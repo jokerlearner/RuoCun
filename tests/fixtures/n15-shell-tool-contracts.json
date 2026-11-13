@@ -1,0 +1,88 @@
+{
+  "exec_shell_poll": {
+    "_source": {
+      "archive": ".scratch/ruocun-discovery/reference/dao-f17e189-7ac654a0dc06/source.zip",
+      "path": "src/tools/exec_shell_poll.ts",
+      "license": "MIT",
+      "sha256": "9caa2d23ed5d3169fb9e6191427fb525ad912e406609c29e24b4c0007a77f138",
+      "description": "读取某个后台进程(Bash 的 background=true 启动的)自上次轮询以来的【新增】输出与当前状态(running/exited)。后台进程完成时会自动通知你,不需要反复轮询--这里只用于查看中间输出(进度/报错)。每次调用都会清空已读部分--不会重复看到同一段输出,但也意味着漏轮询的这段时间的输出拿不回来了(status 会告诉你 exited,配合 exitCode/signal 一起看)。典型场景:后台起了个跑很久的构建/测试命令,过一会儿轮一次看看有没有报错或跑到哪了,而不是干等在原地--进程跑完会自动通知,你不用盯着。stdout/stderr 分开展示,报错信息混在 stderr 里、别只看 stdout 就以为没问题;exited 后依然可以再轮一次拿最后一点残留输出,但只能拿这一次,之后这个 id 就没有新内容了。单次返回的 stdout/stderr 各截断到 2 万字符(保留首尾),超出部分标注实际字符数——若需看完整日志,用 Bash 直接读 .dao/bg/<id>/stdout.log 或 stderr.log 文件。",
+      "descriptionEn": "Reads [new] output from a background process (started via Bash's background=true) since the last poll, and its current status (running/exited). You'll be automatically notified when the process finishes - don't poll for completion; use this only to check intermediate output (progress/errors). Each call clears what's been read - you won't see the same output twice, but it also means output from a gap you didn't poll during is gone for good (status will still tell you it exited, along with exitCode/signal). Typical use: you started a long-running build/test command in the background, and come back to poll once to check for errors or progress rather than sitting idle waiting - the process will notify you when done, you don't need to watch it. stdout and stderr are shown separately - error output lives in stderr, don't assume things are fine just because stdout looks clean; you can still poll once more right after it exits to catch any trailing output, but only once - there's nothing new to get after that. Each stdout/stderr is truncated to 20K chars (keeping head and tail); to read full logs, use Bash to read .dao/bg/<id>/stdout.log or stderr.log directly.",
+      "parameters": {
+        "id": "Bash 返回的后台进程 id"
+      }
+    },
+    "adaptations": {
+      "description": [
+        {
+          "from": "配合 exitCode/signal 一起看",
+          "to": "配合 exitCode 一起看"
+        },
+        {
+          "from": ".dao/bg/<id>/stdout.log 或 stderr.log 文件。",
+          "to": "回执所示运行目录中的 stdout.txt 或 stderr.txt 文件;原始字节保存在 stdout.log/stderr.log。"
+        }
+      ],
+      "descriptionEn": [
+        {
+          "from": "along with exitCode/signal",
+          "to": "along with exitCode"
+        },
+        {
+          "from": ".dao/bg/<id>/stdout.log or stderr.log directly.",
+          "to": "stdout.txt or stderr.txt in the run directory shown in the response. Original bytes remain in stdout.log/stderr.log."
+        }
+      ]
+    }
+  },
+  "exec_shell_kill": {
+    "_source": {
+      "archive": ".scratch/ruocun-discovery/reference/dao-f17e189-7ac654a0dc06/source.zip",
+      "path": "src/tools/exec_shell_kill.ts",
+      "license": "MIT",
+      "sha256": "33fa911e222359a12f8d0b9b0bc247920451d9326994133f6444ea982f4c3745",
+      "description": "终止某个后台进程(Bash 的 background=true 启动的)——杀的是整个进程组(SIGTERM),命令自己再拉起的子进程也会一起终止,不会留下孤儿进程。approval 是 auto:语义是清理一个你自己已经批准过在跑的后台任务,不是发起新的有风险动作,不需要再确认一遍。发送请求不等于已经退出,状态以实际退出事件为准;日志仍可读取。典型场景:后台起了个开发服务器/watch 进程,任务做完了要收尾,或者中途发现起错了命令,用这个把它结束掉,别让它一直占着端口/进程空跑。杀掉一个不存在/早已退出的 id 不会报错,只是提示信号已发送,自行用 BashOutput 确认真实状态。",
+      "descriptionEn": "Terminates a background process (started via Bash's background=true) — kills the entire process group (SIGTERM), so any child processes the command spawned are terminated too, no orphans left behind. approval is auto: the semantics are cleaning up a background task you already approved earlier, not initiating a new risky action, so no extra confirmation is needed. A cancellation request is not confirmation of exit; wait for the executor to close. Logs remain readable. Typical use: you started a dev server/watch process in the background and the task is wrapping up, or you realize mid-way you started the wrong command — kill it rather than leaving it occupying a port or running idle. Killing a nonexistent or already-exited id doesn't error — it just reports the signal was sent; confirm the actual state yourself via BashOutput.",
+      "parameters": {
+        "id": "Bash 返回的后台进程 id"
+      }
+    },
+    "adaptations": {
+      "description": [
+        {
+          "from": "杀的是整个进程组(SIGTERM),",
+          "to": "请求停止Windows受管Job中的整个进程树,"
+        },
+        {
+          "from": "命令自己再拉起的子进程也会一起终止,不会留下孤儿进程。",
+          "to": "命令自己再拉起的受管子进程也会一起停止,以执行器确认树关闭为准。"
+        },
+        {
+          "from": "不需要再确认一遍。",
+          "to": "工具声明为auto,仍遵守会话权限规则。"
+        },
+        {
+          "from": "只是提示信号已发送,自行用 BashOutput 确认真实状态。",
+          "to": "只返回友好状态,自行用 BashOutput 确认真实状态。"
+        }
+      ],
+      "descriptionEn": [
+        {
+          "from": "kills the entire process group (SIGTERM), ",
+          "to": "requests stopping the entire Windows managed Job process tree, "
+        },
+        {
+          "from": "so any child processes the command spawned are terminated too, no orphans left behind. ",
+          "to": "including managed child processes; wait for the executor to confirm the managed tree has closed. "
+        },
+        {
+          "from": "so no extra confirmation is needed.",
+          "to": "the tool is declared auto but still obeys session permission rules."
+        },
+        {
+          "from": "it just reports the signal was sent; ",
+          "to": "it returns a friendly status; "
+        }
+      ]
+    }
+  }
+}

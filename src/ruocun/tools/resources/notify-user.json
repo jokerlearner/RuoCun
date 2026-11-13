@@ -1,0 +1,4 @@
+{
+  "description": "在当前终端向用户显示简短提示，适用于需要留意的进度、结果或阻塞。运行环境无通知能力时，调用可能不会产生可见提示。",
+  "descriptionEn": "Show a short update in the current terminal when a result, milestone, or blocker needs attention. A session without notification support may have no visible indication."
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "archive": "final.zip",
+    "files": 226,
+    "rounds": [
+      {
+        "round": "f09",
+        "exit": 0
+      }
+    ],
+    "worker_receipts_verified": 21
+  },
+  {
+    "archive": "tdd.zip",
+    "files": 750,
+    "rounds": [
+      {
+        "round": "f01",
+        "exit": 1
+      },
+      {
+        "round": "f02",
+        "exit": 0
+      },
+      {
+        "round": "f03",
+        "exit": 1
+      },
+      {
+        "round": "f04",
+        "exit": 0
+      },
+      {
+        "round": "f05",
+        "exit": 1
+      },
+      {
+        "round": "f06",
+        "exit": 0
+      },
+      {
+        "round": "f07",
+        "exit": 0
+      },
+      {
+        "round": "f08",
+        "exit": 0
+      }
+    ],
+    "worker_receipts_verified": 66
+  }
+]

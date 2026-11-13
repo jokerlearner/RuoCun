@@ -1,0 +1,9 @@
+{
+  "intermediate_commit_not_delivery": "a3556416864c06bfdb761661b0eb1d5d7a868ad1",
+  "failure": "initial manifest included ignored __pycache__/review.cpython-311.pyc",
+  "observed_staged_validation_exit": 128,
+  "original_failure_record": "git show :<ignored pyc> failed; check_output raised CalledProcessError",
+  "shell_continued_after_native_python_failure": true,
+  "fix": "exclude bytecode/cache from evidence identity, retain original rejected manifest, validate staged bytes before checked commit",
+  "business_or_candidate_test_rerun": false
+}

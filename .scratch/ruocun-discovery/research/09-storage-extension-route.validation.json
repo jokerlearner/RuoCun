@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "kind": "read-only-research-validation",
+  "base_commit": "8d978824c0163caef851d592d44ba0c4c4f61110",
+  "branch": "research/d09-compat",
+  "source": {
+    "snapshot": "dao-f17e189-7ac654a0dc06",
+    "manifest_members": 805,
+    "zip_members": 805,
+    "mismatches": [],
+    "zip_sha256": "1f8308959d8b9ac0783b6ce6ddbffe7a71cc60bc59332f309f0d62083efac078",
+    "method": "PowerShell .NET ZipFile read-only; each member length and SHA-256 compared to frozen manifest; no extraction/source execution"
+  },
+  "report": {
+    "path": ".scratch/ruocun-discovery/research/09-storage-extension-route.md",
+    "sha256": "2dceafc27092f63bf28ac5ed430745d14895e801c199b4bd534cb41b279daeb3",
+    "lines": 205,
+    "local_links_checked": 41,
+    "missing_local_links": [],
+    "mm_ids_checked": 6,
+    "missing_mm_ids": [],
+    "anchors": [
+      "storage-port-v1",
+      "epoch-contract"
+    ]
+  },
+  "locked_dependency": {
+    "name": "@modelcontextprotocol/sdk",
+    "version": "1.29.0",
+    "cache": "D15 isolated frozen-lock dependency; read-only, not active DAO",
+    "package_sha256": "7ab20eba8fee70f316516b5b3fc45837294caee7e4dd36f2a1593210b0f003ac",
+    "protocol_path": "dist/esm/shared/protocol.js",
+    "protocol_sha256": "8de524602541771e084f7185e7d0fc418b8142a9cae1bd80a3ee7c70e9a9e132",
+    "lines": [
+      "8: DEFAULT_REQUEST_TIMEOUT_MSEC = 60000",
+      "712-714: options timeout fallback; resetTimeoutOnProgress ?? false"
+    ],
+    "official_fixed_source": "https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/v1.29.0/src/shared/protocol.ts",
+    "official_lines": "103,120-129 (one-based)"
+  },
+  "validation_scope": {
+    "product_tests_run": 0,
+    "native_probes_run": 0,
+    "model_calls": 0,
+    "user_config_read": false,
+    "global_environment_changed": false,
+    "active_dao_read": false,
+    "new_product_code": false,
+    "d08_contract_review": "Direct cross-read and messages; D08 e4fd721 uses D09 StoragePort/epoch anchors; event optional and no second schema",
+    "limitations": [
+      "Static source/document checks only",
+      "No product compatibility or runtime acceptance result",
+      "D15/D18/D19 evidence reused with original limits"
+    ]
+  },
+  "document_check_note": "Initial sanitized-env staged diff check rejected CRLF in research/.gitattributes as trailing whitespace; normalized that asset file to LF. No product/source/test expectations changed."
+}

@@ -1,0 +1,302 @@
+[
+  {
+    "path": "g01/submit-raise",
+    "pid": 11076,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g02/submit-raise",
+    "pid": 41196,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g03/diagnostic-fail",
+    "pid": 38716,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g04/diagnostic-fail",
+    "pid": 42632,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/broken-read",
+    "pid": 33252,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/cancel-budget",
+    "pid": 5772,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/cancel-completed",
+    "pid": 5092,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/cancel-fail",
+    "pid": 2464,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/crash/after-replace",
+    "pid": 39016,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/crash/before-replace",
+    "pid": 30224,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/crash/flush-osreplace",
+    "pid": 42224,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/crash/flush-replacefile",
+    "pid": 39744,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/crash/fsync-osreplace",
+    "pid": 44512,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/crash/writethrough-move",
+    "pid": 7772,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/diagnostic-fail",
+    "pid": 27696,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/pipe",
+    "pid": 38828,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/read-cancel-fail",
+    "pid": 23844,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/refusals/denied-permanent",
+    "pid": 44912,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/refusals/denied-release",
+    "pid": 34752,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/refusals/sharing-permanent",
+    "pid": 43940,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/refusals/sharing-release",
+    "pid": 9356,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/result-error",
+    "pid": 43660,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/result-incomplete",
+    "pid": 42772,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/submit-raise",
+    "pid": 39196,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/wait-fail",
+    "pid": 41384,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/wait-raise",
+    "pid": 42824,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g05/write-cancel-fail",
+    "pid": 44260,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/broken-read",
+    "pid": 27260,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/cancel-budget",
+    "pid": 38328,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/cancel-completed",
+    "pid": 40128,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/cancel-fail",
+    "pid": 12348,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/crash/after-replace",
+    "pid": 42292,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/crash/before-replace",
+    "pid": 38272,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/crash/flush-osreplace",
+    "pid": 38040,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/crash/flush-replacefile",
+    "pid": 33220,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/crash/fsync-osreplace",
+    "pid": 23412,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/crash/writethrough-move",
+    "pid": 22768,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/diagnostic-fail",
+    "pid": 43128,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/pipe",
+    "pid": 36164,
+    "pid_reused": false,
+    "original_exited": true
+  },
+  {
+    "path": "g06/read-cancel-fail",
+    "pid": 25336,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/refusals/denied-permanent",
+    "pid": 33164,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/refusals/denied-release",
+    "pid": 43296,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/refusals/sharing-permanent",
+    "pid": 9372,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/refusals/sharing-release",
+    "pid": 18160,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/result-error",
+    "pid": 1120,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/result-incomplete",
+    "pid": 10948,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/submit-raise",
+    "pid": 45628,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/wait-fail",
+    "pid": 44868,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/wait-raise",
+    "pid": 35592,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "g06/write-cancel-fail",
+    "pid": 26216,
+    "open_error": 87,
+    "original_exited": true
+  }
+]

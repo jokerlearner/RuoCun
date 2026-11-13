@@ -1,0 +1,13 @@
+{
+  "baseline_sha": "f199624aa2902e0519bcb1191b4b9bba18a291b8",
+  "baseline_branch": "main",
+  "baseline_worktree_clean": true,
+  "integration_branch": "integration/ruocun-migration",
+  "started_utc": "2026-11-05T06:08:40.368448+00:00",
+  "reference_tree_sha256": "7ac654a0dc06a9724982c35119501d65a3863e000458dcc0e2765fa66b53180c",
+  "implementation_tickets": 84,
+  "existing_confirmation_ticket": "01-test-entrypoints.md",
+  "automatic_evidence": "not-started",
+  "live_model_evidence": "not-started",
+  "windows_terminal_evidence": "not-started"
+}

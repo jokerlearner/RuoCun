@@ -1,0 +1,61 @@
+{
+  "evidence_kind": "independent-automated-prototype",
+  "utc": "2026-11-05T07:37:30.332620+00:00",
+  "candidate": "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63",
+  "integration_start": "35125492cb1b89545494b2a9ca6ba2da554cabd8",
+  "merge": "9e643bff6bafaaee232c04e4788acfc2bbf63e4d",
+  "head_before_run": "9e643bff6bafaaee232c04e4788acfc2bbf63e4d",
+  "branch": "merge/d06-prototype",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "executable": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m06\\.venv\\Scripts\\python.exe",
+  "os": "Windows-10-10.0.26200-SP0",
+  "dependencies": {
+    "prompt_toolkit": "3.0.52",
+    "rich": "14.1.0",
+    "wcwidth": "0.9.4",
+    "pytest": "8.4.2",
+    "markdown-it-py": "4.2.0",
+    "mdurl": "0.1.2",
+    "pygments": "2.21.0",
+    "pluggy": "1.7.0",
+    "packaging": "26.3",
+    "iniconfig": "2.3.1",
+    "colorama": "0.4.6"
+  },
+  "command": [
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m06\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m06\\.scratch\\ruocun-discovery\\experiments\\terminal\\test_terminal.py",
+    "-q",
+    "--basetemp",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m06\\.scratch\\ruocun\\integration-evidence\\d06\\r3\\t"
+  ],
+  "exit_code": 0,
+  "result": "14 passed",
+  "lock_sha256": "79df88ff07692194aeb33f5a737166ed48ce954673f5d333a7968b6fba03ae7e",
+  "code_sha256": {
+    "Copy-Case.ps1": "6c8b4d61b12900dc893b7a9f1cce386166f2876631bf6829f6ba4a5091b6b036",
+    "launch.py": "f39bcaad3590e24642c4009e95100f9f160f82e62476837db35ea958ea61882d",
+    "make_fixtures.py": "b4bfa31bd1405d132e384e59b6601617fc88df4ddec196314465ab283348438f",
+    "model.py": "e74231709118a50ce0904aaac442ade55412edd77c313a8f0f8c2e5dcc43cbc8",
+    "Open-Hitl.ps1": "eadef163f83098ebecb9c784e988471ce38923b2340ac99bc8dddc085de4e69a",
+    "protocol.py": "2a9b7261b8fe792b07658ad3e6a8b953c1a636c2a868b14368625c5a32d84de3",
+    "run_automated.py": "ef769c844e0a164e278ff71338c337fddc96f067a940c1ced925fdca90dcaaec",
+    "Start-Hitl.ps1": "a1fd070c38121996cf9c7fa78c2ac9fdd5afde10c31d84218b44d8aecaf6b1e0",
+    "terminal_app.py": "50d08062ea27a5953970ddbb3a643c5c728b84ca191810de3676d4ac80aa1b57",
+    "test_terminal.py": "c529e30743f2c991a1947c902577af1ac692da7e1a898359d7820e6af3eeeb96",
+    "worker.py": "be076a23068572d3fbcf0c2f4ec9744ce0f5b860afdc3d1d75e99d374903c2af",
+    "workers.py": "d2de630c234d330cdf8cc5eb56e2a793639ad5875c93d61eed40c3c57d0f6397"
+  },
+  "stdout_sha256": "eca19c56b5c1b94ab355781c6afe9004728b0272e0265e3a8616d905dc0e05a9",
+  "technical_continue": true,
+  "hitl": "pending (ADR-0004; only recorded first-group feedback accepted)",
+  "visible_windows_terminal": "not independently operated in this review",
+  "limitations": [
+    "prototype only; no product acceptance inherited",
+    "no real model calls",
+    "mascot/full owned viewport, persistent runner/process tree, system image clipboard not implemented here",
+    "remaining WT visual/input/mode recovery checks require final 77/78/85 acceptance"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "initial_stage_validation_passed": true,
+  "initial_git_commit_returned_nonzero": true,
+  "initial_git_commit_stderr_not_retained_by_first_runner": true,
+  "initial_assertion_log_retained": "seal-failure-stage-20261105-170924/stderr.txt",
+  "subsequent_readonly_identity_probe": "identity-probe.json",
+  "probe_confirmed_synthetic_home_has_no_git_author": true,
+  "recovery": "set per-command synthetic Codex <codex@local> identity, rescan and reseal, recheck every staged blob",
+  "original_seal_and_manifest_preserved": "collection-r01/",
+  "second_stage_rejection": "manifest excluded every basename evidence-sha256.json, including the retained r01 manifest; exact staged set check rejected the extra historical manifest",
+  "second_rejection_log": "seal-failure-stage-20261105-171110/stderr.txt",
+  "second_seal_script_and_manifest_preserved": "collection-r02/",
+  "manifest_fix": "exclude only the active top-level manifest; include historical manifests as ordinary evidence bytes",
+  "business_tests_rerun": false,
+  "candidate_or_original_evidence_modified": false
+}

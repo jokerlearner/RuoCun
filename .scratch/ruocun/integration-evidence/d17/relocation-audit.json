@@ -1,0 +1,13 @@
+{
+  "immediate_post_move_hash_mismatches": [],
+  "paths_verified_inside_m17": true,
+  "system_tests_repeated": false,
+  "destination_absolute": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m17\\.scratch\\ruocun\\integration-evidence\\d17",
+  "source_absolute": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m17\\integration-evidence\\d17",
+  "moved_files_checked": 19,
+  "historical_raw_absolute_paths_rewritten": false,
+  "source_exists_after": false,
+  "source_reparse_points": 0,
+  "destination_exists_after": true,
+  "native_operation": "Move-Item -LiteralPath"
+}

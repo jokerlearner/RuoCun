@@ -1,0 +1,35 @@
+{
+  "command": [
+    "D:\\r18q-20261105-170333\\v\\Scripts\\python.exe",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18q\\.scratch\\ruocun-discovery\\experiments\\durable-io\\.t\\m18q-historical-review\\.scratch\\ruocun\\integration-evidence\\d18-final-review\\audit.py"
+  ],
+  "returncode": 0,
+  "environment_keys": [
+    "APPDATA",
+    "COMSPEC",
+    "HOME",
+    "LOCALAPPDATA",
+    "PATH",
+    "PATHEXT",
+    "PIP_CACHE_DIR",
+    "PIP_CONFIG_FILE",
+    "PIP_DISABLE_PIP_VERSION_CHECK",
+    "PROGRAMDATA",
+    "PROGRAMFILES",
+    "PROGRAMFILES(X86)",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONNOUSERSITE",
+    "PYTHONUTF8",
+    "SYSTEMDRIVE",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME"
+  ],
+  "synthetic_home": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18q\\.scratch\\ruocun-discovery\\experiments\\durable-io\\.t\\env\\home",
+  "token_shape_present": false
+}

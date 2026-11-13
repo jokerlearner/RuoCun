@@ -1,0 +1,52 @@
+{
+  "candidate_entries": 104,
+  "candidate_mismatches": [],
+  "archives": [
+    {
+      "archive": "m17d898598bfc.zip",
+      "archive_hash_ok": true,
+      "entries": 47,
+      "entry_mismatches": []
+    },
+    {
+      "archive": "m17d898598bfc-raw-supplement.zip",
+      "archive_hash_ok": true,
+      "entries": 259,
+      "entry_mismatches": []
+    }
+  ],
+  "entry_syntax_checked": [
+    "archive_existing.py",
+    "audit_conftest.py",
+    "audit_existing.py",
+    "review.py",
+    "verify_artifacts.py"
+  ],
+  "read_only_GetClassInfoW_missing_class_query": {
+    "name": "RuoCunD17Missing279de310bf0b4c8585d0c5913ad61b75",
+    "absent": true,
+    "winerror": 1411
+  },
+  "executed_source_byte_identical": {
+    "clip.py": true,
+    "cron.py": true,
+    "native.py": true,
+    "notify.py": true,
+    "probe.py": true,
+    "run.py": true,
+    "sandbox.py": true,
+    "schedule.py": true,
+    "task.py": false,
+    "test_win.py": true,
+    "worker.py": true
+  },
+  "task_original_tail_byte_identical": false,
+  "task_original_tail_equal_after_CRLF_normalization": true,
+  "task_line_endings": {
+    "original_CRLF": 0,
+    "executed_CRLF": 61,
+    "original_LF": 47,
+    "executed_LF": 61
+  },
+  "no_capability_tests_or_resource_creation": true
+}

@@ -1,0 +1,16 @@
+{
+  "utc": "2026-11-05T07:13:21.413516+00:00",
+  "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation",
+  "command": [
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\sqlite-runtime\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\sqlite-runtime\\test_runtime.py",
+    "-q",
+    "--basetemp=D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\sqlite-runtime\\.venv\\q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "merge": "3a00c588fbd685ac4086cafd7d00e16ed64bd7c5",
+  "candidate": "0419c42c3593a6b56f78e9cad063c2a0c6e56600"
+}

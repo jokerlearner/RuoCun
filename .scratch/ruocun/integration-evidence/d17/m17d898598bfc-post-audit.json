@@ -1,0 +1,229 @@
+{
+  "test_exit": -1,
+  "audit_scope": "Only names and PIDs recorded by this m17 replay; no deletion, bare-PID kill, or mutation.",
+  "credentials": [
+    {
+      "name": "RuoCun.D17.Scheduler.d88a0f4fc45b4f67ac0432f0f3f01ef8",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "RuoCun.D17.ce2ed5210161417ea6daf2ffa02a3ad8/50726f66696c65",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "RuoCun.D17.ce2ed5210161417ea6daf2ffa02a3ad8/70726f66696c65",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "RuoCun.D17.ce2ed5210161417ea6daf2ffa02a3ad8/NativeCase",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "RuoCun.D17.ce2ed5210161417ea6daf2ffa02a3ad8/boundary",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "RuoCun.D17.ce2ed5210161417ea6daf2ffa02a3ad8/e4b8ade696872fe8b4a6e688b7",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "RuoCun.D17.ce2ed5210161417ea6daf2ffa02a3ad8/fallback",
+      "absent": true,
+      "winerror": 1168
+    },
+    {
+      "name": "ruocun.d17.ce2ed5210161417ea6daf2ffa02a3ad8/nativecase",
+      "absent": true,
+      "winerror": 1168
+    }
+  ],
+  "jobs": [],
+  "desktops": [
+    {
+      "name": "RuoCunD17ec123aae8c69499889186499a0396cd6",
+      "absent": true,
+      "winerror": 2
+    }
+  ],
+  "stations": [
+    {
+      "name": "RuoCunD175923c81a9a5145049623ee90c8e2d281",
+      "absent": true,
+      "winerror": 2
+    }
+  ],
+  "window_classes": [],
+  "notification": {
+    "status": "not-independently-requeried; original notify.json records cleanup=true",
+    "events": [],
+    "all_added_icons_deleted": null,
+    "all_owner_windows_destroyed": null
+  },
+  "profiles": [
+    {
+      "profile": "RuoCun.D17.36f727d0766c471ba1bafa8171888f71",
+      "sid": "S-1-15-2-2248357379-858072971-3059484409-1105640806-2118203483-3926494369-742068782",
+      "mapping_absent": true,
+      "returned_folder_absent": true,
+      "package_folder_absent": true
+    },
+    {
+      "profile": "RuoCun.D17.e51919ef89314fe98adfdeff2886b622",
+      "sid": "S-1-15-2-3039309823-2079614218-1352599734-3005765396-433176025-2900564010-2174528183",
+      "mapping_absent": true,
+      "returned_folder_absent": true,
+      "package_folder_absent": true
+    }
+  ],
+  "tasks": [
+    {
+      "name": "RuoCun-D17-43cb6049a4b2488ab7faa5113980e524",
+      "absent": true,
+      "hresult": -2147024894
+    },
+    {
+      "name": "RuoCun-D17-8fabc200b20e4fabb15847f099a45285",
+      "absent": true,
+      "hresult": -2147024894
+    },
+    {
+      "name": "RuoCun-D17-94b97b65b4df4253a51b871d8823338e",
+      "absent": true,
+      "hresult": -2147024894
+    },
+    {
+      "name": "RuoCun-D17-b26c698c8d2f409c884000e39f063951",
+      "absent": true,
+      "hresult": -2147024894
+    },
+    {
+      "name": "\\RuoCun-D17-5cd5504ef6114fb598b58f23bc5c8f84",
+      "absent": true,
+      "hresult": -2147024894
+    }
+  ],
+  "processes": [
+    {
+      "pid": 5188,
+      "recorded_creation": 134383413841400439,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 8448,
+      "recorded_creation": 134383414374316714,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 24220,
+      "recorded_creation": null,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 24840,
+      "recorded_creation": null,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 27144,
+      "recorded_creation": 134383414045231824,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 33024,
+      "recorded_creation": 134383414175324518,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 34316,
+      "recorded_creation": null,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 38208,
+      "recorded_creation": 134383413863287481,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 39136,
+      "recorded_creation": null,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 40184,
+      "recorded_creation": 134383414228949939,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 41420,
+      "recorded_creation": "2026-11-05 08:36:32.507000+00:00",
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 42876,
+      "recorded_creation": 134383413953821530,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 43080,
+      "recorded_creation": 134383414002450853,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 43336,
+      "recorded_creation": null,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 43864,
+      "recorded_creation": 134383413879210886,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 44020,
+      "recorded_creation": null,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 44412,
+      "recorded_creation": 134383414362326162,
+      "absent_or_exited": true,
+      "winerror": 87
+    },
+    {
+      "pid": 45744,
+      "recorded_creation": 134383414115407103,
+      "absent_or_exited": true,
+      "winerror": 87
+    }
+  ],
+  "all_recorded_objects_absent": true,
+  "incomplete_observations": [
+    "The first post-test hook failed before persisting Job/class/icon names. Their exact names cannot be re-queried. Candidate per-probe cleanup and completed pytest process lifetime remain separate evidence."
+  ],
+  "mode": "read-only-post-audit; no probe tests executed",
+  "original_pytest_exit": 1,
+  "original_test_observation": "Ten passed progress markers; sessionfinish audit hook raised AttributeError; not an overall successful pytest run.",
+  "all_object_types_independently_verified": false
+}

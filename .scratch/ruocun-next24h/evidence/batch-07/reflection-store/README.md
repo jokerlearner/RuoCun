@@ -1,0 +1,5 @@
+# 42共享存储接缝
+
+Checkpoint新增可选reflection_state，旧None从operation digest剔除；先由旧实现取得canonical golden 7b0fd391…，新单条真实SQLite复验保持。Conversation提供set_reflection_state(session,state,advisories=())，只在paired边界一次checkpoint保存元数据及尾部advisory；确认后才发布内存态。分支默认不复制该执行元数据。scoped_intent新增可选approval_ref明确记录反思启用授权；非main scope复用原始intent/result，不伪造模型tool_call或Agent run。
+
+red缺API；green真实roundtrip1项通过；final同原例加旧canonical golden及既有26会话四项，实际5 passed22.90s；Mypy254源码通过（导入排序另已修）。例子真实关闭/重开：同稳定id已确认结果可复用，不向主聊天加孤立tool；未确认反思写保持unknown、会话blocked，旧pending id保存，不自动生成新id重做。此为必要持久兼容/恢复技术验证，非额外通用故障矩阵。白名单环境、合成HOME和输入，scan_hit=false，无真实模型、全量或构包。42产品运行和独审另记，不提前结题。

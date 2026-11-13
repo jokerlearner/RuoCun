@@ -1,0 +1,8 @@
+{
+  "description": "查找已保存的记忆。用记录名或标题精确查找时返回正文。也可输入空格分隔的关键词，忽略大小写且每个词都要匹配，这时只列概要。limit 默认 6，可设为 1 到 20。",
+  "descriptionEn": "Retrieve a saved memory’s full text by record name or title. To get a list of summaries, search with space-separated keywords. Every keyword must match, regardless of case. limit defaults to 6 and accepts 1–20.",
+  "parameters": {
+    "query": "记忆记录名、标题或用空格分隔的搜索词。",
+    "limit": "最多返回多少条，默认 6。"
+  }
+}

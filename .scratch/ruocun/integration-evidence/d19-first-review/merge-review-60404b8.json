@@ -1,0 +1,23 @@
+{
+  "merge_sha": "60404b808ecbec4d90ee7f7964732cceb0f58f0b",
+  "raw_files_git_and_working_bytes_verified": 1029,
+  "all_changes_within_D19": 1033,
+  "candidate_archive_sha3": "c2d09c8babb9399277055c057c97a53f1ffd7c5f11d0c1f2118ffdfa39f2daa4",
+  "candidate_dll_sha256": "4b59d3cded9dc1608544160f3b4b10ac974c6ac0d6ffc23064e5f4c8dbd05aea",
+  "original_runtime_hashes_before": {
+    "probe.py": "4e8685adfba0a5eff99eced8e776d0e9da1bfe44a674142e0484db9b81b1b3df",
+    "run_probe.py": "b1a4fae90d6fbebcf965aa71d3a9e801a323ab498e36922110caa6ac65650cda"
+  },
+  "final4_harness_matches_live_and_copy": true,
+  "final4_unique_runtime_identities": 35,
+  "final4_summary": {
+    "cases": 12,
+    "passed": 12,
+    "cleanup_passed": true,
+    "supervisor_job_active_processes": 0,
+    "owned_processes": 34,
+    "cold_recovery_processes": 21,
+    "runtime_manifests_verified": 35,
+    "frozen_harness_unchanged": true
+  }
+}

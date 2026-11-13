@@ -1,0 +1,57 @@
+[
+  {
+    "file": "single.txt",
+    "sha256": "652997ab18aaade4904f54255409511681ea8f6add80856fc081b2dd6bec69b1",
+    "matches_manifest": true
+  },
+  {
+    "file": "six-lines.txt",
+    "sha256": "3668c1e9d7e907334dce037f05fdfe8a2fe1ecc46467b37ad10298556da7363f",
+    "matches_manifest": true
+  },
+  {
+    "file": "seven-lines.txt",
+    "sha256": "9497b6928cdfbb5a02c4059028cb4f010087b516e93074871c9a306c0f09e83e",
+    "matches_manifest": true
+  },
+  {
+    "file": "280-units.txt",
+    "sha256": "874bf7a3c0797cc1933ee767a6315bb85059156d76e908b30d51a354d8a7a24f",
+    "matches_manifest": true
+  },
+  {
+    "file": "281-units.txt",
+    "sha256": "f7e95fc8f1e31e341668a9d9a00a9c52b85df38587bec33ca775dd0c35ab535b",
+    "matches_manifest": true
+  },
+  {
+    "file": "crlf.txt",
+    "sha256": "4c01ec62fabf495cb164ae5baa69b7ac9cf552ff9bd6f6d725203dba7be31588",
+    "matches_manifest": true
+  },
+  {
+    "file": "bare-cr.txt",
+    "sha256": "443484de9d179767491b460796b561c2b6c99d59117f6622f829259a38df94e0",
+    "matches_manifest": true
+  },
+  {
+    "file": "literal-reports.txt",
+    "sha256": "120e22df52cfb8e0902ee7d0f33815e8e9553631b0f30ae56d9dd9403ed15d93",
+    "matches_manifest": true
+  },
+  {
+    "file": "64KiB.txt",
+    "sha256": "09da701a6f48716d2014a8f20672c49ac0c5bdae1e69f93b4e9ce8c3ef928eb1",
+    "matches_manifest": true
+  },
+  {
+    "file": "1MiB.txt",
+    "sha256": "8ec2db2dec39cb937e2403a83c5c3a316abc80800df41fe8bfac1f63fb3eeb10",
+    "matches_manifest": true
+  },
+  {
+    "file": "合成 image.png",
+    "sha256": "472ab6c2c2662c27aa68ab64190db9ea7357fb2c672894c3668f39c125293925",
+    "matches_manifest": true
+  }
+]

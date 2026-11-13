@@ -1,0 +1,15 @@
+{
+  "description": "将一项可独立验收的工作交给子代理。用 task 派发单项，用 tasks 提交多项；批量结果按输入位置对应。子代理无法继续派发 Agent。普通派发默认等待结果，角色配置也可以指定后台运行；background 可先返回任务标识，随后使用 TaskOutput 或 TaskWait。需要独立工作树时选 worktree；remote 当前也使用本地工作树。fork 让子代理接续当前对话，使用时省略 model、mode 和隔离选项。任务中写清范围、交付物与验收方式。 分派前检查任务间是否会修改相同文件；收到结果后核对关键证据。 非 fork 模式请在任务中补齐相关背景。",
+  "descriptionEn": "Delegate work with a clear boundary and a verifiable result. Send one assignment with task or an ordered group with tasks. A child cannot invoke Agent. Ordinary calls wait unless the role defaults to background. With background, keep the returned task ID for TaskOutput or TaskWait. Select worktree for a separate checkout; remote currently uses a local worktree too. With fork, the child starts from the current conversation, so leave out model, mode, and isolation. State the files, expected result, and how to verify it. Avoid overlapping edits and check important evidence after the child returns. Include the relevant background for a child started without fork.",
+  "properties": {
+    "task": "派给一名子代理的完整任务，与 tasks 二选一。",
+    "tasks": "最多 20 项相互独立的任务。按会话并行上限运行，余项等待空位。",
+    "background": "为可独立推进的任务先取回 id，结束时会通知。下游依赖结果时等待前台返回。",
+    "agent_type": "可用角色的名称，省略时使用 general-purpose。",
+    "isolate": "设为 true 时使用独立 Git 工作树。",
+    "isolation": "worktree 和 remote 都在同机工作树隔离；remote 可参与受支持的前台转后台交接。",
+    "fork": "让子代理从父对话的上下文出发；不能与模型、权限覆盖或隔离选项同用。",
+    "model": "可选模型覆盖，必须是网关支持的完整名称。inherit 使用主会话的模型。",
+    "mode": "可选权限覆盖，plan 只允许规划。默认采用角色设置。"
+  }
+}

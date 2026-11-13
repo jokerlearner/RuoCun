@@ -1,0 +1,7 @@
+{
+  "GetNativeSystemInfo_wProcessorArchitecture": 9,
+  "architecture_name": "PROCESSOR_ARCHITECTURE_AMD64",
+  "pointer_bits": 64,
+  "platform_machine_empty_in_bootstrap": true,
+  "interpretation": "bootstrap platform.machine() empty; native Windows API supplies OS architecture"
+}

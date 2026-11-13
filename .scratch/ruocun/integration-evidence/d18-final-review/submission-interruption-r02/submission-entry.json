@@ -1,0 +1,30 @@
+{
+  "evidence_kind": "review-only post-native-submission-boundary-exception",
+  "real_user_ctrl_c_timing_tested": false,
+  "native_still_pending": true,
+  "event_open": true,
+  "early_event_close_attempts": [
+    {
+      "event": 556,
+      "native_status": 259,
+      "suppressed_by_test_safety_anchor": true
+    }
+  ],
+  "application_pending_owner_count": 0,
+  "error": {
+    "type": "SubmissionBoundaryInterruption",
+    "text": "review-only interruption after actual native pending submission"
+  },
+  "injections": [
+    {
+      "api": "ConnectNamedPipe-return-boundary",
+      "native_called": true,
+      "native_return": false,
+      "native_winerror": 997,
+      "injected_exception": "SubmissionBoundaryInterruption"
+    }
+  ],
+  "test_safety_anchor_retained_overlapped": true,
+  "safety_native_termination_before_local_release": true,
+  "no_actual_use_after_free_attempted": true
+}

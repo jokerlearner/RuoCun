@@ -1,0 +1,319 @@
+{
+  "power_loss_tested": false,
+  "publish_path_receipts": {
+    "fsync-osreplace": {
+      "version": 2,
+      "status": "completed",
+      "text": "合成回执"
+    },
+    "flush-osreplace": {
+      "version": 2,
+      "status": "completed",
+      "text": "合成回执"
+    },
+    "flush-replacefile": {
+      "version": 2,
+      "status": "completed",
+      "text": "合成回执"
+    },
+    "writethrough-move": {
+      "version": 2,
+      "status": "completed",
+      "text": "合成回执"
+    }
+  },
+  "cold_reads": {
+    "before-replace": {
+      "version": 1
+    },
+    "after-replace": {
+      "version": 2
+    }
+  },
+  "concurrent_readers": {
+    "fsync-osreplace": {
+      "reads": 179,
+      "versions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "malformed": [],
+      "open_errors": []
+    },
+    "flush-osreplace": {
+      "reads": 151,
+      "versions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "malformed": [],
+      "open_errors": []
+    },
+    "flush-replacefile": {
+      "reads": 149,
+      "versions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "malformed": [],
+      "open_errors": [
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        }
+      ]
+    },
+    "writethrough-move": {
+      "reads": 183,
+      "versions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "malformed": [],
+      "open_errors": []
+    }
+  },
+  "server_events_opened": 51,
+  "server_events_closed": 51,
+  "anonymous_attempts": {
+    "directory": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    },
+    "capability": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    },
+    "pipe": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    }
+  },
+  "independent_account": {
+    "status": "not-run",
+    "reason": "No independent test account/token supplied; anonymous impersonation is not cross-account validation."
+  }
+}

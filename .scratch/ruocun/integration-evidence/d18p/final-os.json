@@ -1,0 +1,128 @@
+[
+  {
+    "path": "f09/broken-read",
+    "pid": 11748,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/cancel-budget",
+    "pid": 32132,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/cancel-completed",
+    "pid": 38528,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/cancel-fail",
+    "pid": 39244,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/crash/after-replace",
+    "pid": 36564,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/crash/before-replace",
+    "pid": 31396,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/crash/flush-osreplace",
+    "pid": 18748,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/crash/flush-replacefile",
+    "pid": 29000,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/crash/fsync-osreplace",
+    "pid": 9276,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/crash/writethrough-move",
+    "pid": 11488,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/pipe",
+    "pid": 18516,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/read-cancel-fail",
+    "pid": 43928,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/refusals/denied-permanent",
+    "pid": 44240,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/refusals/denied-release",
+    "pid": 39904,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/refusals/sharing-permanent",
+    "pid": 29320,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/refusals/sharing-release",
+    "pid": 42980,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/result-error",
+    "pid": 34372,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/result-incomplete",
+    "pid": 42396,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/wait-fail",
+    "pid": 42564,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/wait-raise",
+    "pid": 37388,
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "path": "f09/write-cancel-fail",
+    "pid": 44320,
+    "open_error": 87,
+    "original_exited": true
+  }
+]

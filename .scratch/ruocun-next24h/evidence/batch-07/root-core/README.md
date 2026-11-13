@@ -1,0 +1,15 @@
+# 批次07根接线与核心回执
+
+42、59、62的来源及普通入口技术gate已通过独审acb8929d，不能据此宣称57/70/71或本批集中包已完成。
+
+42核心纯模块、解析、请求和记忆维护由实现线A迁移；主协调接确定性健康判据、子代理静态自检、显式反思开关、统一反思的lastSentLength前缀/同工具快照、cadence和持久恢复。两类模型反思默认关闭，headless argv不启用；实测仅合成响应，无付费/真实模型调用。
+
+后台分析只产生数据，工具未配对时不写文件或插入建议；结果在配对边界存ready checkpoint，按稳定已接纳input ID提交既有reflect作用域intent，实际记忆改写在agent_tool_batches锁内，确认result后才同checkpoint发布建议与cadence。已确认日志结果优先复用，不重放文件；部分写入或保存不明保留现场并停止本scope。关闭时取消模型、保存已完成分析，不再新启动记忆写入。存储与控制器分别有独立恢复证据，未宣称SQLite与Markdown文件跨介质原子事务。
+
+沿已批准ADR-0013，本实现不会沿来源catch-all把未确认的记忆写入伪装为无记忆结果。发现并修复既有中文邻接密钥Unicode词边界迁移缺陷；锁定原生事实只允许CAS续lastUsed，正文与兼容来源仍不可改。反思usage按实际模型记入会话，cache条目明确distill，不重复冒充main。
+
+根定向回执：health来源红→绿1项；controller+既有loop34项通过；存储/控制器/来源维护/loop组合40项通过；普通Windows定时拒绝/四工具注册/每轮正常取消异常释放及反思pipe4项通过8.95s。独审复原5项通过10.37s，先前2项controller和存储回执复用。原红AttributeError、静态缺口和后续修复均保留，不能将红回执当最终通过。
+
+59真实首参按DAO源码大写Schedule，无账户可运行；Windows明确拒绝不调用系统crontab，POSIX仅合成后端证据，不写真实定时触发通过。62按每轮acquire/finally release，idle不持锁；Windows无自动防休眠保证，Mac/Linux仅best-effort进程路由，未做实机系统电源验收。
+
+57的审计查询与tool_audit接线在本目录后续raw有记录，整票需等待观测与独审，不因部分查询通过即结题。所有进程通过tools/run.py白名单启动、synthetic HOME/会话；raw命令回执scan_hit=false。原18窗口记录未纳入本批。

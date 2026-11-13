@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-11-05T09:41:17.0233539Z",
+  "scope": "first development pins; not final minimum Python / cross-platform / release support",
+  "development_target": {
+    "implementation": "CPython",
+    "version": "3.11.9",
+    "architecture": "Windows x64",
+    "evidence": "integration-evidence/d07/README.md and platform.json"
+  },
+  "d07_lock": {
+    "path": ".scratch/ruocun-discovery/experiments/distribution/requirements.lock",
+    "sha256": "22e8def4ebb850049705099e082b91c7345b49acda6f83338d3fb6679e35c0a1"
+  },
+  "packages": [
+    {
+      "name": "hatchling",
+      "version": "1.33.0",
+      "metadata_url": "https://pypi.org/pypi/hatchling/1.33.0/json",
+      "response_sha256": "aba0f7c78f0d63e00c028731c72c2316e9a2b9a9705f6a103d8520d5fc32c473",
+      "requires_python": ">=3.10",
+      "license_expression": "MIT",
+      "license": null,
+      "requires_dist": [
+        "packaging>=24.2",
+        "pathspec>=0.10.1",
+        "pluggy>=1.0.0",
+        "tomli>=1.2.2; python_version < \"3.11\"",
+        "tomlkit>=0.11.1",
+        "trove-classifiers"
+      ],
+      "wheel": {
+        "filename": "hatchling-1.33.0-py3-none-any.whl",
+        "sha256": "415290b84f464d2884303fca8974d38e7b85579069fab02a15db0828fbb1446d",
+        "url": "https://files.pythonhosted.org/packages/32/64/4afe5dd77b2939a93e8c9513f8082dbd049ecba9c1484a379a0f6ae29d6b/hatchling-1.33.0-py3-none-any.whl",
+        "size": 78750,
+        "requires_python": ">=3.10",
+        "yanked": false,
+        "uploaded_utc": "2026-10-28T02:27:29.033037Z"
+      },
+      "evidence": "D07 actual Windows CPython 3.11.9 x64 hash-locked install/build/test; this query checks official metadata"
+    },
+    {
+      "name": "build",
+      "version": "1.6.1",
+      "metadata_url": "https://pypi.org/pypi/build/1.6.1/json",
+      "response_sha256": "064e9dcb80e948b5de7a841c3fd9b5644a980eb27bb644fb7f562b7d773b157b",
+      "requires_python": ">=3.10",
+      "license_expression": "MIT",
+      "license": null,
+      "requires_dist": [
+        "packaging>=24.0",
+        "pyproject_hooks",
+        "colorama; os_name == \"nt\"",
+        "importlib-metadata>=4.6; python_full_version < \"3.10.2\"",
+        "tomli>=1.1.0; python_version < \"3.11\"",
+        "keyring; extra == \"keyring\"",
+        "uv>=0.1.18; extra == \"uv\"",
+        "virtualenv>=20.36.1; extra == \"virtualenv\""
+      ],
+      "wheel": {
+        "filename": "build-1.6.1-py3-none-any.whl",
+        "sha256": "ecd351a4be9d35a9eaaba244a7687143c9c7d4aea6ac964e7e7ddab20cbcf4e7",
+        "url": "https://files.pythonhosted.org/packages/ad/9b/9fb3585dabcd73a1b2a6267f63f62649347c9e6d072c9fde365b105abb2c/build-1.6.1-py3-none-any.whl",
+        "size": 31179,
+        "requires_python": ">=3.10",
+        "yanked": false,
+        "uploaded_utc": "2026-09-10T07:55:59.148398Z"
+      },
+      "evidence": "D07 actual Windows CPython 3.11.9 x64 hash-locked install/build/test; this query checks official metadata"
+    },
+    {
+      "name": "pytest",
+      "version": "8.4.2",
+      "metadata_url": "https://pypi.org/pypi/pytest/8.4.2/json",
+      "response_sha256": "4160e7ff2349347b2cd538efdc3a66e25e5d6a02cd9b3b6fbf2312a4e3d23e94",
+      "requires_python": ">=3.9",
+      "license_expression": null,
+      "license": "MIT",
+      "requires_dist": [
+        "colorama>=0.4; sys_platform == \"win32\"",
+        "exceptiongroup>=1; python_version < \"3.11\"",
+        "iniconfig>=1",
+        "packaging>=20",
+        "pluggy<2,>=1.5",
+        "pygments>=2.7.2",
+        "tomli>=1; python_version < \"3.11\"",
+        "argcomplete; extra == \"dev\"",
+        "attrs>=19.2; extra == \"dev\"",
+        "hypothesis>=3.56; extra == \"dev\"",
+        "mock; extra == \"dev\"",
+        "requests; extra == \"dev\"",
+        "setuptools; extra == \"dev\"",
+        "xmlschema; extra == \"dev\""
+      ],
+      "wheel": {
+        "filename": "pytest-8.4.2-py3-none-any.whl",
+        "sha256": "872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79",
+        "url": "https://files.pythonhosted.org/packages/a8/a4/20da314d277121d6534b3a980b29035dcd51e6744bd79075a6ce8fa4eb8d/pytest-8.4.2-py3-none-any.whl",
+        "size": 365750,
+        "requires_python": ">=3.9",
+        "yanked": false,
+        "uploaded_utc": "2025-09-04T14:34:20.226862Z"
+      },
+      "evidence": "D07 actual Windows CPython 3.11.9 x64 hash-locked install/build/test; this query checks official metadata"
+    },
+    {
+      "name": "ruff",
+      "version": "0.17.3",
+      "metadata_url": "https://pypi.org/pypi/ruff/0.17.3/json",
+      "response_sha256": "8c7c0d9a4defa3f62bdfeb308d25335720eed0c0960bdc9c64c2b9247b9a7a81",
+      "requires_python": ">=3.7",
+      "license_expression": "MIT",
+      "license": null,
+      "requires_dist": null,
+      "wheel": {
+        "filename": "ruff-0.17.3-py3-none-win_amd64.whl",
+        "sha256": "56b8ffb3f3b3cbccb8b76b71b38261b7ed982ef5d20f5b447b1b61a7f4949b24",
+        "url": "https://files.pythonhosted.org/packages/d0/a0/f08c1631bfd81faa6a90eaf70c37c786c11bed2046302b56bb506c25e1a0/ruff-0.17.3-py3-none-win_amd64.whl",
+        "size": 10341333,
+        "requires_python": ">=3.7",
+        "yanked": false,
+        "uploaded_utc": "2026-10-27T00:34:02.099291Z"
+      },
+      "evidence": "official metadata only; no isolated install or product execution in D21"
+    },
+    {
+      "name": "mypy",
+      "version": "2.4.1",
+      "metadata_url": "https://pypi.org/pypi/mypy/2.4.1/json",
+      "response_sha256": "7a117664785380511fe56aa00829f566616544933e5ab9ea34b4d4a7ffd5da41",
+      "requires_python": ">=3.10",
+      "license_expression": "MIT",
+      "license": null,
+      "requires_dist": [
+        "typing_extensions>=4.6.0; python_version < \"3.15\"",
+        "typing_extensions>=4.14.0; python_version >= \"3.15\"",
+        "mypy_extensions>=1.0.0",
+        "pathspec>=1.0.0",
+        "tomli>=1.1.0; python_version < \"3.11\"",
+        "librt>=0.16.0; platform_python_implementation != \"PyPy\"",
+        "ast-serialize<1.0.0,>=0.12.1",
+        "psutil>=4.0; extra == \"dmypy\"",
+        "setuptools>=50; extra == \"mypyc\"",
+        "lxml; extra == \"reports\"",
+        "pip; extra == \"install-types\"",
+        "orjson; extra == \"faster-cache\""
+      ],
+      "wheel": {
+        "filename": "mypy-2.4.1-cp311-cp311-win_amd64.whl",
+        "sha256": "6f7225951a277dd0d6add900731d487174b7d24ac133c09d670ed63b4d8cb90d",
+        "url": "https://files.pythonhosted.org/packages/6a/36/8b722b88c325d317354de7d10d8fb9d4dc0f958433e873a91fc4ed21a06e/mypy-2.4.1-cp311-cp311-win_amd64.whl",
+        "size": 11300972,
+        "requires_python": ">=3.10",
+        "yanked": false,
+        "uploaded_utc": "2026-10-28T19:21:48.724984Z"
+      },
+      "evidence": "official metadata only; no isolated install or product execution in D21"
+    }
+  ],
+  "installation_attempt": {
+    "state": "not-run",
+    "reason": "exec_command ProcessStart was rejected by automatic policy before PowerShell launch; no detailed reason supplied; did not retry",
+    "metadata_fallback": "D21 explicitly permits official metadata or isolated installation; implementation03 must still install/run and capture red-green"
+  }
+}

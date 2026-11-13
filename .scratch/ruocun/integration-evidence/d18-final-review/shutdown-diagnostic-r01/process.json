@@ -1,0 +1,28 @@
+{
+  "pid": 43816,
+  "creation_time": "134383409165710599",
+  "command": [
+    "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18f\\.scratch\\ruocun\\integration-evidence\\d18-final-review\\shutdown_probe.py",
+    "worker",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18f\\.scratch\\ruocun\\integration-evidence\\d18-final-review\\shutdown-diagnostic-r01"
+  ],
+  "environment_keys": [
+    "APPDATA",
+    "COMSPEC",
+    "LOCALAPPDATA",
+    "PATH",
+    "PATHEXT",
+    "PROGRAMDATA",
+    "PROGRAMFILES",
+    "PROGRAMFILES(X86)",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONUTF8",
+    "SYSTEMDRIVE",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR"
+  ]
+}

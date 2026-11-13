@@ -1,0 +1,9 @@
+{
+  "upstream_ref": "integration/ruocun-migration",
+  "upstream_sha": "3f8aabc4db36125b7012d47eb5aaa78a8534d7c2",
+  "sync_merge_sha": "0ec5def6946a9db760b7290003f8c50b8c5ceabb",
+  "psec_relevant_upstream_diff_empty": true,
+  "original_75_assets_unchanged": true,
+  "archive_sha256": "6647184698b96d71f6c62bdc9b233c31a4b160a1ee2f1b0ff273afbc7e6b4492",
+  "native_experiments_rerun": false
+}

@@ -1,0 +1,7 @@
+{
+  "description": "向 id 对应的后台 Shell 进程树请求停止。收到请求回执后，可用 BashOutput 确认是否已经退出。若停止结果无法确认，保留任务标识并查看状态。",
+  "descriptionEn": "Ask the runner to stop the background shell and its descendants by id. Use BashOutput to check whether the process has actually exited. Keep the ID if termination is still unconfirmed.",
+  "parameters": {
+    "id": "要停止的后台 Bash 任务标识。"
+  }
+}

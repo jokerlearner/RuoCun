@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1580 1040" role="img" aria-labelledby="title desc">
+<title id="title">编码代理的四种执行边界</title>
+<desc id="desc">比较普通宿主执行、仅Shell沙箱、独立工具执行环境、整个Agent放入隔离环境。图中虚线边界不表示安全强度相同。</desc>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#1e293b" stroke-width="0.6"/></pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0L10 4L0 8Z" fill="#fb923c"/></marker>
+  <style>
+    text{font-family:'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif;fill:#e2e8f0}
+    .title{font-size:30px;font-weight:700}.sub{font-size:18px;fill:#94a3b8}
+    .panel{fill:#111c31;stroke:#334155;stroke-width:1.5}.pt{font-size:23px;font-weight:700}
+    .region{fill:none;stroke:#64748b;stroke-width:1.4;stroke-dasharray:8 5}
+    .isolated{fill:#062d27;fill-opacity:.3;stroke:#34d399;stroke-width:1.6;stroke-dasharray:8 5}
+    .shellboundary{fill:#3b162c;fill-opacity:.3;stroke:#fb7185;stroke-width:1.6;stroke-dasharray:8 5}
+    .rlabel{font-size:16px;fill:#94a3b8}.green{fill:#34d399}.rose{fill:#fb7185}
+    .mask{fill:#0f172a}.agent{fill:#083344;fill-opacity:.65;stroke:#22d3ee;stroke-width:1.5}
+    .tool{fill:#064e3b;fill-opacity:.4;stroke:#34d399;stroke-width:1.5}
+    .hosttool{fill:#1e293b;stroke:#94a3b8;stroke-width:1.3}
+    .name{font-size:20px;font-weight:600;text-anchor:middle}.small{font-size:16px;fill:#cbd5e1;text-anchor:middle}
+    .note{font-size:18px;fill:#cbd5e1}.arrow{fill:none;stroke:#fb923c;stroke-width:2.2;marker-end:url(#arrow)}
+  </style>
+</defs>
+<rect width="1580" height="1040" fill="#0f172a"/><rect width="1580" height="1040" fill="url(#grid)"/>
+<!-- Panel and region boundaries -->
+<rect class="panel" x="40" y="120" width="730" height="350" rx="14"/>
+<rect class="panel" x="810" y="120" width="730" height="350" rx="14"/>
+<rect class="panel" x="40" y="510" width="730" height="350" rx="14"/>
+<rect class="panel" x="810" y="510" width="730" height="350" rx="14"/>
+<rect class="region" x="62" y="190" width="686" height="210" rx="10"/>
+<rect class="region" x="832" y="190" width="686" height="210" rx="10"/>
+<rect class="shellboundary" x="1120" y="210" width="370" height="160" rx="10"/>
+<rect class="isolated" x="330" y="590" width="410" height="190" rx="10"/>
+<rect class="isolated" x="1070" y="590" width="440" height="190" rx="10"/>
+<!-- Connections beneath opaque component masks -->
+<path class="arrow" d="M270 265H360"/>
+<path class="arrow" d="M1040 265H1145"/>
+<path class="arrow" d="M250 670H355"/>
+<path class="arrow" d="M1010 670H1095"/>
+<path class="arrow" d="M535 690V724"/>
+<path class="arrow" d="M1290 690V724"/>
+<!-- Component masks and colored boxes -->
+<rect class="mask" x="85" y="235" width="185" height="60" rx="7"/><rect class="agent" x="85" y="235" width="185" height="60" rx="7"/>
+<rect class="mask" x="360" y="235" width="330" height="60" rx="7"/><rect class="hosttool" x="360" y="235" width="330" height="60" rx="7"/>
+<rect class="mask" x="855" y="235" width="185" height="60" rx="7"/><rect class="agent" x="855" y="235" width="185" height="60" rx="7"/>
+<rect class="mask" x="855" y="325" width="185" height="50" rx="7"/><rect class="hosttool" x="855" y="325" width="185" height="50" rx="7"/>
+<rect class="mask" x="1145" y="250" width="320" height="70" rx="7"/><rect class="tool" x="1145" y="250" width="320" height="70" rx="7"/>
+<rect class="mask" x="80" y="635" width="170" height="70" rx="7"/><rect class="agent" x="80" y="635" width="170" height="70" rx="7"/>
+<rect class="mask" x="355" y="635" width="360" height="55" rx="7"/><rect class="tool" x="355" y="635" width="360" height="55" rx="7"/>
+<rect class="mask" x="355" y="725" width="360" height="40" rx="6"/><rect class="hosttool" x="355" y="725" width="360" height="40" rx="6"/>
+<rect class="mask" x="840" y="635" width="170" height="70" rx="7"/><rect class="hosttool" x="840" y="635" width="170" height="70" rx="7"/>
+<rect class="mask" x="1095" y="635" width="390" height="55" rx="7"/><rect class="agent" x="1095" y="635" width="390" height="55" rx="7"/>
+<rect class="mask" x="1095" y="725" width="390" height="40" rx="6"/><rect class="tool" x="1095" y="725" width="390" height="40" rx="6"/>
+<!-- Labels -->
+<text class="pt" x="64" y="162">A  普通本机执行</text>
+<text class="rlabel" x="80" y="215">宿主系统：以启动账户的权限运行</text>
+<text class="name" x="177" y="272">Agent 主控</text>
+<text class="name" x="525" y="272">文件工具 · Shell · 扩展</text>
+<text class="note" x="85" y="345">审批决定是否执行；OS 未因此增加隔离。</text>
+<text class="sub" x="64" y="438">适合可信本地工作流；审批本身不建立独立环境。</text>
+
+<text class="pt" x="834" y="162">B  本机 Shell 受限</text>
+<text class="rlabel" x="850" y="215">宿主系统</text>
+<text class="rlabel rose" x="1136" y="235">仅命令进入 OS 沙箱</text>
+<text class="name" x="947" y="272">Agent 主控</text>
+<text class="small" x="947" y="356">文件工具 · Hooks</text>
+<text class="name" x="1305" y="278">Shell 命令及其子进程</text>
+<text class="small" x="1305" y="304">DAO：Seatbelt / bubblewrap</text>
+<text class="sub" x="834" y="438">其他工具仍需各自约束；限制程度取决于实际策略。</text>
+
+<text class="pt" x="64" y="552">C  独立工具执行环境</text>
+<text class="rlabel" x="80" y="610">宿主系统</text>
+<text class="rlabel green" x="346" y="616">容器 / VM：通过接口执行任务</text>
+<text class="name" x="165" y="665">Agent 主控</text>
+<text class="small" x="165" y="690">模型调用与调度</text>
+<text class="name" x="535" y="670">执行服务 · Shell · 文件操作</text>
+<text class="small" x="535" y="752">项目副本 / 挂载 · 依赖 · 测试进程</text>
+<text class="sub" x="64" y="828">例：SWE-agent + SWE-ReX；实际文件工具也需接入。</text>
+
+<text class="pt" x="834" y="552">D  整个 Agent 放入隔离环境</text>
+<text class="rlabel" x="840" y="610">宿主系统</text>
+<text class="rlabel green" x="1086" y="616">容器 / VM：Agent 与本地工具一起运行</text>
+<text class="name" x="925" y="665">终端 / 界面</text>
+<text class="small" x="925" y="690">显示与输入</text>
+<text class="name" x="1290" y="670">Agent 主控 · 配置 · 会话</text>
+<text class="small" x="1290" y="752">文件工具 · Shell · 本地扩展</text>
+<text class="sub" x="834" y="828">外接服务、宿主 MCP、挂载和凭据仍有独立边界。</text>
+
+<text class="note" x="42" y="918">主控负责决定下一步动作；执行服务负责运行命令并返回输出。远程模型不需要装进容器。</text>
+<text class="note" x="42" y="956">直接共享的可写项目仍会被修改；使用项目副本或私有 clone，可先独立改动，再审查合回。</text>
+<text class="sub" x="42" y="995">示意图：虚线表示部署或策略边界，不代表不同实现具有相同的隔离强度。调研日期：2026-11-13。</text>
+<text class="title" x="40" y="48">独立沙箱环境：到底把哪一部分搬进去了？</text>
+<text class="sub" x="42" y="86">四种部署方式可以采用不同后端；“用了 Docker”仍需说明 Agent、工具、项目和共享资源分别在哪里。</text>
+</svg>

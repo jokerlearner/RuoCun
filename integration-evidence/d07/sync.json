@@ -1,0 +1,11 @@
+{
+  "root_integration": "4048910744a7aab60a9bc75d721df9262a403292",
+  "review_evidence_commit": "c00ce418083cabbedea9f0de7efeb4f7f76bff6d",
+  "synchronization_merge": "631def4a27507541b89e163ab7409440c74f7778",
+  "root_tip_is_ancestor": true,
+  "d07_source_and_committed_evidence_diff": [],
+  "max_relevant_relative_path_length": 91,
+  "business_chain_rerun": false,
+  "reason": "D17/root status material does not touch D07 inputs; reuse passed chain",
+  "source_and_raw_bytes_unchanged": true
+}

@@ -1,0 +1,13 @@
+{
+  "sensitive_values_present": true,
+  "match_present": false,
+  "values_or_names_recorded": false,
+  "files_scanned": 1575,
+  "indexed_files_verified": 1466,
+  "indexed_blob_bytes_equal": true,
+  "original_inputs_unchanged": true,
+  "unique_held_runtime_identities": 12,
+  "all_held_runtime_exits_zero": true,
+  "private_material_read": false,
+  "onefile_retried": false
+}

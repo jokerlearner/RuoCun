@@ -1,0 +1,22 @@
+{
+  "merge": "d719be86b5d768270620dedc7d8db9ed870ff35e",
+  "candidate": "1860c70ad6109dbd09ac80ac7a2a118d77818012",
+  "pytest": "18 passed in 9.79s",
+  "archive_files": 245,
+  "workers_bound_to_pid_creation_and_held_handle": 23,
+  "unconfirmed_ownership_cases": 9,
+  "diagnostic_entry_guard_cases": 1,
+  "real_os_completion_errors": [
+    995,
+    109
+  ],
+  "original_files": 874,
+  "original_rounds": 19,
+  "first_review_archive_files": 134,
+  "pending_archive_worker_receipts": 108,
+  "final_fix_archive_worker_receipts": 96,
+  "old_review_worker_receipts": 25,
+  "old_review_rejected_current_source_as_expected": true,
+  "old_review_passed_exact_historical_source_view": true,
+  "acceptance": "D18 standalone experiment technical correction accepted; product and final acceptance pending"
+}

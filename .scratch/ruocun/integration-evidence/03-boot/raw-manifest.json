@@ -1,0 +1,1596 @@
+{
+  "archive": "raw.zip",
+  "sha256": "a51f605698798e3384b872a01d88f5e7ae268259cdca14f04fac72148b0bf3f6",
+  "members": [
+    {
+      "path": "engineering/01-venv/command.json",
+      "size": 558,
+      "sha256": "1a0eb36c37ddc042d35d16b19c85f0f7e03127fb7fcf2dbe6dbfc326c1fb8259"
+    },
+    {
+      "path": "engineering/01-venv/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/01-venv/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/02-wheels/command.json",
+      "size": 653,
+      "sha256": "c8a4411d9d9035b605b5cd6fa255484b209c3f2d171acfc04284ba7fc3e5572c"
+    },
+    {
+      "path": "engineering/02-wheels/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/02-wheels/stdout.bin",
+      "size": 5652,
+      "sha256": "f6d0d06fb0bc368f615463d4edb36861253bbb9e848c80f933965da69c94e63c"
+    },
+    {
+      "path": "engineering/03-install-tools/command.json",
+      "size": 597,
+      "sha256": "ad2453c972b17be7f734f97728019218aae84880af0aad3bc145eb04911c6f40"
+    },
+    {
+      "path": "engineering/03-install-tools/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/03-install-tools/stdout.bin",
+      "size": 3651,
+      "sha256": "0bf617495aec51512f24a70c2059bb750843cbc4745cd55f4f3cd8d100ae8019"
+    },
+    {
+      "path": "engineering/04-closure/command.json",
+      "size": 494,
+      "sha256": "279d89cda4cfadaee8e527ce530622469b7be0685f82c77e6e80e7f9f7fe047a"
+    },
+    {
+      "path": "engineering/04-closure/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/04-closure/stdout.bin",
+      "size": 83,
+      "sha256": "12aa664c42ac49582456dc57f4c5c0c22a4faa31e29268e4312fead2a07b4d93"
+    },
+    {
+      "path": "engineering/05-build/command.json",
+      "size": 440,
+      "sha256": "411e77a38840b074904ffa511e908b1be0247cab1510c1c017294aa530db66d6"
+    },
+    {
+      "path": "engineering/05-build/stderr.bin",
+      "size": 517,
+      "sha256": "8b18ef21386c5798738bca69ce9dc25ba61d9a17cea589f2566d7ee4c93efda9"
+    },
+    {
+      "path": "engineering/05-build/stdout.bin",
+      "size": 84,
+      "sha256": "daf655f67d04984ca3cc852b07ef0777912cb148c256878a2f00488b0b5a8b60"
+    },
+    {
+      "path": "engineering/06-support-build/command.json",
+      "size": 510,
+      "sha256": "223d3d71c24117dc2115203d145df8e554b19d95dab4227c36212c814440e02a"
+    },
+    {
+      "path": "engineering/06-support-build/stderr.bin",
+      "size": 517,
+      "sha256": "8b18ef21386c5798738bca69ce9dc25ba61d9a17cea589f2566d7ee4c93efda9"
+    },
+    {
+      "path": "engineering/06-support-build/stdout.bin",
+      "size": 98,
+      "sha256": "cb7e06dc032bdc9d17a86838afc3ffd9b6e4ab0928d3e68b9d057c9b4c05edee"
+    },
+    {
+      "path": "engineering/07-direct-build/command.json",
+      "size": 503,
+      "sha256": "75be60708486708f453974b91a67363dc9a76cbb32954788dfafcd0f1cf218cf"
+    },
+    {
+      "path": "engineering/07-direct-build/stderr.bin",
+      "size": 244,
+      "sha256": "0a5e1527025f2a9a9a42f9c1cc91ca38eba339892556bfb8306f980e7af1c61c"
+    },
+    {
+      "path": "engineering/07-direct-build/stdout.bin",
+      "size": 55,
+      "sha256": "1aa108f9235605722365c3e88775b4df8b26c8d51051f868b0892911a2f4b586"
+    },
+    {
+      "path": "engineering/08-dev-install/command.json",
+      "size": 612,
+      "sha256": "79a173f5316d9b7b932c9c84028e7ae9b6eae08fc05fae576796d2c11eed4467"
+    },
+    {
+      "path": "engineering/08-dev-install/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/08-dev-install/stdout.bin",
+      "size": 357,
+      "sha256": "75ce276449afcb9fb32679dc657cfba5a81f1a8db63de427939dd7ddf5cbeb8f"
+    },
+    {
+      "path": "engineering/09-pytest/command.json",
+      "size": 441,
+      "sha256": "44856ad073a28b1a36d14cea03da2fb059d9a1ea0c645175e435ebff05843ab8"
+    },
+    {
+      "path": "engineering/09-pytest/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/09-pytest/stdout.bin",
+      "size": 707,
+      "sha256": "11a3a2afe3bfceff9a2fe46102bca5a61c261923dd7b2a492ff4a9b834241d51"
+    },
+    {
+      "path": "engineering/10-ruff/command.json",
+      "size": 463,
+      "sha256": "6f1d0378d483dcfadd3f117e995ea5568c6872a6729373f5601effea1bc7f1a2"
+    },
+    {
+      "path": "engineering/10-ruff/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/10-ruff/stdout.bin",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "engineering/11-mypy/command.json",
+      "size": 439,
+      "sha256": "6d2e3bbeceab22a519d1e88d90f463d51f2ba42bc2230a734ab1987313346178"
+    },
+    {
+      "path": "engineering/11-mypy/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/11-mypy/stdout.bin",
+      "size": 45,
+      "sha256": "ce32e21ee307d2da61637151f2f239cf8568be270711ff04e8e3025805ab7f57"
+    },
+    {
+      "path": "engineering/12-pipcheck/command.json",
+      "size": 452,
+      "sha256": "f56fd4138f8919d8a809167f6ec9ad84cf2dfaf9300743a2ab103406b464823c"
+    },
+    {
+      "path": "engineering/12-pipcheck/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/12-pipcheck/stdout.bin",
+      "size": 31,
+      "sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+    },
+    {
+      "path": "engineering/13-ruff-files/command.json",
+      "size": 484,
+      "sha256": "6a8c194d08a71324a16df7ae6fdac8b2632a92952a7d3266ba080e0fda3eef36"
+    },
+    {
+      "path": "engineering/13-ruff-files/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/13-ruff-files/stdout.bin",
+      "size": 1396,
+      "sha256": "51f433302d1c6747a6230e59ce3da81af297cdeee62f1b2fab05dc649b70350b"
+    },
+    {
+      "path": "engineering/14-artifacts/command.json",
+      "size": 496,
+      "sha256": "87da415ec036b1a35708e33b2610e0dffd4abac1b4431f13c9b43c67e91baf6b"
+    },
+    {
+      "path": "engineering/14-artifacts/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/14-artifacts/stdout.bin",
+      "size": 105,
+      "sha256": "db56dbb8a44b49ca4816870754f063de24c59000fad58143ad187a2239ea4904"
+    },
+    {
+      "path": "engineering/15-product-venv/command.json",
+      "size": 563,
+      "sha256": "ba7c40042822ac181429ed0ae0ab5f1234c3e6895213ab59d403a04862b41d3f"
+    },
+    {
+      "path": "engineering/15-product-venv/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/15-product-venv/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/16-support-venv/command.json",
+      "size": 563,
+      "sha256": "4dfa10902aacc1ec62d98f64a39289b1e4358778e6774b050ce8afd462b2666a"
+    },
+    {
+      "path": "engineering/16-support-venv/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/16-support-venv/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/17-reference-extract/command.json",
+      "size": 611,
+      "sha256": "2bc567f4d1e1aefff0d0a48299127bf9ddcd5f89157e3e66f3daaa847606ccf5"
+    },
+    {
+      "path": "engineering/17-reference-extract/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/17-reference-extract/stdout.bin",
+      "size": 1420,
+      "sha256": "44cea814ed42beef571f2d12c32d9290bccf2c4a90dde361b550d526bcedf0e2"
+    },
+    {
+      "path": "engineering/18-public-copy/command.json",
+      "size": 483,
+      "sha256": "d1f7d2d023ae02f4830469d523008a83be3699d0365bd1b1a8c222702418df46"
+    },
+    {
+      "path": "engineering/18-public-copy/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/18-public-copy/stdout.bin",
+      "size": 78,
+      "sha256": "6eb1cdd7eedb7a6d1ee7208449b990ac249463e70ef3a9f8e0ef5b14b62e4152"
+    },
+    {
+      "path": "engineering/19-product-install/command.json",
+      "size": 681,
+      "sha256": "e3898d62a873536dd0d92a62ab8a6f9d29b8655bff57281003a792e36589cd81"
+    },
+    {
+      "path": "engineering/19-product-install/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/19-product-install/stdout.bin",
+      "size": 184,
+      "sha256": "d7202c2ba675fb0e1635addc154480bedb7b5ae95ffeb40670b0fbd6b1f866e0"
+    },
+    {
+      "path": "engineering/20-support-install/command.json",
+      "size": 814,
+      "sha256": "6b6a35028dadeeeb259704d9d53a14897f676ae1004121eb65d39932c4dbd40d"
+    },
+    {
+      "path": "engineering/20-support-install/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/20-support-install/stdout.bin",
+      "size": 357,
+      "sha256": "75ce276449afcb9fb32679dc657cfba5a81f1a8db63de427939dd7ddf5cbeb8f"
+    },
+    {
+      "path": "engineering/21-oracle12/command.json",
+      "size": 569,
+      "sha256": "0d630b2d153b5c7630dc0ef17ce70295a24aa5702ea0fcb6040b68a83db2eb29"
+    },
+    {
+      "path": "engineering/21-oracle12/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/21-oracle12/stdout.bin",
+      "size": 417,
+      "sha256": "19c80d04a07de2278c3ea114561653c27db2001a9264aecd7010cb4d1119eb32"
+    },
+    {
+      "path": "engineering/22-product-origin/command.json",
+      "size": 623,
+      "sha256": "64f147a2009034ce59b9e5e76346ed06d3362fed30508a35d6005a1f5809833d"
+    },
+    {
+      "path": "engineering/22-product-origin/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/22-product-origin/stdout.bin",
+      "size": 1334,
+      "sha256": "3e281148c4e53948557bf088ad9023875e721fd8d52470a79385ff133ac63269"
+    },
+    {
+      "path": "engineering/23-support-origin/command.json",
+      "size": 623,
+      "sha256": "5ec217526ae4dc4d100c5c033dba87a0ede16b92cc276c1d143e47c5799bff5c"
+    },
+    {
+      "path": "engineering/23-support-origin/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/23-support-origin/stdout.bin",
+      "size": 1490,
+      "sha256": "0b2e8205b3cb673c4b8e905f114bf4efde81d2b6d606651bca16ac22285b2117"
+    },
+    {
+      "path": "engineering/24-boundaries/command.json",
+      "size": 627,
+      "sha256": "c4bf545a8995ee216c4d60f5bc87bba70a792838cb46874fc8211ff008d27979"
+    },
+    {
+      "path": "engineering/24-boundaries/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/24-boundaries/stdout.bin",
+      "size": 110,
+      "sha256": "90edf2b985de18981144fafa169a95634166c1e2b07e6b96f6163fd8d6d906f3"
+    },
+    {
+      "path": "engineering/25-cancellation/command.json",
+      "size": 629,
+      "sha256": "6e7a8c9d5e739b8ee82540012e22c309955f5c1522b031ae258a734415bb63e2"
+    },
+    {
+      "path": "engineering/25-cancellation/stderr.bin",
+      "size": 528,
+      "sha256": "9e219e2b1fe0a636e6983cadeadf851aab10e94a6e2404500736cd01c7e6f7be"
+    },
+    {
+      "path": "engineering/25-cancellation/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/26-deadline/command.json",
+      "size": 625,
+      "sha256": "73c3769194de437921689a8740c551b1451373f0d7c3a1f18a15d0e90c12100b"
+    },
+    {
+      "path": "engineering/26-deadline/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engineering/26-deadline/stdout.bin",
+      "size": 77,
+      "sha256": "75b265044ac44020bdbea6e2a12f83dda6762c8e23742756c97c5f3717b34f82"
+    },
+    {
+      "path": "external-checks/console-priority/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/console-priority/stdout.bin",
+      "size": 20,
+      "sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699"
+    },
+    {
+      "path": "external-checks/empty/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/empty/stdout.bin",
+      "size": 337,
+      "sha256": "b231d72c4f9b198e43680d4fce7f7867e4633b1140b4441131da6c852967a738"
+    },
+    {
+      "path": "external-checks/install/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/install/stdout.bin",
+      "size": 443,
+      "sha256": "d113c9d3a2e905700777163a8440a9c5313a03802f35b0ef1825f1883da09fa3"
+    },
+    {
+      "path": "external-checks/live/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/live/stdout.bin",
+      "size": 437,
+      "sha256": "0f42dbd6e40f228e8cdbf81f44d7932a466319813975d0012144ce82ec8dabcd"
+    },
+    {
+      "path": "external-checks/long-help/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/long-help/stdout.bin",
+      "size": 381,
+      "sha256": "72e12c0a09d19e1ce44ba27daea8785e8a7583dc0b350c19589183cf4d720d88"
+    },
+    {
+      "path": "external-checks/missing-python/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/missing-python/stdout.bin",
+      "size": 4504,
+      "sha256": "45d29b71118798bc77eebfa33a5671d2b46030fad3e38a2960604acd78e7d837"
+    },
+    {
+      "path": "external-checks/offline/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/offline/stdout.bin",
+      "size": 4381,
+      "sha256": "dcb6cf4b6022c2ca0bdb6e0c9135d3a6bb97e0328c9df005aca6a50a89b49da3"
+    },
+    {
+      "path": "external-checks/oracle/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/oracle/stdout.bin",
+      "size": 441,
+      "sha256": "007aec100a4bbedf5b766687b4d1b9f2802329c55e3cd4b06a830344bf87aee7"
+    },
+    {
+      "path": "external-checks/protocol/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/protocol/stdout.bin",
+      "size": 445,
+      "sha256": "98f74b07e1dc90a70ab3c01a6d5ea75f11d5e7f781a769db3c09ca18af16d0be"
+    },
+    {
+      "path": "external-checks/resource-missing-help/stderr.bin",
+      "size": 61,
+      "sha256": "73ba11a47307db76d381d078e4b521c16ca773e35fdf086a6b9b22b12c19da8f"
+    },
+    {
+      "path": "external-checks/resource-missing-help/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/resource-missing-offline/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/resource-missing-offline/stdout.bin",
+      "size": 4454,
+      "sha256": "562bcea35dd24379861678867f8349dc26d14e7814a4b4dda319814075f28947"
+    },
+    {
+      "path": "external-checks/resource-missing-version/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/resource-missing-version/stdout.bin",
+      "size": 20,
+      "sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699"
+    },
+    {
+      "path": "external-checks/restored-offline/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/restored-offline/stdout.bin",
+      "size": 4417,
+      "sha256": "9f3122a4067193ac94be8c61d577915f536c5c3c583ae19ec657e2e101972dd9"
+    },
+    {
+      "path": "external-checks/runtime/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/runtime/stdout.bin",
+      "size": 443,
+      "sha256": "f2a1a2e49c3b05c3b0b0427738ab238c565f65373e92191e4574308c30c10458"
+    },
+    {
+      "path": "external-checks/short-help/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/short-help/stdout.bin",
+      "size": 381,
+      "sha256": "72e12c0a09d19e1ce44ba27daea8785e8a7583dc0b350c19589183cf4d720d88"
+    },
+    {
+      "path": "external-checks/terminal/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-checks/terminal/stdout.bin",
+      "size": 445,
+      "sha256": "beb4723650d31a64009fa390e3c53804a6fe521bff44830d9c4994edc29214b8"
+    },
+    {
+      "path": "external-checks/unknown-suite/stderr.bin",
+      "size": 306,
+      "sha256": "87067f9d0665377af33c6ff5e1e56f8334dde47b452477ca8a4463203b92136b"
+    },
+    {
+      "path": "external-checks/unknown-suite/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-deadline/CONTROLLED.deadline/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-deadline/CONTROLLED.deadline/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-faults/CONTROLLED.slow/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-faults/CONTROLLED.slow/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-faults/cancel/CONTROLLED.slow/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-faults/cancel/CONTROLLED.slow/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-faults/cancel/summary.json",
+      "size": 1378,
+      "sha256": "6f2b7a9d0e90ec7ae79ad43a09b963f7f6873693d772e65eff47483771dec427"
+    },
+    {
+      "path": "external-outputs/empty/summary.json",
+      "size": 337,
+      "sha256": "b231d72c4f9b198e43680d4fce7f7867e4633b1140b4441131da6c852967a738"
+    },
+    {
+      "path": "external-outputs/install/summary.json",
+      "size": 443,
+      "sha256": "d113c9d3a2e905700777163a8440a9c5313a03802f35b0ef1825f1883da09fa3"
+    },
+    {
+      "path": "external-outputs/live/summary.json",
+      "size": 437,
+      "sha256": "0f42dbd6e40f228e8cdbf81f44d7932a466319813975d0012144ce82ec8dabcd"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.help/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.help/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.resource/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.resource/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.unimplemented/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.unimplemented/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.version/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/ENT-01.version/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/missing-python/summary.json",
+      "size": 4504,
+      "sha256": "45d29b71118798bc77eebfa33a5671d2b46030fad3e38a2960604acd78e7d837"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.help/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.help/stdout.bin",
+      "size": 381,
+      "sha256": "72e12c0a09d19e1ce44ba27daea8785e8a7583dc0b350c19589183cf4d720d88"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.resource/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.resource/stdout.bin",
+      "size": 383,
+      "sha256": "916401ddcf7335fa818688edcd19c58595cd971f996b506447705f23b427b13e"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.unimplemented/stderr.bin",
+      "size": 44,
+      "sha256": "afe02b17ebee6a5d28742b778f664e93b0b18e6a78ec7441a807ce67c40ba12e"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.unimplemented/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.version/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/offline/ENT-01.version/stdout.bin",
+      "size": 20,
+      "sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699"
+    },
+    {
+      "path": "external-outputs/offline/summary.json",
+      "size": 4381,
+      "sha256": "dcb6cf4b6022c2ca0bdb6e0c9135d3a6bb97e0328c9df005aca6a50a89b49da3"
+    },
+    {
+      "path": "external-outputs/oracle/summary.json",
+      "size": 441,
+      "sha256": "007aec100a4bbedf5b766687b4d1b9f2802329c55e3cd4b06a830344bf87aee7"
+    },
+    {
+      "path": "external-outputs/protocol/summary.json",
+      "size": 445,
+      "sha256": "98f74b07e1dc90a70ab3c01a6d5ea75f11d5e7f781a769db3c09ca18af16d0be"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.help/stderr.bin",
+      "size": 61,
+      "sha256": "73ba11a47307db76d381d078e4b521c16ca773e35fdf086a6b9b22b12c19da8f"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.help/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.resource/stderr.bin",
+      "size": 734,
+      "sha256": "c20d587c5772aa77d21e03238a744cd9573e73760b738515ca868d8cc18d03f5"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.resource/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.unimplemented/stderr.bin",
+      "size": 44,
+      "sha256": "afe02b17ebee6a5d28742b778f664e93b0b18e6a78ec7441a807ce67c40ba12e"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.unimplemented/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.version/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/ENT-01.version/stdout.bin",
+      "size": 20,
+      "sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699"
+    },
+    {
+      "path": "external-outputs/resource-missing-offline/summary.json",
+      "size": 4454,
+      "sha256": "562bcea35dd24379861678867f8349dc26d14e7814a4b4dda319814075f28947"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.help/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.help/stdout.bin",
+      "size": 381,
+      "sha256": "72e12c0a09d19e1ce44ba27daea8785e8a7583dc0b350c19589183cf4d720d88"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.resource/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.resource/stdout.bin",
+      "size": 383,
+      "sha256": "916401ddcf7335fa818688edcd19c58595cd971f996b506447705f23b427b13e"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.unimplemented/stderr.bin",
+      "size": 44,
+      "sha256": "afe02b17ebee6a5d28742b778f664e93b0b18e6a78ec7441a807ce67c40ba12e"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.unimplemented/stdout.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.version/stderr.bin",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "external-outputs/restored-offline/ENT-01.version/stdout.bin",
+      "size": 20,
+      "sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699"
+    },
+    {
+      "path": "external-outputs/restored-offline/summary.json",
+      "size": 4417,
+      "sha256": "9f3122a4067193ac94be8c61d577915f536c5c3c583ae19ec657e2e101972dd9"
+    },
+    {
+      "path": "external-outputs/runtime/summary.json",
+      "size": 443,
+      "sha256": "f2a1a2e49c3b05c3b0b0427738ab238c565f65373e92191e4574308c30c10458"
+    },
+    {
+      "path": "external-outputs/terminal/summary.json",
+      "size": 445,
+      "sha256": "beb4723650d31a64009fa390e3c53804a6fe521bff44830d9c4994edc29214b8"
+    },
+    {
+      "path": "oracle-build/build.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle-build/build.stdout.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/command.json",
+      "size": 3816,
+      "sha256": "6afeea119c3c98ef79a96813869f2e61d3398f1b819e19ef5b43c243e2004afd"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/environment.json",
+      "size": 865,
+      "sha256": "166e3ef186d9377322a69fedc19660632aa68f8ac915bc15bf30e8da9f810f32"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/input.json",
+      "size": 295,
+      "sha256": "083baf1a5e43650479597be0d080f906e0f47ea9337f3901f34fdda20a5c65bf"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/network.jsonl",
+      "size": 277,
+      "sha256": "d54a5ac498e191609360881e071b153d104bd5511d309656c8905ee0598416fd"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/request-001.body.json",
+      "size": 100141,
+      "sha256": "3386d55fd56408572eda96ad9f5e1a24f30185f8f4585e85295963d3f84158ad"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/requests.json",
+      "size": 112694,
+      "sha256": "0bad8d87f2e2ce8b1309d0aab5a1cbd70fc99fe5126b43a46c205289a18d696c"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/responses.json",
+      "size": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/home/.agent-deck/agents/17232-e025d3f9-8760-4bd4-897b-f6d159123372.json",
+      "size": 438,
+      "sha256": "f50971733bdd457799b770a6bb9ec516f87f05d8fd1fb51d74f17cecb5b4e098"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/home/.dao/config.json",
+      "size": 268,
+      "sha256": "f8dc1cd77a46b10b07437074291bcdd699acca8cb56808fb3666e3ece5a3709a"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/home/.dao/settings.json",
+      "size": 23,
+      "sha256": "fc9fe7401c2fa101ffe6a68373ee97bce5c970349d3537b6319a47ed866bec60"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/home/empty.gitconfig",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/home/empty.npmrc",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/home/global.npmrc",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.dao/.last-cleanup",
+      "size": 13,
+      "sha256": "568803a7b75c071d7df26fc28bc1b39c2c3dd400fbf71de1836e20e535ed6d13"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183319-xc6q/meta.json",
+      "size": 414,
+      "sha256": "33eab01cd067f1a4d9b2f2e2d2ded0b69b283a020ff3f50ec07b68cec5aa9f96"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183319-xc6q/session.db",
+      "size": 4096,
+      "sha256": "da63a52bdf62b3fc863995d79f497584be3ba97c1de4c55d1d301afbafab6cfc"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183319-xc6q/session.db-shm",
+      "size": 32768,
+      "sha256": "9461a98252c558e4f367502fa06450568ef10e236017195eaf606e05377d656a"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183319-xc6q/session.db-wal",
+      "size": 234872,
+      "sha256": "7ce92e1ce4442456e505323acea7476738a4fca8f72f4f799fd05323999ade7e"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183319-xc6q/state.json",
+      "size": 67610,
+      "sha256": "9169c68c4150ab3df96ae94247127512fbd805b60d480d20203ca16e1b59d0ff"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/COMMIT_EDITMSG",
+      "size": 8,
+      "sha256": "e80b71cd14d3cbd65f4173abcbfcf01a545dbca32a72d575108b553a648cc96f"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/HEAD",
+      "size": 31,
+      "sha256": "93ddbbcc6fa1e009da85c441214351d789d3dd7b13c61e6f03feec4fe38ef7e8"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/config",
+      "size": 130,
+      "sha256": "05becdb83bb897f6103c8d91439e2e9092144edf5b3955a746fce4975c12bfdc"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/description",
+      "size": 73,
+      "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/applypatch-msg.sample",
+      "size": 478,
+      "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/commit-msg.sample",
+      "size": 896,
+      "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/fsmonitor-watchman.sample",
+      "size": 4726,
+      "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/post-update.sample",
+      "size": 189,
+      "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/pre-applypatch.sample",
+      "size": 424,
+      "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/pre-commit.sample",
+      "size": 1649,
+      "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/pre-merge-commit.sample",
+      "size": 416,
+      "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/pre-push.sample",
+      "size": 1374,
+      "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/pre-rebase.sample",
+      "size": 4898,
+      "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/pre-receive.sample",
+      "size": 544,
+      "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/prepare-commit-msg.sample",
+      "size": 1492,
+      "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/push-to-checkout.sample",
+      "size": 2783,
+      "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/sendemail-validate.sample",
+      "size": 2308,
+      "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/hooks/update.sample",
+      "size": 3650,
+      "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/index",
+      "size": 65,
+      "sha256": "8a99f56bd3599f16165eb30aa3c8c626923a7d63855907a5b97b98b5c6cdea2b"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/info/exclude",
+      "size": 240,
+      "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/logs/HEAD",
+      "size": 165,
+      "sha256": "bfd82589af2c845bbf3468ee5c0a4c7959ea31bea55f0deebcc52081e55c322f"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/logs/refs/heads/oracle-fixture",
+      "size": 165,
+      "sha256": "bfd82589af2c845bbf3468ee5c0a4c7959ea31bea55f0deebcc52081e55c322f"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+      "size": 15,
+      "sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/objects/c1/34e739ce8c2eaefa9837f0ae78aafe93ecd18f",
+      "size": 130,
+      "sha256": "6d9d8b3cfd9f945a23cf740f7b1e1c143ed26ab039b556cd3ea45d65e1108cd2"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/.git/refs/heads/oracle-fixture",
+      "size": 41,
+      "sha256": "c3a5dd8b09f4c451357e39ecbeed1125c82683c5d6c47aa4beefbeb844874115"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/runtime/工作区 空格/材料 空格.txt",
+      "size": 25,
+      "sha256": "beb248230b7888abfcb613a177b7db7d51a99d9316faf6c70777cba737dbd0a2"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/sha256.json",
+      "size": 962,
+      "sha256": "ebd1f6cee43fbb30889a27bc56d65d714905f31756108866982883d1093c8398"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/stdout.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/summary.json",
+      "size": 636,
+      "sha256": "e359947f0e697cd74fc7bedad0b0b2303e47d5ea83d9306065debdc5950c14cf"
+    },
+    {
+      "path": "oracle12/test_deadline_stops_cli_and_cl0/evidence/tree-stop.json",
+      "size": 248,
+      "sha256": "8305b68bb97dd8ba38563a2e86998f60b76779b6763b7eb44c81a9e6d51bb420"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/command.json",
+      "size": 3816,
+      "sha256": "e3e48fff27ccc7e3f6d5b7b5b8ac7083736560b320463c3ee6b7877d9ecdcb24"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/environment.json",
+      "size": 865,
+      "sha256": "166e3ef186d9377322a69fedc19660632aa68f8ac915bc15bf30e8da9f810f32"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/input.json",
+      "size": 295,
+      "sha256": "083baf1a5e43650479597be0d080f906e0f47ea9337f3901f34fdda20a5c65bf"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/network.jsonl",
+      "size": 361,
+      "sha256": "29b0aabeb49f117922b0b8ccbd4e882cdca19013337b495866b6f93dc6d51963"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/request-001.body.json",
+      "size": 100141,
+      "sha256": "fc0f7c2aae02e6ed46d82db2ccf77fa02a0fa0a22cf8191652f3c8a651bae077"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/request-002.body.json",
+      "size": 100795,
+      "sha256": "54098bfd8bfe16a49a5247ebea3e442827e19148d43238e05fe10bec64f98576"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/requests.json",
+      "size": 226504,
+      "sha256": "c2d65cf73fd5a1a55883afda9d909a4dda9d1927ac9220acfb1305221be90a45"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/response-001.sse",
+      "size": 708,
+      "sha256": "e13faf2c73ce62db9c6c0aa876f191c129902742640e38f24082b198c6babd58"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/response-002.sse",
+      "size": 103,
+      "sha256": "a1c6c5129ac8b089602569a4e187c8e45bf8ca28cf47c457e2b27a7bd455dc53"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/responses.json",
+      "size": 2042,
+      "sha256": "de310d96507c48fc6c0bbbaf6dce991f9f5323adbe59074bd17733f95ab55974"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/home/.dao/config.json",
+      "size": 268,
+      "sha256": "c9b366b6f672fc42d421e9cd2041beab59fed28a1be8509f93f623f2cc8e5923"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/home/.dao/settings.json",
+      "size": 23,
+      "sha256": "fc9fe7401c2fa101ffe6a68373ee97bce5c970349d3537b6319a47ed866bec60"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/home/empty.gitconfig",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/home/empty.npmrc",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/home/global.npmrc",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.dao/.last-cleanup",
+      "size": 13,
+      "sha256": "ef18d2c48481a9c717ec9c615cb699b1dd5a1247b9b5fc643a3533f718eab96d"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183256-nyjc/meta.json",
+      "size": 414,
+      "sha256": "118dd6ba20753161ddc24dc6d02f07ada1830929385389bbe15c3c3f2b60c8be"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183256-nyjc/perm-trace.jsonl",
+      "size": 233,
+      "sha256": "2854951a22be2918300b14208f74873ea39cadfab9b328ec7b447a9bbed5b0b3"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183256-nyjc/session.db",
+      "size": 180224,
+      "sha256": "d245ba75366ccd68c1cf263c2f2c6dcde103d9cfa5aa69fd40158f609111e13b"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183256-nyjc/state.json",
+      "size": 68315,
+      "sha256": "f76b24e8ec807bc7d4085441ea29973186de45bd8cd1d81caa7fdc9f78536e40"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183256-nyjc/tool-trace.jsonl",
+      "size": 328,
+      "sha256": "2f5e2186d763459f5aa34e6683e3350d118a627201da1c64bf4f63b77f2881fc"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/COMMIT_EDITMSG",
+      "size": 8,
+      "sha256": "e80b71cd14d3cbd65f4173abcbfcf01a545dbca32a72d575108b553a648cc96f"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/HEAD",
+      "size": 31,
+      "sha256": "93ddbbcc6fa1e009da85c441214351d789d3dd7b13c61e6f03feec4fe38ef7e8"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/config",
+      "size": 130,
+      "sha256": "05becdb83bb897f6103c8d91439e2e9092144edf5b3955a746fce4975c12bfdc"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/description",
+      "size": 73,
+      "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/applypatch-msg.sample",
+      "size": 478,
+      "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/commit-msg.sample",
+      "size": 896,
+      "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/fsmonitor-watchman.sample",
+      "size": 4726,
+      "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/post-update.sample",
+      "size": 189,
+      "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/pre-applypatch.sample",
+      "size": 424,
+      "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/pre-commit.sample",
+      "size": 1649,
+      "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/pre-merge-commit.sample",
+      "size": 416,
+      "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/pre-push.sample",
+      "size": 1374,
+      "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/pre-rebase.sample",
+      "size": 4898,
+      "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/pre-receive.sample",
+      "size": 544,
+      "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/prepare-commit-msg.sample",
+      "size": 1492,
+      "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/push-to-checkout.sample",
+      "size": 2783,
+      "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/sendemail-validate.sample",
+      "size": 2308,
+      "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/hooks/update.sample",
+      "size": 3650,
+      "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/index",
+      "size": 65,
+      "sha256": "8a99f56bd3599f16165eb30aa3c8c626923a7d63855907a5b97b98b5c6cdea2b"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/info/exclude",
+      "size": 240,
+      "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/logs/HEAD",
+      "size": 165,
+      "sha256": "99d19cd5d70e96b98e5e52b16915efd7b489ab6f7eb130aae70e678b4d9af375"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/logs/refs/heads/oracle-fixture",
+      "size": 165,
+      "sha256": "99d19cd5d70e96b98e5e52b16915efd7b489ab6f7eb130aae70e678b4d9af375"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+      "size": 15,
+      "sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/objects/c7/be50bc5f3a08eb5d23250c8351ff5a0892b886",
+      "size": 129,
+      "sha256": "be0250cfc7e5d64e0adfd67cbdaad18e89676a7e6eeb29a71a30c12cabc5fc95"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/.git/refs/heads/oracle-fixture",
+      "size": 41,
+      "sha256": "573caa6cf9dccb4fa4c0b8483670fee27662a7db7d004ee6d13c2f255bcb6224"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/runtime/工作区 空格/材料 空格.txt",
+      "size": 25,
+      "sha256": "beb248230b7888abfcb613a177b7db7d51a99d9316faf6c70777cba737dbd0a2"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/sha256.json",
+      "size": 1149,
+      "sha256": "e2d5bc501f6fbe655e2f0834de2a23f4262c19ff87685d2774d81be44453cbe4"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/stdout.txt",
+      "size": 58,
+      "sha256": "208feafe8370ee6747faa876177c644ac5196bf9412432ebcacb73500c37ffd7"
+    },
+    {
+      "path": "oracle12/test_frozen_cli_returns_read_r0/evidence/summary.json",
+      "size": 763,
+      "sha256": "870c18f11bc93f3c105c361580cc94dd71a1801a0b2cbf3cd24c1424dd4f3db2"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/command.json",
+      "size": 3816,
+      "sha256": "0e2ef691abd7097228cce32d0cec698f520e300ba2a334c7c06472b9fa29bb8b"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/environment.json",
+      "size": 865,
+      "sha256": "166e3ef186d9377322a69fedc19660632aa68f8ac915bc15bf30e8da9f810f32"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/input.json",
+      "size": 295,
+      "sha256": "083baf1a5e43650479597be0d080f906e0f47ea9337f3901f34fdda20a5c65bf"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/network.jsonl",
+      "size": 445,
+      "sha256": "a9fccaa9ec1d166d728b8f4f02e5c66d3e236f39c6abd608d9a65852472db0f3"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/request-001.body.json",
+      "size": 100141,
+      "sha256": "bc239def181be9942ca3b7522b258bc1bcaadfaac05a2dfffff8b1dd8ddf6888"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/request-002.body.json",
+      "size": 100746,
+      "sha256": "e51b1e677288b4949a8e7ad786a44a5f1246c5b76920bf0f9dae1d496e9051c8"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/request-003.body.json",
+      "size": 101229,
+      "sha256": "596a74b0aa267766dcfc5745adbb3c3998d578260b25b20c6934d1cccbbc3878"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/requests.json",
+      "size": 340764,
+      "sha256": "dab1666394f4681fe8fee9729ea89a660589601dd16a4f109def3acc35a8a249"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/response-001.sse",
+      "size": 253,
+      "sha256": "881fc6063c448e4062d871573ff7e05d30f7c3d6fa6c8fce4410fe914abfcba4"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/response-002.sse",
+      "size": 708,
+      "sha256": "e13faf2c73ce62db9c6c0aa876f191c129902742640e38f24082b198c6babd58"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/response-003.sse",
+      "size": 103,
+      "sha256": "a1c6c5129ac8b089602569a4e187c8e45bf8ca28cf47c457e2b27a7bd455dc53"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/responses.json",
+      "size": 2593,
+      "sha256": "536c005d92817b0a73b7dcf8851027692acafe6c91fd7046a1affd55579b238f"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/home/.dao/config.json",
+      "size": 268,
+      "sha256": "ab4a6338f73ab6fbb2daf12d9be66d2a6784955e12229379eea434e9c9b9b4e1"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/home/.dao/settings.json",
+      "size": 23,
+      "sha256": "fc9fe7401c2fa101ffe6a68373ee97bce5c970349d3537b6319a47ed866bec60"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/home/empty.gitconfig",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/home/empty.npmrc",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/home/global.npmrc",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.dao/.last-cleanup",
+      "size": 13,
+      "sha256": "b918a7f588aea2dbb24e67597f63f4bbee4c0d46734ab71e721f4eb79dc6159d"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183307-0xll/meta.json",
+      "size": 415,
+      "sha256": "46336e3b3e116ac0257904bbf36d2c09df016a04b6e55f1bc1ab9a6839b4cbe0"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183307-0xll/perm-trace.jsonl",
+      "size": 233,
+      "sha256": "1034fb56e287e42fc565b5dc1f62d7c08adfc43168b15bd9022fd26e5603f6cf"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183307-0xll/session.db",
+      "size": 180224,
+      "sha256": "ccc8fa14d3422e6922402be2358a18b603eb4c0013c2bef0b4eb4d6a461d1077"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183307-0xll/state.json",
+      "size": 68751,
+      "sha256": "d87c162c5a0c5861f264055b1110a4db8d77cd5c82479540022e63367a479427"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.dao/sessions/20261105-183307-0xll/tool-trace.jsonl",
+      "size": 327,
+      "sha256": "91d37696c3ae4165a649116ad9b91d4a1c251e8a0caef58e705653e591637965"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/COMMIT_EDITMSG",
+      "size": 8,
+      "sha256": "e80b71cd14d3cbd65f4173abcbfcf01a545dbca32a72d575108b553a648cc96f"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/HEAD",
+      "size": 31,
+      "sha256": "93ddbbcc6fa1e009da85c441214351d789d3dd7b13c61e6f03feec4fe38ef7e8"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/config",
+      "size": 130,
+      "sha256": "05becdb83bb897f6103c8d91439e2e9092144edf5b3955a746fce4975c12bfdc"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/description",
+      "size": 73,
+      "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/applypatch-msg.sample",
+      "size": 478,
+      "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/commit-msg.sample",
+      "size": 896,
+      "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/fsmonitor-watchman.sample",
+      "size": 4726,
+      "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/post-update.sample",
+      "size": 189,
+      "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/pre-applypatch.sample",
+      "size": 424,
+      "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/pre-commit.sample",
+      "size": 1649,
+      "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/pre-merge-commit.sample",
+      "size": 416,
+      "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/pre-push.sample",
+      "size": 1374,
+      "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/pre-rebase.sample",
+      "size": 4898,
+      "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/pre-receive.sample",
+      "size": 544,
+      "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/prepare-commit-msg.sample",
+      "size": 1492,
+      "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/push-to-checkout.sample",
+      "size": 2783,
+      "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/sendemail-validate.sample",
+      "size": 2308,
+      "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/hooks/update.sample",
+      "size": 3650,
+      "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/index",
+      "size": 65,
+      "sha256": "8a99f56bd3599f16165eb30aa3c8c626923a7d63855907a5b97b98b5c6cdea2b"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/info/exclude",
+      "size": 240,
+      "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/logs/HEAD",
+      "size": 165,
+      "sha256": "8e5fdaf5309f32e6104f3e7f81da80e7da95b6ff9949e13c20c018b06a657f06"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/logs/refs/heads/oracle-fixture",
+      "size": 165,
+      "sha256": "8e5fdaf5309f32e6104f3e7f81da80e7da95b6ff9949e13c20c018b06a657f06"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+      "size": 15,
+      "sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/objects/f1/4d005792c319b2bb276abcc10ca02e242bfbc0",
+      "size": 130,
+      "sha256": "11b991eb8d2df0aa5009fa6fae09d57018074a29317b03a02ca8b0547bd94629"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/.git/refs/heads/oracle-fixture",
+      "size": 41,
+      "sha256": "575861f1a3c5a5e01f01559822d832b988ed57de2032d424bb866f5d81aed840"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/runtime/工作区 空格/材料 空格.txt",
+      "size": 25,
+      "sha256": "beb248230b7888abfcb613a177b7db7d51a99d9316faf6c70777cba737dbd0a2"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/sha256.json",
+      "size": 1334,
+      "sha256": "9d82b191780429b591295b8e88fabb0f24335e3cc0a81dd9b13ed434c0defa2a"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/stdout.txt",
+      "size": 77,
+      "sha256": "da2e95af851c7e7e139681705bbcfd904bc58cc672789cad369322489aafc7c8"
+    },
+    {
+      "path": "oracle12/test_headless_rejects_read_fir0/evidence/summary.json",
+      "size": 809,
+      "sha256": "a1c16f1145615c22cc398e030ec9324c5a1b4cd096108527c058d8162c3afd2a"
+    }
+  ]
+}

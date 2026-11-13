@@ -1,0 +1,39 @@
+{
+  "branch": "merge/02-15",
+  "base": "f2c96cbf5dad6f4ec011374d67bbd66210d65084",
+  "merge02": "eefab839dd9c94fd65f92cb2c75523ae2dfc2c0c",
+  "mergeD15": "d09ca8bfa6ade02624d019b49c9979632c23a8b4",
+  "02": {
+    "pytest": "12 passed in 37.41s",
+    "basetemp": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m02\\.worktrees\\t02",
+    "junit": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m02\\.worktrees\\pytest02.xml",
+    "source_tests": "190 passed across 6 files; source02/result.json and stdout.txt",
+    "source805_unchanged": true,
+    "paid_calls": 0,
+    "fake_requests": [
+      2,
+      3,
+      1
+    ],
+    "cleanup": "child_exited/server_closed true; deadline tree stop true; no matching processes observed",
+    "existing_manifest_git_and_worktree_hashes": 90,
+    "old_node24_status": "ENV preserved, raw source failed exit 3221226505; no new Node24 run"
+  },
+  "D15": {
+    "status": "SETUP-ENV, stopped before run_experiment.py",
+    "copy_exit_code": 1,
+    "error": "shutil.Error: deep node_modules source path Errno 2",
+    "example_source": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\impl-d15-extensions\\.scratch\\ruocun-discovery\\experiments\\extensions\\.runtime\\source\\node_modules\\@traceloop\\instrumentation-anthropic\\node_modules\\@opentelemetry\\api-logs\\build\\esm\\platform\\browser\\globalThis.d.ts",
+    "source_path_length": 261,
+    "normal_exists": false,
+    "extended_exists": true,
+    "source805_members_checked": 805,
+    "source805_mismatches": [],
+    "old_raw_hash_and_git_blob_files_checked": 144,
+    "new_experiment_run": "not-run"
+  },
+  "limitations": [
+    "No live model, Windows Terminal, or product acceptance",
+    "D15 independent 11 test rerun not completed"
+  ]
+}

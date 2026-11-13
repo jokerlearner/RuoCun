@@ -1,0 +1,360 @@
+{
+  "pipe-oserror": {
+    "case": {
+      "id": "CONTROLLED.pipe",
+      "argv": [
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-c",
+        "import time; time.sleep(30)"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\r2-faults\\pipe-oserror\\CONTROLLED.pipe",
+      "expected": {
+        "exit": 0,
+        "contains": "",
+        "stderr": false
+      },
+      "expected_source": "independent Task03 failed-wait cleanup requirement",
+      "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+      "process": {
+        "pid": 17368,
+        "executable": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+        "spawn_observed_monotonic_ns": 158032296000000,
+        "identity": "owned subprocess.Popen process/handle; no PID-based reacquisition"
+      },
+      "status": "failed",
+      "logical_exit": 1,
+      "reason": "OSError",
+      "failure": {
+        "operation": "spawn-or-communicate",
+        "exception": "OSError",
+        "errno": 5
+      },
+      "exit": 1,
+      "output_complete": false,
+      "cleanup": {
+        "process_started": true,
+        "command_joined": true,
+        "streams_closed": true,
+        "stop_requested": true,
+        "errors": [],
+        "workspace_retained": true
+      },
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "running_at_execute_return": false,
+    "reviewer_cleanup": [
+      {
+        "pid": 17368,
+        "actual_argv": [
+          "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+          "-I",
+          "-X",
+          "utf8",
+          "-c",
+          "import time; time.sleep(30)"
+        ],
+        "real_exit": 1,
+        "streams_closed": true
+      }
+    ]
+  },
+  "cancel": {
+    "driver_exit": 130,
+    "report": {
+      "schema_version": 1,
+      "suite": "offline",
+      "scope": "task03 implemented subset",
+      "cases": [
+        {
+          "id": "ENT-01.version",
+          "argv": [
+            "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+            "-I",
+            "-X",
+            "utf8",
+            "-m",
+            "ruocun",
+            "--version"
+          ],
+          "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\r2-faults\\cancel\\ENT-01.version",
+          "expected": {
+            "exit": 0,
+            "contains": "RuoCun v0.1.0.dev0\n",
+            "stderr": false
+          },
+          "expected_source": "frozen src/index.ts:216-220; installed distribution metadata; R-02",
+          "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+          "process": {
+            "pid": 44440,
+            "executable": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+            "spawn_observed_monotonic_ns": 158032328000000,
+            "identity": "owned subprocess.Popen process/handle; no PID-based reacquisition"
+          },
+          "status": "cancelled",
+          "logical_exit": 130,
+          "reason": "interrupted",
+          "failure": {
+            "operation": "spawn-or-communicate",
+            "exception": "KeyboardInterrupt"
+          },
+          "exit": 1,
+          "output_complete": false,
+          "cleanup": {
+            "process_started": true,
+            "command_joined": true,
+            "streams_closed": true,
+            "stop_requested": true,
+            "errors": [],
+            "workspace_retained": true
+          },
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ENT-01.help",
+          "status": "not-run",
+          "reason": "cancelled"
+        },
+        {
+          "id": "ENT-01.resource",
+          "status": "not-run",
+          "reason": "cancelled"
+        },
+        {
+          "id": "ENT-01.unimplemented",
+          "status": "not-run",
+          "reason": "cancelled"
+        }
+      ],
+      "status": "not-passed",
+      "logical_exit": 130,
+      "cleanup": {
+        "commands_joined": true,
+        "streams_closed": true,
+        "workspace_retained": true
+      }
+    },
+    "reviewer_cleanup": [
+      {
+        "pid": 44440,
+        "actual_argv": [
+          "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+          "-I",
+          "-X",
+          "utf8",
+          "-c",
+          "import time; time.sleep(30)"
+        ],
+        "real_exit": 1,
+        "streams_closed": true
+      }
+    ]
+  },
+  "unconfirmed": {
+    "driver_exit": 1,
+    "report": {
+      "schema_version": 1,
+      "suite": "offline",
+      "scope": "task03 implemented subset",
+      "cases": [
+        {
+          "id": "ENT-01.version",
+          "argv": [
+            "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+            "-I",
+            "-X",
+            "utf8",
+            "-m",
+            "ruocun",
+            "--version"
+          ],
+          "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\r2-faults\\unconfirmed\\ENT-01.version",
+          "expected": {
+            "exit": 0,
+            "contains": "RuoCun v0.1.0.dev0\n",
+            "stderr": false
+          },
+          "expected_source": "frozen src/index.ts:216-220; installed distribution metadata; R-02",
+          "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+          "process": {
+            "pid": 30668,
+            "executable": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+            "spawn_observed_monotonic_ns": 158032343000000,
+            "identity": "owned subprocess.Popen process/handle; no PID-based reacquisition"
+          },
+          "status": "cleanup-failed",
+          "logical_exit": 1,
+          "reason": "OSError",
+          "failure": {
+            "operation": "spawn-or-communicate",
+            "exception": "OSError",
+            "errno": 5
+          },
+          "exit": null,
+          "output_complete": false,
+          "cleanup": {
+            "process_started": true,
+            "command_joined": false,
+            "streams_closed": true,
+            "stop_requested": true,
+            "errors": [
+              {
+                "operation": "poll",
+                "exception": "OSError",
+                "errno": 5
+              },
+              {
+                "operation": "wait",
+                "exception": "OSError",
+                "errno": 5
+              },
+              {
+                "operation": "poll",
+                "exception": "OSError",
+                "errno": 5
+              }
+            ],
+            "workspace_retained": true
+          },
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ENT-01.help",
+          "status": "not-run",
+          "reason": "cleanup-failed"
+        },
+        {
+          "id": "ENT-01.resource",
+          "status": "not-run",
+          "reason": "cleanup-failed"
+        },
+        {
+          "id": "ENT-01.unimplemented",
+          "status": "not-run",
+          "reason": "cleanup-failed"
+        }
+      ],
+      "status": "cleanup-failed",
+      "logical_exit": 1,
+      "cleanup": {
+        "commands_joined": false,
+        "streams_closed": true,
+        "workspace_retained": true
+      }
+    },
+    "reviewer_cleanup": [
+      {
+        "pid": 30668,
+        "actual_argv": [
+          "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+          "-I",
+          "-X",
+          "utf8",
+          "-c",
+          "import time; time.sleep(30)"
+        ],
+        "real_exit": 1,
+        "streams_closed": true
+      }
+    ]
+  },
+  "confirmation-interrupt": {
+    "driver_exit": 130,
+    "report": {
+      "schema_version": 1,
+      "suite": "offline",
+      "scope": "task03 implemented subset",
+      "cases": [
+        {
+          "id": "ENT-01.version",
+          "argv": [
+            "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+            "-I",
+            "-X",
+            "utf8",
+            "-m",
+            "ruocun",
+            "--version"
+          ],
+          "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\r2-faults\\confirmation-interrupt\\ENT-01.version",
+          "expected": {
+            "exit": 0,
+            "contains": "RuoCun v0.1.0.dev0\n",
+            "stderr": false
+          },
+          "expected_source": "frozen src/index.ts:216-220; installed distribution metadata; R-02",
+          "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+          "process": {
+            "pid": 132,
+            "executable": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+            "spawn_observed_monotonic_ns": 158032375000000,
+            "identity": "owned subprocess.Popen process/handle; no PID-based reacquisition"
+          },
+          "status": "cancelled",
+          "logical_exit": 130,
+          "exit": 0,
+          "output_complete": true,
+          "cleanup": {
+            "process_started": true,
+            "command_joined": true,
+            "streams_closed": true,
+            "stop_requested": false,
+            "errors": [
+              {
+                "operation": "wait",
+                "exception": "KeyboardInterrupt"
+              }
+            ],
+            "workspace_retained": true
+          },
+          "reason": "interrupted during cleanup",
+          "stdout_sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ENT-01.help",
+          "status": "not-run",
+          "reason": "cancelled"
+        },
+        {
+          "id": "ENT-01.resource",
+          "status": "not-run",
+          "reason": "cancelled"
+        },
+        {
+          "id": "ENT-01.unimplemented",
+          "status": "not-run",
+          "reason": "cancelled"
+        }
+      ],
+      "status": "not-passed",
+      "logical_exit": 130,
+      "cleanup": {
+        "commands_joined": true,
+        "streams_closed": true,
+        "workspace_retained": true
+      }
+    },
+    "reviewer_cleanup": [
+      {
+        "pid": 132,
+        "actual_argv": [
+          "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support-r2\\Scripts\\python.exe",
+          "-I",
+          "-X",
+          "utf8",
+          "-m",
+          "ruocun",
+          "--version"
+        ],
+        "real_exit": 0,
+        "streams_closed": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "authorization": "root message: only public Node22 exe and node_modules; no private homes/runs/dist read",
+  "node_source": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\impl-02-oracle\\.worktrees\\oracle\\node22\\node_modules\\node\\bin\\node.exe",
+  "node_target": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.cache\\merge03\\node.exe",
+  "node_sha256": "dccc52de28d8df2ee22d2062424f8c563070d95d8ad70c54c4bf01d590dec14f",
+  "deps_source": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\impl-02-oracle\\.worktrees\\oracle-node22\\source\\node_modules",
+  "deps_target": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.cache\\merge03\\oracle\\source\\node_modules",
+  "files_copied": 30284,
+  "dependency_tree_manifest_sha256": "592712d72ae02153c57ee702f360a122917e51dcdf855817155ee6784ea80ca8",
+  "source_lock_sha256": "776a0c18759a9c94389b73f0c6e83dab668a1884a520e3a4e01c8d83f11aeebd"
+}

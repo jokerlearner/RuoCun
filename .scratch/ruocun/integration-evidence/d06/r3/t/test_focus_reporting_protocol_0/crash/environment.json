@@ -1,0 +1,19 @@
+{
+  "evidence_kind": "automated",
+  "hitl": "pending",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "os": "Windows-10-10.0.26200-SP0",
+  "input_backend": "Win32PipeInput",
+  "input_reader": "Win32PipeInput",
+  "output_backend": "ProtocolOutput",
+  "duration": 20,
+  "token_ms": 30,
+  "graphics_mode": "off",
+  "wt_session_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dependencies": {
+    "prompt_toolkit": "3.0.52",
+    "rich": "14.1.0",
+    "wcwidth": "0.9.4"
+  },
+  "lock_sha256": "79df88ff07692194aeb33f5a737166ed48ce954673f5d333a7968b6fba03ae7e"
+}

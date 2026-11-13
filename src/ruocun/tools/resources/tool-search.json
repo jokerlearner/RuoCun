@@ -1,0 +1,4 @@
+{
+  "description": "用工具名或一段用途描述查找尚未加载的工具。命中的工具会在本会话启用。结果提供名称和说明，内置工具还会列出参数。",
+  "descriptionEn": "Find deferred tools using a name or a short description. Matches become available to this session. Results show each name and purpose, with parameter schemas for built-in tools."
+}

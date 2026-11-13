@@ -1,0 +1,10 @@
+{
+  "original_relative_path": "pip",
+  "retained_under_ignored_path": ".scratch/ruocun-discovery/experiments/durable-io/.t/stray-pip-cache",
+  "cache_sha256": {
+    "cache/http-v2/a/1/9/5/3/a19537d3cf37c122db841d6fe4cd322bc10d1a558bb00d146b85cb9a": "4e350ef1311bf58a38ff43b461c8a380996739f35fb62deb8b553290e3055483",
+    "cache/http-v2/a/1/9/5/3/a19537d3cf37c122db841d6fe4cd322bc10d1a558bb00d146b85cb9a.body": "ddcc5716b60d99dc79f9e354f35ec1594b365d6ed3e85a2f5b2819aa572ab75a",
+    "cache/selfcheck/a554c20dc8546043ae797bf3ba1b20e512ff9d48a7e7b06f0b592ee7": "25c5b00a64fcb95bb5b56f899ef4cc365729e13ab8493e480ce68fa5b09f8161"
+  },
+  "repository_root_cache_absent": true
+}

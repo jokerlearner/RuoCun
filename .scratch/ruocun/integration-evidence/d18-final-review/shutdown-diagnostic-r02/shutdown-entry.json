@@ -1,0 +1,12 @@
+{
+  "python_atexit_reached": true,
+  "evidence_kind": "review-only diagnostic-write-boundary-injection",
+  "native_diagnostic_failure_tested": false,
+  "application_pending_owner_count": 1,
+  "native_still_pending": true,
+  "event_open": true,
+  "actual_pid": 35416,
+  "creation_time": "134383411582897666",
+  "safety_callback_native_termination_before_global_teardown": true,
+  "no_actual_use_after_free_attempted": true
+}

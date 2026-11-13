@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ruocun-dev-support"
+version = "0.1.0"
+description = "RuoCun development acceptance and frozen source oracle support"
+requires-python = "==3.11.*"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["ruocun_acceptance", "oracle"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/ruocun_acceptance", "/oracle", "/pyproject.toml", "/LICENSE"]

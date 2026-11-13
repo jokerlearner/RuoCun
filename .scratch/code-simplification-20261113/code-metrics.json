@@ -1,0 +1,3223 @@
+{
+  "root": "D:\\java supplement\\Firstcode\\RuoCun",
+  "generated_at_utc": "2026-11-13T03:26:25.217479+00:00",
+  "method": "All current src/ruocun .py files including untracked files; groups by first subdirectory, root files together; physical lines split on LF; blank lines take priority; ast locates module/class/function first-statement string docstrings; tokenize counts remaining non-trivia token lines as code; nonempty lines without code are comment/docstring; inline comments remain code lines; data/prompt strings remain code.",
+  "excluded_dirs": [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "node_modules"
+  ],
+  "excluded_suffixes": [
+    ".pyc",
+    ".pyo"
+  ],
+  "modules": {
+    "(root)": {
+      "files": 9,
+      "physical": 980,
+      "code": 760,
+      "comment_docstring": 78,
+      "blank": 142
+    },
+    "agent": {
+      "files": 36,
+      "physical": 10128,
+      "code": 8966,
+      "comment_docstring": 172,
+      "blank": 990
+    },
+    "approval": {
+      "files": 4,
+      "physical": 92,
+      "code": 67,
+      "comment_docstring": 5,
+      "blank": 20
+    },
+    "client": {
+      "files": 7,
+      "physical": 1938,
+      "code": 1503,
+      "comment_docstring": 206,
+      "blank": 229
+    },
+    "commands": {
+      "files": 4,
+      "physical": 277,
+      "code": 210,
+      "comment_docstring": 9,
+      "blank": 58
+    },
+    "config": {
+      "files": 14,
+      "physical": 1103,
+      "code": 827,
+      "comment_docstring": 62,
+      "blank": 214
+    },
+    "data": {
+      "files": 2,
+      "physical": 42,
+      "code": 36,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    "hooks": {
+      "files": 3,
+      "physical": 359,
+      "code": 301,
+      "comment_docstring": 5,
+      "blank": 53
+    },
+    "i18n": {
+      "files": 5,
+      "physical": 651,
+      "code": 618,
+      "comment_docstring": 5,
+      "blank": 28
+    },
+    "lsp": {
+      "files": 6,
+      "physical": 568,
+      "code": 496,
+      "comment_docstring": 7,
+      "blank": 65
+    },
+    "mcp": {
+      "files": 2,
+      "physical": 645,
+      "code": 556,
+      "comment_docstring": 11,
+      "blank": 78
+    },
+    "memory": {
+      "files": 14,
+      "physical": 1756,
+      "code": 1431,
+      "comment_docstring": 30,
+      "blank": 295
+    },
+    "obs": {
+      "files": 5,
+      "physical": 570,
+      "code": 441,
+      "comment_docstring": 18,
+      "blank": 111
+    },
+    "permissions": {
+      "files": 22,
+      "physical": 5251,
+      "code": 4632,
+      "comment_docstring": 44,
+      "blank": 575
+    },
+    "platform": {
+      "files": 12,
+      "physical": 2876,
+      "code": 2343,
+      "comment_docstring": 163,
+      "blank": 370
+    },
+    "prompt": {
+      "files": 2,
+      "physical": 193,
+      "code": 150,
+      "comment_docstring": 4,
+      "blank": 39
+    },
+    "repomap": {
+      "files": 7,
+      "physical": 428,
+      "code": 350,
+      "comment_docstring": 8,
+      "blank": 70
+    },
+    "session": {
+      "files": 18,
+      "physical": 4885,
+      "code": 3949,
+      "comment_docstring": 287,
+      "blank": 649
+    },
+    "skills": {
+      "files": 12,
+      "physical": 1220,
+      "code": 1005,
+      "comment_docstring": 25,
+      "blank": 190
+    },
+    "tools": {
+      "files": 57,
+      "physical": 5320,
+      "code": 4487,
+      "comment_docstring": 108,
+      "blank": 725
+    },
+    "tui": {
+      "files": 38,
+      "physical": 2864,
+      "code": 2386,
+      "comment_docstring": 60,
+      "blank": 418
+    }
+  },
+  "total": {
+    "files": 279,
+    "physical": 42146,
+    "code": 35514,
+    "comment_docstring": 1308,
+    "blank": 5324
+  },
+  "text_resources_by_extension": {
+    "(no suffix)": {
+      "files": 2,
+      "physical": 5,
+      "bytes": 210
+    },
+    ".json": {
+      "files": 13,
+      "physical": 327,
+      "bytes": 676415
+    },
+    ".md": {
+      "files": 8,
+      "physical": 54,
+      "bytes": 5567
+    },
+    ".txt": {
+      "files": 6,
+      "physical": 823,
+      "bytes": 86415
+    }
+  },
+  "text_resources_total": {
+    "files": 29,
+    "physical": 1209,
+    "bytes": 768607
+  },
+  "text_resources": [
+    {
+      "path": "src/ruocun/agent/resources/bundled-agents.json",
+      "bytes": 5850,
+      "sha256": "6c3b29e626724ae856f74f9d8949336cef328cfe54e5154041587ab45307a05e",
+      "physical": 23,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/agent/resources/compact.zh.txt",
+      "bytes": 1372,
+      "sha256": "30c89753454023c0fb16b49bc839ded6abea189ac776ee1ff2c079c00f20cbb3",
+      "physical": 15,
+      "extension": ".txt"
+    },
+    {
+      "path": "src/ruocun/agent/resources/empty-truncation.zh.txt",
+      "bytes": 368,
+      "sha256": "79e91e7e9aa0a416af3163dfbb5b4efd16b0f9457e90e5a2e21680731b7a3ccb",
+      "physical": 1,
+      "extension": ".txt"
+    },
+    {
+      "path": "src/ruocun/prompt/resources/.gitattributes",
+      "bytes": 148,
+      "sha256": "da1af6299d582b6c85447b886a8a48a26bf4ea41030691186b66b99223bd9492",
+      "physical": 2,
+      "extension": "(no suffix)"
+    },
+    {
+      "path": "src/ruocun/prompt/resources/system_prompt.en.txt",
+      "bytes": 39563,
+      "sha256": "ab63aaf37f507c7026cf81e8ef2f14cea020f594ace945b71bde85cdd1b24fd3",
+      "physical": 347,
+      "extension": ".txt"
+    },
+    {
+      "path": "src/ruocun/prompt/resources/system_prompt.zh.txt",
+      "bytes": 33408,
+      "sha256": "95ec6799fc056266ca768f9a07cbda27f630ff84ac854cc1103d8b80c8149c3a",
+      "physical": 336,
+      "extension": ".txt"
+    },
+    {
+      "path": "src/ruocun/resources/help.zh-CN.txt",
+      "bytes": 10949,
+      "sha256": "938f31d1a84bead185ebe8cfd79ed3c073310f136b9184e6c28bf07f2a3479a9",
+      "physical": 114,
+      "extension": ".txt"
+    },
+    {
+      "path": "src/ruocun/resources/runtime/README.txt",
+      "bytes": 755,
+      "sha256": "b1ecf4cca2832ef813b3d868b512dd3f76d34c86927cf6d0bb8b5af3dcc623f7",
+      "physical": 10,
+      "extension": ".txt"
+    },
+    {
+      "path": "src/ruocun/skills/resources/.gitattributes",
+      "bytes": 62,
+      "sha256": "d6c2a67b715070a47b864a9a3e53fde0c4f116f6d4c64cf958c6c82a02556fbf",
+      "physical": 3,
+      "extension": "(no suffix)"
+    },
+    {
+      "path": "src/ruocun/skills/resources/catalog.json",
+      "bytes": 2052,
+      "sha256": "c852c0f6ec1339b3493ab955a108eef59c9f431bb32c32ea6cf094084e372cab",
+      "physical": 50,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/skills/resources/code-review.md",
+      "bytes": 652,
+      "sha256": "1bee922cb0e5f89e6f3a591fdd9320bca9dce427a37741a2d3582b2447d5eefa",
+      "physical": 5,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/debug.md",
+      "bytes": 747,
+      "sha256": "46495b0c7641d8bf193e8d44c4916f35b149ed0a2b3e88e2d3ff8693ac0bf1d2",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/deep-research.md",
+      "bytes": 642,
+      "sha256": "971c414f1853f4536707617800632f6ccaddc7cdfffa1f638200be80f82ff44e",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/fewer-permission-prompts.md",
+      "bytes": 627,
+      "sha256": "b971a4485c6b98d93ead2523d16eca271322eae687b11eb59ad6d822798bb5cb",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/make-plan.md",
+      "bytes": 621,
+      "sha256": "18acc957264309af30336c62672b5b1c464476243f38b0c8411fa3a4252c155d",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/run-skill-generator.md",
+      "bytes": 729,
+      "sha256": "cccfbab6ab2ff1a70836d677c9fabc900089348fb29ecf52242935038a4ed9e6",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/simplify.md",
+      "bytes": 706,
+      "sha256": "448b67d5c694cce80b782fa881eb560a4cef6c3f48eed3fd180608853bb312db",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/skills/resources/verify.md",
+      "bytes": 843,
+      "sha256": "68c22bfe77461be4b5e1930ff6e22efd3813f10d14204c644bdde2c138987ffb",
+      "physical": 7,
+      "extension": ".md"
+    },
+    {
+      "path": "src/ruocun/tools/resources/agent.json",
+      "bytes": 2307,
+      "sha256": "3a8e075961635639c3f0f6ed3384673868d51872b0641208aa8c4cd5ca0c7f98",
+      "physical": 15,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/exec-shell-kill.json",
+      "bytes": 494,
+      "sha256": "dae902ae6d62fbfe047409c6f91df649ed83f12755e4f8ed572248c56c8ef1ea",
+      "physical": 7,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/exec-shell-poll.json",
+      "bytes": 721,
+      "sha256": "9593547b93aeb026045827867da54a4e6cb63126135283f6518ca1c7285b0dd8",
+      "physical": 7,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/memory-read.json",
+      "bytes": 627,
+      "sha256": "1593a329fe5abb38f8f20051311c1510adb272d6a4fc5bae4a83c7b903d20ac2",
+      "physical": 8,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/memory-write.json",
+      "bytes": 1371,
+      "sha256": "b22a71537e990281003937b3d19c49f8332d1aa5f4dd6bd4d07b502407151a5b",
+      "physical": 14,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/notify-user.json",
+      "bytes": 383,
+      "sha256": "62a9e5f734d457a5038a597c91243874df3d6d9c1c3b2f97254184174cf9f251",
+      "physical": 4,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/task-wait.json",
+      "bytes": 1223,
+      "sha256": "774c50a2ff9ce9010a15fe49d714d65624eed6ab3eb84b62de279affb552ac6f",
+      "physical": 4,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/todo-write.json",
+      "bytes": 495,
+      "sha256": "55d9a9cdaa3372fca190d5883404a1f29227ef9d738282f35d58ac1e5ad17949",
+      "physical": 4,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tools/resources/tool-search.json",
+      "bytes": 389,
+      "sha256": "17164c0a95e37c6ac8bf902ac06554e979e258f71cc479538b48c989335a2bfa",
+      "physical": 4,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tui/resources/mascot-frames.json",
+      "bytes": 599596,
+      "sha256": "870092f06945ae15997ac5d19ab143f12399c43b73676063c14dae3ab63566d1",
+      "physical": 84,
+      "extension": ".json"
+    },
+    {
+      "path": "src/ruocun/tui/resources/mascot-static.json",
+      "bytes": 60907,
+      "sha256": "dbef9dfe6b41d49522bd0287417b11967d4303caababc041a2578cbd917132d6",
+      "physical": 103,
+      "extension": ".json"
+    }
+  ],
+  "binary_resources": [
+    {
+      "path": "src/ruocun/resources/runtime/sqlite-dll-win-x64-3540100.zip",
+      "bytes": 1450919,
+      "sha256": "f436f53ad8f965af43f3817b42c99c0689e6787f6b7ace208fe38dab7ffc4971"
+    }
+  ],
+  "supplemental_python_only": {
+    "tests": {
+      "python_files": 195,
+      "python_physical": 27849
+    },
+    "tools": {
+      "python_files": 3,
+      "python_physical": 219
+    },
+    "evals": {
+      "python_files": 27,
+      "python_physical": 2441
+    }
+  },
+  "files": [
+    {
+      "path": "src/ruocun/__init__.py",
+      "module": "(root)",
+      "sha256": "194440b5a90d2ecc647d1140851af4814a0a54c6cff7480a2e97c1757b07d657",
+      "files": 1,
+      "physical": 5,
+      "code": 2,
+      "comment_docstring": 1,
+      "blank": 2
+    },
+    {
+      "path": "src/ruocun/__main__.py",
+      "module": "(root)",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "files": 1,
+      "physical": 3,
+      "code": 2,
+      "comment_docstring": 0,
+      "blank": 1
+    },
+    {
+      "path": "src/ruocun/agent/__init__.py",
+      "module": "agent",
+      "sha256": "5b7459e82fda36e7711bc7fc09987ec5a86f4d72f90809fe505ecc21750f5087",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/agent/agent_defs.py",
+      "module": "agent",
+      "sha256": "d47479a935b097fbc972a798f739678751f90e11ba539efa1dd2245179933c7c",
+      "files": 1,
+      "physical": 149,
+      "code": 129,
+      "comment_docstring": 1,
+      "blank": 19
+    },
+    {
+      "path": "src/ruocun/agent/agent_handoff.py",
+      "module": "agent",
+      "sha256": "7353b9954a32ecf4d387ea0add6b37c54759d6d73853c1a81201920926c4684a",
+      "files": 1,
+      "physical": 55,
+      "code": 45,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/agent/agent_hooks.py",
+      "module": "agent",
+      "sha256": "c767976a7b87dddc325dbc69ddf9b608502b21fcc4604f40ae15ed36514d416a",
+      "files": 1,
+      "physical": 57,
+      "code": 43,
+      "comment_docstring": 1,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/agent/agent_lifecycle.py",
+      "module": "agent",
+      "sha256": "02356280f8f0619d7fcc394df94c8148b32945c9af3c4e721bb280f73543ac50",
+      "files": 1,
+      "physical": 24,
+      "code": 17,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/agent/agent_mcp.py",
+      "module": "agent",
+      "sha256": "6240cf5cc55c40d1eb2d6ac3d7fcc6672b4531c8b7e655642fd5d13e76f760b8",
+      "files": 1,
+      "physical": 86,
+      "code": 71,
+      "comment_docstring": 1,
+      "blank": 14
+    },
+    {
+      "path": "src/ruocun/agent/agent_memory.py",
+      "module": "agent",
+      "sha256": "c1e24b0328a615b6ce0d9f2a644ed0aefa0336d3deccef79b7994995522b9e35",
+      "files": 1,
+      "physical": 27,
+      "code": 21,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/agent/background_delivery.py",
+      "module": "agent",
+      "sha256": "83c89a3468e4f4383bfd9c7ae0a891a289ee8084bdd0f9a7b88f40d9f39f3ea5",
+      "files": 1,
+      "physical": 63,
+      "code": 55,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/agent/background_runtime.py",
+      "module": "agent",
+      "sha256": "89a4dd353163ea22cc61b5d5d3cd9c1c27908d206d69016f370c293320f6e3cb",
+      "files": 1,
+      "physical": 602,
+      "code": 542,
+      "comment_docstring": 1,
+      "blank": 59
+    },
+    {
+      "path": "src/ruocun/agent/background_types.py",
+      "module": "agent",
+      "sha256": "b8bcb62d7b096c2f7d83a25361bcd1d773668d7aa6952c3981ae54976f4a304b",
+      "files": 1,
+      "physical": 78,
+      "code": 60,
+      "comment_docstring": 1,
+      "blank": 17
+    },
+    {
+      "path": "src/ruocun/agent/bundled_agents.py",
+      "module": "agent",
+      "sha256": "f882b8d868560617911daf5379fb469a7c4542887eba6a7db0d763f3b01aa336",
+      "files": 1,
+      "physical": 43,
+      "code": 33,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/agent/cleanup.py",
+      "module": "agent",
+      "sha256": "78221347a600127a76fe96c220678504b2c9f414dcfd553f13d0a820a022919d",
+      "files": 1,
+      "physical": 182,
+      "code": 160,
+      "comment_docstring": 4,
+      "blank": 18
+    },
+    {
+      "path": "src/ruocun/agent/compact.py",
+      "module": "agent",
+      "sha256": "e0f716b69e9a6180f6e2140138fce2e80ed4c8a1f78bca0ce40d8811b9c95506",
+      "files": 1,
+      "physical": 87,
+      "code": 64,
+      "comment_docstring": 7,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/agent/context_runtime.py",
+      "module": "agent",
+      "sha256": "9f825df9d9b51e2711a618d94dc132c62c211646aaf14b8529680293fc8dcc16",
+      "files": 1,
+      "physical": 310,
+      "code": 268,
+      "comment_docstring": 8,
+      "blank": 34
+    },
+    {
+      "path": "src/ruocun/agent/deck_bridge.py",
+      "module": "agent",
+      "sha256": "838f06fc05a0823d876a5570e4cce564523f8ed53d8697412c0da337fcce4f20",
+      "files": 1,
+      "physical": 644,
+      "code": 565,
+      "comment_docstring": 8,
+      "blank": 71
+    },
+    {
+      "path": "src/ruocun/agent/deck_messages.py",
+      "module": "agent",
+      "sha256": "db0ceccdcf0acf4de3d1dc5cc8533cb91a551407b2c4139996ccc29c54abd047",
+      "files": 1,
+      "physical": 142,
+      "code": 120,
+      "comment_docstring": 1,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/agent/files.py",
+      "module": "agent",
+      "sha256": "42518abca1533608b6cd87cff38d01f48691317b383c727606a64852d9781643",
+      "files": 1,
+      "physical": 22,
+      "code": 17,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/agent/fork_agent.py",
+      "module": "agent",
+      "sha256": "d93a778a1069ed64ddec61c65c69f3b857427fa75a8da6668de86433dbfd8aab",
+      "files": 1,
+      "physical": 45,
+      "code": 33,
+      "comment_docstring": 2,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/agent/input_broker.py",
+      "module": "agent",
+      "sha256": "fe0486168b047cd9d5682cebde09af1c05a2311f800b107d52cd9aff768932c3",
+      "files": 1,
+      "physical": 1267,
+      "code": 1145,
+      "comment_docstring": 13,
+      "blank": 109
+    },
+    {
+      "path": "src/ruocun/agent/loop.py",
+      "module": "agent",
+      "sha256": "31456093afb431d69b63629a560d7f5dea1f98fa94e6733268e2b338b5dda575",
+      "files": 1,
+      "physical": 554,
+      "code": 506,
+      "comment_docstring": 13,
+      "blank": 35
+    },
+    {
+      "path": "src/ruocun/agent/monitor.py",
+      "module": "agent",
+      "sha256": "d7c1426be756666f242948d886d18b2103679fdc7770e8c25c4be3c0d12baf2a",
+      "files": 1,
+      "physical": 61,
+      "code": 53,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/agent/progress_advice.py",
+      "module": "agent",
+      "sha256": "b0bca64215344e037b0f7348fc2507ac31b9292b32a5cc1d5036b0916f72d8a1",
+      "files": 1,
+      "physical": 90,
+      "code": 73,
+      "comment_docstring": 4,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/agent/reflect_cadence.py",
+      "module": "agent",
+      "sha256": "8e14ed1ab9a143297ac60d54856bbc90d6b43a86c751a07b79c98f227daad574",
+      "files": 1,
+      "physical": 33,
+      "code": 19,
+      "comment_docstring": 1,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/agent/reflect_persist.py",
+      "module": "agent",
+      "sha256": "cbf69ceba272646550d904ebd8e7b411248d47fa25f82c044a114450d2000f66",
+      "files": 1,
+      "physical": 105,
+      "code": 86,
+      "comment_docstring": 2,
+      "blank": 17
+    },
+    {
+      "path": "src/ruocun/agent/reflect_prompts.py",
+      "module": "agent",
+      "sha256": "636952fbe206e7226dc84c4d8f7925c9995bc9f7e1fd5161b59aaea71ea1c9eb",
+      "files": 1,
+      "physical": 12,
+      "code": 8,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/agent/reflect_result.py",
+      "module": "agent",
+      "sha256": "7c518773ab4d5d88f935cbbd7d5f61749f714c862b1ab052a5c6dd85d3e91861",
+      "files": 1,
+      "physical": 108,
+      "code": 86,
+      "comment_docstring": 1,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/agent/reflect_tail.py",
+      "module": "agent",
+      "sha256": "b68fe49a42ec49375abcd45815c0fa99d99385825eb5ab34f429cefeae8465fa",
+      "files": 1,
+      "physical": 17,
+      "code": 10,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/agent/reflection_runtime.py",
+      "module": "agent",
+      "sha256": "1e1c215cc66b7f3e7be4fb03a719be880895e1093a65c978077f40425695091d",
+      "files": 1,
+      "physical": 130,
+      "code": 108,
+      "comment_docstring": 11,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/agent/resume_agent.py",
+      "module": "agent",
+      "sha256": "926f662b5a692974602d7df78112f1f6892e88c7c19efea0d7fb112b8471ccd6",
+      "files": 1,
+      "physical": 134,
+      "code": 108,
+      "comment_docstring": 9,
+      "blank": 17
+    },
+    {
+      "path": "src/ruocun/agent/run_agent.py",
+      "module": "agent",
+      "sha256": "a0aa266bca7711357716e25beb976e5f59f8cfe076a5a3ce916433b851b9db06",
+      "files": 1,
+      "physical": 538,
+      "code": 480,
+      "comment_docstring": 8,
+      "blank": 50
+    },
+    {
+      "path": "src/ruocun/agent/runtime.py",
+      "module": "agent",
+      "sha256": "2a60da2fe8f765890aafbee47ab87b96477587650c6ffd617a132c53b2c6cdfc",
+      "files": 1,
+      "physical": 2658,
+      "code": 2458,
+      "comment_docstring": 38,
+      "blank": 162
+    },
+    {
+      "path": "src/ruocun/agent/session_scheduler.py",
+      "module": "agent",
+      "sha256": "fe7e8728c096f05647b077275f13786d012824879bc61f851d0f59b1a186258d",
+      "files": 1,
+      "physical": 443,
+      "code": 391,
+      "comment_docstring": 7,
+      "blank": 45
+    },
+    {
+      "path": "src/ruocun/agent/tasks.py",
+      "module": "agent",
+      "sha256": "bfb8b2eabd012b77ff9623e3878221be08fd5799227fbccf118799b5aaff45c0",
+      "files": 1,
+      "physical": 864,
+      "code": 789,
+      "comment_docstring": 6,
+      "blank": 69
+    },
+    {
+      "path": "src/ruocun/agent/turn_health.py",
+      "module": "agent",
+      "sha256": "a41f1d4cd307ae5bec097d08f6e5222f450cb36e4187276d21f48270cbaf993f",
+      "files": 1,
+      "physical": 87,
+      "code": 65,
+      "comment_docstring": 1,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/agent/unified_reflect.py",
+      "module": "agent",
+      "sha256": "01d5d55d22bec3e24de3b7cddb29a29bef64a0a7b03e4bb1050921c345c4c2d2",
+      "files": 1,
+      "physical": 66,
+      "code": 56,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/agent/worktree.py",
+      "module": "agent",
+      "sha256": "d5de687843caac09fffc889e0d2834d721610d198ac053eb41158f36cac49187",
+      "files": 1,
+      "physical": 344,
+      "code": 282,
+      "comment_docstring": 12,
+      "blank": 50
+    },
+    {
+      "path": "src/ruocun/approval/__init__.py",
+      "module": "approval",
+      "sha256": "11fee991b583fe721a80c9bca46189120aa00ad93d53fb0c6bff616a3a8de8a8",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/approval/stdin_prompt.py",
+      "module": "approval",
+      "sha256": "60f6c250ed8226fbe8adf7bde1e22e7575091113db4e43621f2c50fd4a307c85",
+      "files": 1,
+      "physical": 25,
+      "code": 21,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/approval/store.py",
+      "module": "approval",
+      "sha256": "72677ca465b2a54a07d02980d45c5680da309c3f52f18eb0727e2ecd17edbe8f",
+      "files": 1,
+      "physical": 32,
+      "code": 24,
+      "comment_docstring": 2,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/approval/types.py",
+      "module": "approval",
+      "sha256": "d0c6e4aa1b9d3f1a1ae752a625a9919a75e0414c134b5fe5999f0b0aa065c8d6",
+      "files": 1,
+      "physical": 34,
+      "code": 22,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/chat_demo.py",
+      "module": "(root)",
+      "sha256": "025f4184e1ae9370766da4e9cec8137c74a499e5e6e9ca48f975e29631de6fe5",
+      "files": 1,
+      "physical": 165,
+      "code": 116,
+      "comment_docstring": 21,
+      "blank": 28
+    },
+    {
+      "path": "src/ruocun/cli.py",
+      "module": "(root)",
+      "sha256": "9fcbeec617e7c4a4f5a7c8055b6a5a08f264ff80e87ea7c565d89a12236b8094",
+      "files": 1,
+      "physical": 156,
+      "code": 127,
+      "comment_docstring": 10,
+      "blank": 19
+    },
+    {
+      "path": "src/ruocun/client/__init__.py",
+      "module": "client",
+      "sha256": "a439d898d38ae6dfdf3cbc37e2b971c233e68cc38db44978faef5b79859eac6f",
+      "files": 1,
+      "physical": 7,
+      "code": 1,
+      "comment_docstring": 4,
+      "blank": 2
+    },
+    {
+      "path": "src/ruocun/client/_dns_helper.py",
+      "module": "client",
+      "sha256": "a9b2fcba90e4e723c216c1127f543e85c173fd5eb0fbae716d86abe43f126257",
+      "files": 1,
+      "physical": 28,
+      "code": 21,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/client/client.py",
+      "module": "client",
+      "sha256": "b3cbd37b602a88b955d9f2b4a14ff295013354f0e5f8f35082d44fd2d561f378",
+      "files": 1,
+      "physical": 524,
+      "code": 417,
+      "comment_docstring": 53,
+      "blank": 54
+    },
+    {
+      "path": "src/ruocun/client/resilient.py",
+      "module": "client",
+      "sha256": "c3ada1011a980e04c09f8fa66523ae68d1ac850bce11076a3db8495bd4ec12ff",
+      "files": 1,
+      "physical": 936,
+      "code": 742,
+      "comment_docstring": 90,
+      "blank": 104
+    },
+    {
+      "path": "src/ruocun/client/responses.py",
+      "module": "client",
+      "sha256": "e93b3e8f44324e83cc1dfdbd6276706d5bb47a6e3696bfcdc7d8ea255c536484",
+      "files": 1,
+      "physical": 325,
+      "code": 248,
+      "comment_docstring": 41,
+      "blank": 36
+    },
+    {
+      "path": "src/ruocun/client/sse.py",
+      "module": "client",
+      "sha256": "acf7fd5e22b2a6ede875284e0ddcc9483a5e4bae247055d3037033cc4e067914",
+      "files": 1,
+      "physical": 68,
+      "code": 39,
+      "comment_docstring": 12,
+      "blank": 17
+    },
+    {
+      "path": "src/ruocun/client/types.py",
+      "module": "client",
+      "sha256": "4410a61c1811fc2efc92ccb5e6086631be600289e8dd5122b2dc00dfb222a7c9",
+      "files": 1,
+      "physical": 50,
+      "code": 35,
+      "comment_docstring": 5,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/commands/__init__.py",
+      "module": "commands",
+      "sha256": "fe4ad2ac084c86561589fc43dd5e6f7e9c59fcf144af4c8a7c41f2be13744342",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/commands/audit.py",
+      "module": "commands",
+      "sha256": "ba7d9197ed88d9bb46070128a7bd2d10a4be2830b1c0c60484df6b4d86dceb51",
+      "files": 1,
+      "physical": 74,
+      "code": 65,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/commands/builtin.py",
+      "module": "commands",
+      "sha256": "63b4394235d06029653a9f8a7795dfaa171e9a8053236e7ff2fe9306ac885112",
+      "files": 1,
+      "physical": 165,
+      "code": 121,
+      "comment_docstring": 1,
+      "blank": 43
+    },
+    {
+      "path": "src/ruocun/commands/catalog.py",
+      "module": "commands",
+      "sha256": "552c295c2efdbaf2fa8691ddf389f63f734567b00e452c4f8b64e8d5c6f444bb",
+      "files": 1,
+      "physical": 37,
+      "code": 24,
+      "comment_docstring": 6,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/config/__init__.py",
+      "module": "config",
+      "sha256": "b78f951b07ef1c5693979a63917ebfb0c27932453d2a8f7c4c68fe35f4119211",
+      "files": 1,
+      "physical": 3,
+      "code": 1,
+      "comment_docstring": 1,
+      "blank": 1
+    },
+    {
+      "path": "src/ruocun/config/auth_wizard.py",
+      "module": "config",
+      "sha256": "1b4ccc4469ca65e271d3dbacca1976cfa4112634296d5f30e4e3783d733dc7bb",
+      "files": 1,
+      "physical": 49,
+      "code": 38,
+      "comment_docstring": 2,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/config/compat.py",
+      "module": "config",
+      "sha256": "14f4284bb40f7e5d305130c6bd2c09548e505bfc483e9245011d0757676f3328",
+      "files": 1,
+      "physical": 79,
+      "code": 45,
+      "comment_docstring": 5,
+      "blank": 29
+    },
+    {
+      "path": "src/ruocun/config/credential.py",
+      "module": "config",
+      "sha256": "0d680018d0894c007463af306591c40ca3e74b36285d7e1830393960bb837fd3",
+      "files": 1,
+      "physical": 242,
+      "code": 185,
+      "comment_docstring": 8,
+      "blank": 49
+    },
+    {
+      "path": "src/ruocun/config/env_file.py",
+      "module": "config",
+      "sha256": "5807135c51aecdac435b4c8d6156021830c0d94621cd1cb8ca7055a01c87f98b",
+      "files": 1,
+      "physical": 53,
+      "code": 38,
+      "comment_docstring": 6,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/config/mcp_store.py",
+      "module": "config",
+      "sha256": "de250eb4a31a6cfbe8fcc09e1f0e990d5bf1243c698cddd2636941d09d8eb9c2",
+      "files": 1,
+      "physical": 20,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/config/migrate_dirs.py",
+      "module": "config",
+      "sha256": "d3097cfd143e14bba264406e0ef79f230dc43794f8510bbf31beebe336ad9a2e",
+      "files": 1,
+      "physical": 23,
+      "code": 12,
+      "comment_docstring": 5,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/config/model_selection.py",
+      "module": "config",
+      "sha256": "d5f2e4f2fc0b71ccd8e8d185771510711f636993f8d95366f066caf5f6b2d251",
+      "files": 1,
+      "physical": 52,
+      "code": 36,
+      "comment_docstring": 5,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/config/native_json.py",
+      "module": "config",
+      "sha256": "a3b0ba31f540a123c73548b61dd317a45fb8a522d5c7584939ff15582abb67d0",
+      "files": 1,
+      "physical": 52,
+      "code": 39,
+      "comment_docstring": 3,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/config/profiles.py",
+      "module": "config",
+      "sha256": "aea8500409ec0bcab66bd4882042e3f3b192b00154d7ce39ce6658c3c1400e6e",
+      "files": 1,
+      "physical": 225,
+      "code": 179,
+      "comment_docstring": 14,
+      "blank": 32
+    },
+    {
+      "path": "src/ruocun/config/profiles_store.py",
+      "module": "config",
+      "sha256": "52d3da4208010473c8012992871a3ceb767c7f34a52b45463742d41fbf8af7c7",
+      "files": 1,
+      "physical": 111,
+      "code": 85,
+      "comment_docstring": 5,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/config/settings_store.py",
+      "module": "config",
+      "sha256": "222593c995ba5c84be7b81cc160656c7bbdaecd30063f977493366d21d58304f",
+      "files": 1,
+      "physical": 52,
+      "code": 44,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/config/trust.py",
+      "module": "config",
+      "sha256": "b35d6176afff4fbc7f61bbf075583b45d26b54a59b0a0bb0f845026514cd637e",
+      "files": 1,
+      "physical": 70,
+      "code": 50,
+      "comment_docstring": 5,
+      "blank": 15
+    },
+    {
+      "path": "src/ruocun/config/validate_key.py",
+      "module": "config",
+      "sha256": "01efbbab08d7a3b587dd2fd335a2f51846ebd277bce27212584f205fe86d200a",
+      "files": 1,
+      "physical": 72,
+      "code": 61,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/data/__init__.py",
+      "module": "data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 1,
+      "physical": 0,
+      "code": 0,
+      "comment_docstring": 0,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/data/laozi_maxims.py",
+      "module": "data",
+      "sha256": "10ba2a11bbefc6bef4b53f43fc4912a9aaca080b7c086024cb9802876bf83abf",
+      "files": 1,
+      "physical": 42,
+      "code": 36,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/env_snapshot.py",
+      "module": "(root)",
+      "sha256": "f0f7d8776d4e5a2c2ea63e62b911bfd9d61de44a6343769eb44368bc233e28b0",
+      "files": 1,
+      "physical": 129,
+      "code": 103,
+      "comment_docstring": 10,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/hooks/__init__.py",
+      "module": "hooks",
+      "sha256": "a6cbeeebad6096944061c67b77a8e7b7554fc4dc18c44a97bad14b5b5727b928",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/hooks/hooks.py",
+      "module": "hooks",
+      "sha256": "a5313e0e1ee22fced0c99623182324b198c8ecb6c99fa740f1165fa58a0bb6f6",
+      "files": 1,
+      "physical": 289,
+      "code": 249,
+      "comment_docstring": 2,
+      "blank": 38
+    },
+    {
+      "path": "src/ruocun/hooks/journal.py",
+      "module": "hooks",
+      "sha256": "43de07f3f092286d7db7028aa9e190e8dadf8babd10316bf54e98bf0e14abe5c",
+      "files": 1,
+      "physical": 69,
+      "code": 52,
+      "comment_docstring": 2,
+      "blank": 15
+    },
+    {
+      "path": "src/ruocun/i18n/__init__.py",
+      "module": "i18n",
+      "sha256": "a556cd688fc6d0786f7d5ba9b124b58795d6b5836f09b76f80ca2553e8efece0",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/i18n/i18n.py",
+      "module": "i18n",
+      "sha256": "5f9c3cbd58672d6e601a3b59732ed57d38884d404eec3d68c917fc699b25bc36",
+      "files": 1,
+      "physical": 97,
+      "code": 72,
+      "comment_docstring": 1,
+      "blank": 24
+    },
+    {
+      "path": "src/ruocun/i18n/messages/__init__.py",
+      "module": "i18n",
+      "sha256": "a0cc68c8da336bbf3150aa26ec47fce05915a9c325dd104f35f86684d1517be8",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/i18n/messages/en.py",
+      "module": "i18n",
+      "sha256": "bc193805815f0cb24e72b045084302416a0e05daf487e41c8fd7094debf15705",
+      "files": 1,
+      "physical": 276,
+      "code": 273,
+      "comment_docstring": 1,
+      "blank": 2
+    },
+    {
+      "path": "src/ruocun/i18n/messages/zh.py",
+      "module": "i18n",
+      "sha256": "7a2aecee6a699e693f02ef69db8a130d14f002613fc65e394f27ca1d7aa97449",
+      "files": 1,
+      "physical": 276,
+      "code": 273,
+      "comment_docstring": 1,
+      "blank": 2
+    },
+    {
+      "path": "src/ruocun/lsp/__init__.py",
+      "module": "lsp",
+      "sha256": "528d0d5784b0b7e57e4e2823fa80c8a3738f5db358ea8ea1870592579f4c7d55",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/lsp/client.py",
+      "module": "lsp",
+      "sha256": "9c88cb8ed2c3726116bb07bba02ba59092b01b9418641adaa59d4b6282de97e8",
+      "files": 1,
+      "physical": 380,
+      "code": 337,
+      "comment_docstring": 1,
+      "blank": 42
+    },
+    {
+      "path": "src/ruocun/lsp/config.py",
+      "module": "lsp",
+      "sha256": "e7c04321be3e7803ad79c16ae598075f3bdb0fd852599c9e44a82bbdfe9dadd9",
+      "files": 1,
+      "physical": 30,
+      "code": 23,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/lsp/descriptions.py",
+      "module": "lsp",
+      "sha256": "8adefe4615f69dcea876bdbfbf9867328a8ce47c25f2f787b2744d38e702a7fa",
+      "files": 1,
+      "physical": 16,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 1
+    },
+    {
+      "path": "src/ruocun/lsp/manager.py",
+      "module": "lsp",
+      "sha256": "0466f1e37a7e53951e8bd0dfa35fb80e6baebcaa11f4a20721570db43d005986",
+      "files": 1,
+      "physical": 31,
+      "code": 23,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/lsp/windows_job.py",
+      "module": "lsp",
+      "sha256": "d4284ea9de2095096e6343aeddcf1c97ef3b93166eb0419dbd0abfc2b2e18909",
+      "files": 1,
+      "physical": 110,
+      "code": 99,
+      "comment_docstring": 2,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/mcp/__init__.py",
+      "module": "mcp",
+      "sha256": "dd32a696bd763877450cce38053a0e9995ab65a67ee23a13e53d3e344761d9be",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/mcp/mcp.py",
+      "module": "mcp",
+      "sha256": "53d5840ecf8781c580c83df096617abe1178a55137ba6f4e28d8d6bb721abd66",
+      "files": 1,
+      "physical": 644,
+      "code": 556,
+      "comment_docstring": 10,
+      "blank": 78
+    },
+    {
+      "path": "src/ruocun/memory/__init__.py",
+      "module": "memory",
+      "sha256": "3f67b24e1a4e5b4b252385b9c44941fd92975746e4f496741e0fc4a77e54c1da",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/memory/audit.py",
+      "module": "memory",
+      "sha256": "b70a03e504abb893e485d28a53479724feadef10cbe82e365b5c8bd80bc5a21f",
+      "files": 1,
+      "physical": 130,
+      "code": 107,
+      "comment_docstring": 1,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/memory/command.py",
+      "module": "memory",
+      "sha256": "18085f38480bccb421cabc316ef79c062fb67825148a97534866aeb3bd1a931f",
+      "files": 1,
+      "physical": 51,
+      "code": 42,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/memory/consolidate.py",
+      "module": "memory",
+      "sha256": "5004ef2a789b942fab799695eaff289686f807b468c95cd68138eeb40f54fb65",
+      "files": 1,
+      "physical": 260,
+      "code": 210,
+      "comment_docstring": 4,
+      "blank": 46
+    },
+    {
+      "path": "src/ruocun/memory/distill.py",
+      "module": "memory",
+      "sha256": "afab335432390cd7b61c0b868c6235fd931fdc6da781e5d14ff5a0d0c04c1912",
+      "files": 1,
+      "physical": 121,
+      "code": 98,
+      "comment_docstring": 2,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/memory/frontmatter.py",
+      "module": "memory",
+      "sha256": "0abc7c1a3f1bfa5ae5eb42737abbcb5426a1e7d4051bf12661cc5e1a3d1946a7",
+      "files": 1,
+      "physical": 79,
+      "code": 66,
+      "comment_docstring": 1,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/memory/gc.py",
+      "module": "memory",
+      "sha256": "559796f591cd88c193714c2feabc2ec3b91a73565c54dac8707655bb02b37ebc",
+      "files": 1,
+      "physical": 73,
+      "code": 57,
+      "comment_docstring": 2,
+      "blank": 14
+    },
+    {
+      "path": "src/ruocun/memory/hash.py",
+      "module": "memory",
+      "sha256": "e86b6d7820838abfded36f4e017b13edbdd35b4dbed33ff97194eb67c8895067",
+      "files": 1,
+      "physical": 9,
+      "code": 4,
+      "comment_docstring": 2,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/memory/inject.py",
+      "module": "memory",
+      "sha256": "fb0601977a327b00ff29257de100354f606246f28ed1378c165b362eb24c1cef",
+      "files": 1,
+      "physical": 112,
+      "code": 87,
+      "comment_docstring": 3,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/memory/memory_audit.py",
+      "module": "memory",
+      "sha256": "01a0fba8e4a5f30d9a405791be5aa6b6a06dec1c937204a1fbe20348c2592c35",
+      "files": 1,
+      "physical": 297,
+      "code": 241,
+      "comment_docstring": 2,
+      "blank": 54
+    },
+    {
+      "path": "src/ruocun/memory/secrets.py",
+      "module": "memory",
+      "sha256": "f03197743cad2f79675ca58fbec32db2b4c24e245de915f09d3d966c3e7548fa",
+      "files": 1,
+      "physical": 27,
+      "code": 20,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/memory/store.py",
+      "module": "memory",
+      "sha256": "7f1e79b94a09d08c800d306db0edff70d474d296b1467bc3231a50c92c45d832",
+      "files": 1,
+      "physical": 500,
+      "code": 429,
+      "comment_docstring": 7,
+      "blank": 64
+    },
+    {
+      "path": "src/ruocun/memory/types.py",
+      "module": "memory",
+      "sha256": "483d8d3554741aaecc3ddc69301e7e96a89f5911458915cd9572ca0e803cb2bb",
+      "files": 1,
+      "physical": 43,
+      "code": 35,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/memory/validate.py",
+      "module": "memory",
+      "sha256": "00934fe689ca9b0b149a592264746e7fd94cedd3903ae1d1eb21feebfe5e87de",
+      "files": 1,
+      "physical": 53,
+      "code": 35,
+      "comment_docstring": 2,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/obs/__init__.py",
+      "module": "obs",
+      "sha256": "526e365c62aaf25a9dbef0ba8ed33d4e847586dcf7118523e21848a8315dff96",
+      "files": 1,
+      "physical": 6,
+      "code": 3,
+      "comment_docstring": 1,
+      "blank": 2
+    },
+    {
+      "path": "src/ruocun/obs/attrs.py",
+      "module": "obs",
+      "sha256": "38a2c1b34fe4091c385f53b7fe821eca233e7ec45deeb2ee0000e6f18c2528a0",
+      "files": 1,
+      "physical": 52,
+      "code": 39,
+      "comment_docstring": 1,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/obs/backend.py",
+      "module": "obs",
+      "sha256": "a1a627c48a7a559cfa98172c1cbf36aed29bb68c30a6e69d4db5a511b0da55d8",
+      "files": 1,
+      "physical": 225,
+      "code": 167,
+      "comment_docstring": 4,
+      "blank": 54
+    },
+    {
+      "path": "src/ruocun/obs/init.py",
+      "module": "obs",
+      "sha256": "3c3e31b7e50d71cc9d5c122e97dd7c510a32ba1b6dcc188cc465bd86a87ae541",
+      "files": 1,
+      "physical": 164,
+      "code": 135,
+      "comment_docstring": 8,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/obs/wrap.py",
+      "module": "obs",
+      "sha256": "2a6dba634b4d6e5a97f22462ad4fb8455eef5b7ede5b240cfc741a78fadaa62f",
+      "files": 1,
+      "physical": 123,
+      "code": 97,
+      "comment_docstring": 4,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/permissions/__init__.py",
+      "module": "permissions",
+      "sha256": "aa2482f9edec04c1698469d9909c2c2d5685e5b06de14a1d32f1a455cb0be376",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/permissions/audit.py",
+      "module": "permissions",
+      "sha256": "a0399ae56458d29f712e0185463a9aad565679eea9a5f2370d4f99b428dc81a4",
+      "files": 1,
+      "physical": 23,
+      "code": 18,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/permissions/bash/__init__.py",
+      "module": "permissions",
+      "sha256": "eaf07693c21da49a25edbe99b2955c25835a05aee2c4dc08d0e5941f74c1d4e6",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/permissions/bash/ast.py",
+      "module": "permissions",
+      "sha256": "dfa9f7b158e74e6a25d6ee4032908587f1176d3bb3a01e93c1b70cf3d35fc0df",
+      "files": 1,
+      "physical": 838,
+      "code": 758,
+      "comment_docstring": 4,
+      "blank": 76
+    },
+    {
+      "path": "src/ruocun/permissions/bash/bash_ast.py",
+      "module": "permissions",
+      "sha256": "696287aafe1e80d500832771981d22fa35802ce7a07e211f6f1ff8ec8bca1777",
+      "files": 1,
+      "physical": 30,
+      "code": 24,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/permissions/bash/bash_parser.py",
+      "module": "permissions",
+      "sha256": "99f0da36fcbe5311369e57898e5efc2f032bad2bc6afc855d41dc4b3160beaad",
+      "files": 1,
+      "physical": 2417,
+      "code": 2234,
+      "comment_docstring": 3,
+      "blank": 180
+    },
+    {
+      "path": "src/ruocun/permissions/bash/parser.py",
+      "module": "permissions",
+      "sha256": "497065af624ff25e0630f130044697f9114f4e6d9894e95aa0b2dad73f5553b8",
+      "files": 1,
+      "physical": 102,
+      "code": 79,
+      "comment_docstring": 1,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/permissions/bash/types.py",
+      "module": "permissions",
+      "sha256": "5c73472e65653146c3cb6252b3d1f3b52ec09204657332cc4fbd3938f5d28b19",
+      "files": 1,
+      "physical": 32,
+      "code": 20,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/permissions/bash_preprocess.py",
+      "module": "permissions",
+      "sha256": "5f37faf3928707251328c9b40969dce84311655f6fe529f3ae33bbb6d0062a2b",
+      "files": 1,
+      "physical": 75,
+      "code": 60,
+      "comment_docstring": 1,
+      "blank": 14
+    },
+    {
+      "path": "src/ruocun/permissions/bash_safety.py",
+      "module": "permissions",
+      "sha256": "44eb5326ab4c997f50ea8761713fa53dccc925902aef6efc4bb0ff7c42011daf",
+      "files": 1,
+      "physical": 103,
+      "code": 89,
+      "comment_docstring": 1,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/permissions/classifier.py",
+      "module": "permissions",
+      "sha256": "24180ed14d0f41b9f163796ad2fa94522f2a4b4c6030a2486797289c35069214",
+      "files": 1,
+      "physical": 151,
+      "code": 109,
+      "comment_docstring": 1,
+      "blank": 41
+    },
+    {
+      "path": "src/ruocun/permissions/classifier_model.py",
+      "module": "permissions",
+      "sha256": "0b8633d57c65462ac01399fa7071cd5693dbc165408a5d4d86952ac42a10df3f",
+      "files": 1,
+      "physical": 45,
+      "code": 32,
+      "comment_docstring": 1,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/permissions/dangerous_patterns.py",
+      "module": "permissions",
+      "sha256": "142165481a926937f8af0e5738346a8dbdde307c8c9abd5fe10d6e8ca96fa3de",
+      "files": 1,
+      "physical": 18,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/permissions/engine.py",
+      "module": "permissions",
+      "sha256": "8d880df270872a2ceddcc56713e18b16282987ae31d2cccd55723e084c6e6af1",
+      "files": 1,
+      "physical": 125,
+      "code": 96,
+      "comment_docstring": 3,
+      "blank": 26
+    },
+    {
+      "path": "src/ruocun/permissions/gate.py",
+      "module": "permissions",
+      "sha256": "62c533f7e1ad6eb651fd24dc5b6d0f3b2d44ad85dd969c8aeb5bdbba7edf776e",
+      "files": 1,
+      "physical": 129,
+      "code": 113,
+      "comment_docstring": 1,
+      "blank": 15
+    },
+    {
+      "path": "src/ruocun/permissions/identity.py",
+      "module": "permissions",
+      "sha256": "3b1af595ef07e396a0353f6efdb99c6f0c38672290dc05007b64899f8b677ba2",
+      "files": 1,
+      "physical": 58,
+      "code": 48,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/permissions/perm_audit.py",
+      "module": "permissions",
+      "sha256": "eec4ebea5c243fbecd3b45f72cf9cbba40ffd3cfb8ea7e719a4fedf4ed56294d",
+      "files": 1,
+      "physical": 100,
+      "code": 80,
+      "comment_docstring": 2,
+      "blank": 18
+    },
+    {
+      "path": "src/ruocun/permissions/rules.py",
+      "module": "permissions",
+      "sha256": "53fbe0d1da3ecb035bdcb4f1e103281f8624db412c1e71c468985a7ddccb8f1f",
+      "files": 1,
+      "physical": 190,
+      "code": 155,
+      "comment_docstring": 1,
+      "blank": 34
+    },
+    {
+      "path": "src/ruocun/permissions/runtime.py",
+      "module": "permissions",
+      "sha256": "ffedef46060a137e6cd7f52ac58f9b680afec0cd7b2781d8c7c5a88f83895dc7",
+      "files": 1,
+      "physical": 578,
+      "code": 522,
+      "comment_docstring": 12,
+      "blank": 44
+    },
+    {
+      "path": "src/ruocun/permissions/sanitize.py",
+      "module": "permissions",
+      "sha256": "63f4c71e0d5ca9d469782ae4151367b3270fbbdeaa6cf6b635e56e775637fd81",
+      "files": 1,
+      "physical": 25,
+      "code": 15,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/permissions/secrets.py",
+      "module": "permissions",
+      "sha256": "748067e2726c72364a77d858d421a316dbb8712467f3ddc20479c2ff9c661c58",
+      "files": 1,
+      "physical": 3,
+      "code": 2,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/permissions/settings.py",
+      "module": "permissions",
+      "sha256": "75904e8a166c5cc91745408822ad922e7167a3bbe0c3f4bbda36ae6c41a63ac6",
+      "files": 1,
+      "physical": 207,
+      "code": 164,
+      "comment_docstring": 4,
+      "blank": 39
+    },
+    {
+      "path": "src/ruocun/platform/__init__.py",
+      "module": "platform",
+      "sha256": "0ea185229c8afcb80f0aa9a2a193e58d5022c7df0e483ab93389303e8eebf48f",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/platform/file_contract.py",
+      "module": "platform",
+      "sha256": "1955d2005e1ce128d7445b75f02c9fab512645bec505802e8e8e989d3f7b5029",
+      "files": 1,
+      "physical": 25,
+      "code": 14,
+      "comment_docstring": 3,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/platform/process_tree.py",
+      "module": "platform",
+      "sha256": "207d55f94a82bae441c55674046d01f7617bbb7e3b7e6d3f805c5143183edbd1",
+      "files": 1,
+      "physical": 224,
+      "code": 194,
+      "comment_docstring": 3,
+      "blank": 27
+    },
+    {
+      "path": "src/ruocun/platform/sandbox.py",
+      "module": "platform",
+      "sha256": "990e73a2574805e4433307c8433d40e240023c5be5e91703d19e5bc181c3094a",
+      "files": 1,
+      "physical": 87,
+      "code": 61,
+      "comment_docstring": 3,
+      "blank": 23
+    },
+    {
+      "path": "src/ruocun/platform/shell_output.py",
+      "module": "platform",
+      "sha256": "be403cd96226686900a96628d41b65b87688be5ac5978e3d8ecf1dd7979b745b",
+      "files": 1,
+      "physical": 165,
+      "code": 147,
+      "comment_docstring": 5,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/platform/shell_plan.py",
+      "module": "platform",
+      "sha256": "6b1f0cf5d5681d9476be141e6f2d2101a293b9e595f48ed40b3e4c863240ce79",
+      "files": 1,
+      "physical": 266,
+      "code": 231,
+      "comment_docstring": 8,
+      "blank": 27
+    },
+    {
+      "path": "src/ruocun/platform/windows/__init__.py",
+      "module": "platform",
+      "sha256": "2720d4cbae9ab70b2078decde91edd9e271fd440be6bbe446e4615bc994292a0",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/platform/windows/clipboard.py",
+      "module": "platform",
+      "sha256": "e5817dd65b20af6307c0b09aa7c67fad10a0390a4e867d9b6ef9df42eef77a33",
+      "files": 1,
+      "physical": 129,
+      "code": 109,
+      "comment_docstring": 6,
+      "blank": 14
+    },
+    {
+      "path": "src/ruocun/platform/windows/credentials.py",
+      "module": "platform",
+      "sha256": "fc1f42a67bea2b096a3414f909a9eede24fe7dd5bded213f07df902efeb1b0a5",
+      "files": 1,
+      "physical": 313,
+      "code": 204,
+      "comment_docstring": 51,
+      "blank": 58
+    },
+    {
+      "path": "src/ruocun/platform/windows/durable_file.py",
+      "module": "platform",
+      "sha256": "ab2ae7311e79184d8c28decf09eae0f078690c741207376ffae994b72122645e",
+      "files": 1,
+      "physical": 671,
+      "code": 534,
+      "comment_docstring": 61,
+      "blank": 76
+    },
+    {
+      "path": "src/ruocun/platform/windows/ipc.py",
+      "module": "platform",
+      "sha256": "653e2d0ee1e13db6e2ebb77d0ba9696fbd90e30839efce702724ad41e2a84dfa",
+      "files": 1,
+      "physical": 757,
+      "code": 644,
+      "comment_docstring": 13,
+      "blank": 100
+    },
+    {
+      "path": "src/ruocun/platform/windows/process_tree.py",
+      "module": "platform",
+      "sha256": "1587d8c7e26990eabaf6f092dbcdb9d7d90d17dbcd44fb4d57b0d37a92d6720f",
+      "files": 1,
+      "physical": 237,
+      "code": 205,
+      "comment_docstring": 8,
+      "blank": 24
+    },
+    {
+      "path": "src/ruocun/project_doc.py",
+      "module": "(root)",
+      "sha256": "5dce43824bc925f78d7cf289813cf97077375fbfa56bf29e9ae306d699947882",
+      "files": 1,
+      "physical": 66,
+      "code": 56,
+      "comment_docstring": 2,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/prompt/__init__.py",
+      "module": "prompt",
+      "sha256": "341c017054bcaa0bd86d1177f333d6f9778627b72644153a4070af2eaa55269b",
+      "files": 1,
+      "physical": 3,
+      "code": 1,
+      "comment_docstring": 1,
+      "blank": 1
+    },
+    {
+      "path": "src/ruocun/prompt/system_prompt.py",
+      "module": "prompt",
+      "sha256": "5e7b1f523772f71c59f704e2ef2215e4ecdc13db0009d2ef584c64952e925857",
+      "files": 1,
+      "physical": 190,
+      "code": 149,
+      "comment_docstring": 3,
+      "blank": 38
+    },
+    {
+      "path": "src/ruocun/repomap/__init__.py",
+      "module": "repomap",
+      "sha256": "3293202098800acf1f780de56e8f3edc7552e51a732386eef101dd559c3ad830",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/repomap/extract.py",
+      "module": "repomap",
+      "sha256": "93ca4e3ed0ce1ee7a2e3faf1b71201f7dec8be44243ccd2b58259e7999540387",
+      "files": 1,
+      "physical": 150,
+      "code": 126,
+      "comment_docstring": 2,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/repomap/graph.py",
+      "module": "repomap",
+      "sha256": "86998c6ef5ce8f4f369b77906e8a60d4ca204e69ab01df02e162defd274da0ba",
+      "files": 1,
+      "physical": 70,
+      "code": 58,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/repomap/index.py",
+      "module": "repomap",
+      "sha256": "e3ce168f94fde24502b506f2657da028a87a7c8df65e0871a18f45c3b7669ea4",
+      "files": 1,
+      "physical": 110,
+      "code": 93,
+      "comment_docstring": 1,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/repomap/languages.py",
+      "module": "repomap",
+      "sha256": "ae47244c2e80a4656d080ccfc0c1e941001144393746942db56677878f8c5da1",
+      "files": 1,
+      "physical": 34,
+      "code": 26,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/repomap/loader.py",
+      "module": "repomap",
+      "sha256": "12daf9f2d8108a0e7163c80d686fa726e74c86ebf83caeb7c9430fce2faeb15e",
+      "files": 1,
+      "physical": 21,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/repomap/render.py",
+      "module": "repomap",
+      "sha256": "5ca1339b47887805a3f68143a2667a9fe0604d67b8f7d7e5e4103a40049fd090",
+      "files": 1,
+      "physical": 42,
+      "code": 33,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/responses_demo.py",
+      "module": "(root)",
+      "sha256": "f029ef160da2ef9d42e5bb618de9284134ee96a49da70644046464f62dcce77d",
+      "files": 1,
+      "physical": 281,
+      "code": 214,
+      "comment_docstring": 31,
+      "blank": 36
+    },
+    {
+      "path": "src/ruocun/schedule.py",
+      "module": "(root)",
+      "sha256": "465c48bcf211edbbcae1ed74860ecb7b9bdf6c323f1b8b01d3825d15382862d6",
+      "files": 1,
+      "physical": 172,
+      "code": 139,
+      "comment_docstring": 2,
+      "blank": 31
+    },
+    {
+      "path": "src/ruocun/session/cache_audit.py",
+      "module": "session",
+      "sha256": "6cb31a4bb7ce7d5ebde7d6009c59c073d345d03d067931c4deefba44248b0e20",
+      "files": 1,
+      "physical": 201,
+      "code": 161,
+      "comment_docstring": 5,
+      "blank": 35
+    },
+    {
+      "path": "src/ruocun/session/checkpoint.py",
+      "module": "session",
+      "sha256": "ddcd9c8f977f1e0c50737dbdfb46fe36ff39a28607208eb9b66bff40b83098ca",
+      "files": 1,
+      "physical": 319,
+      "code": 281,
+      "comment_docstring": 5,
+      "blank": 33
+    },
+    {
+      "path": "src/ruocun/session/context_window.py",
+      "module": "session",
+      "sha256": "e3528f87b8aae76f2056c245a23126e3617651c868ebee8f0c65c9651d21920e",
+      "files": 1,
+      "physical": 23,
+      "code": 13,
+      "comment_docstring": 5,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/session/contract.py",
+      "module": "session",
+      "sha256": "45508ebd7adecefc4cf726dd903c1e4ddb0b45e1ea3748843791e887cb320c50",
+      "files": 1,
+      "physical": 459,
+      "code": 281,
+      "comment_docstring": 78,
+      "blank": 100
+    },
+    {
+      "path": "src/ruocun/session/conversation.py",
+      "module": "session",
+      "sha256": "5ac25d8ae8e8c206ae16e8fb7424e6b300e8a768dca9897bd96c12578b7e3a5d",
+      "files": 1,
+      "physical": 516,
+      "code": 454,
+      "comment_docstring": 16,
+      "blank": 46
+    },
+    {
+      "path": "src/ruocun/session/cost.py",
+      "module": "session",
+      "sha256": "f21b0e66e558f7663b51c601cc21998fc87ce273e84ef985e9d2a30d879aa8f7",
+      "files": 1,
+      "physical": 107,
+      "code": 78,
+      "comment_docstring": 6,
+      "blank": 23
+    },
+    {
+      "path": "src/ruocun/session/demo.py",
+      "module": "session",
+      "sha256": "67ee7c8ecf32ef80d7ea78820862e1d26d898839ef1e7961a98ca9ebef94c358",
+      "files": 1,
+      "physical": 150,
+      "code": 128,
+      "comment_docstring": 5,
+      "blank": 17
+    },
+    {
+      "path": "src/ruocun/session/durable_store.py",
+      "module": "session",
+      "sha256": "93838accd7b2346bcfccd44bc9ed7e59907f208c0cf9ea087c11dfadd23792ba",
+      "files": 1,
+      "physical": 1574,
+      "code": 1363,
+      "comment_docstring": 57,
+      "blank": 154
+    },
+    {
+      "path": "src/ruocun/session/inputs.py",
+      "module": "session",
+      "sha256": "03822ed1804d6e55486b4cc372fa4d0d2e612337370fe7d9a0708ce09d2e18e6",
+      "files": 1,
+      "physical": 37,
+      "code": 23,
+      "comment_docstring": 1,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/session/log.py",
+      "module": "session",
+      "sha256": "a1006fe7d5601fe5f90c92b725a6d6f35b379d1940eb61e0a16f3de3de6ddc2c",
+      "files": 1,
+      "physical": 133,
+      "code": 108,
+      "comment_docstring": 1,
+      "blank": 24
+    },
+    {
+      "path": "src/ruocun/session/messages.py",
+      "module": "session",
+      "sha256": "5cd71bf266c81322163872c07e626a064b8c7e6661884426a0f2cb2d00604c80",
+      "files": 1,
+      "physical": 44,
+      "code": 34,
+      "comment_docstring": 3,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/session/process_identity.py",
+      "module": "session",
+      "sha256": "46640a2e5751606e65c8c4802302ade729cec9d399c753ad4ed4d6de3278fd2c",
+      "files": 1,
+      "physical": 197,
+      "code": 147,
+      "comment_docstring": 20,
+      "blank": 30
+    },
+    {
+      "path": "src/ruocun/session/prune.py",
+      "module": "session",
+      "sha256": "fd90fd9d7a3ec12f9ec1141e480447029719c448e51ae4d2f17b1604ceeca58f",
+      "files": 1,
+      "physical": 78,
+      "code": 68,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/session/recovery.py",
+      "module": "session",
+      "sha256": "e9abb3905863fd5edd823c75ab2be5acceaf8cef52acdd7bf20299020126ca04",
+      "files": 1,
+      "physical": 221,
+      "code": 193,
+      "comment_docstring": 9,
+      "blank": 19
+    },
+    {
+      "path": "src/ruocun/session/runtime.py",
+      "module": "session",
+      "sha256": "c25978d53ed52ca3247ee893b7ac356f1d301ae8641080aed7cbb3b5ccb9e8aa",
+      "files": 1,
+      "physical": 250,
+      "code": 188,
+      "comment_docstring": 30,
+      "blank": 32
+    },
+    {
+      "path": "src/ruocun/session/session.py",
+      "module": "session",
+      "sha256": "0f47a82d26ec5ef93563c90269c42db008a6d6e935d2371ef090fbe8cb94fe7c",
+      "files": 1,
+      "physical": 133,
+      "code": 102,
+      "comment_docstring": 5,
+      "blank": 26
+    },
+    {
+      "path": "src/ruocun/session/sqlite_port.py",
+      "module": "session",
+      "sha256": "32d0eb19d1594e5c3db891b5da41f300154bb92cce7a341e7d4f7ff5a58b9bde",
+      "files": 1,
+      "physical": 116,
+      "code": 72,
+      "comment_docstring": 22,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/session/storage_worker.py",
+      "module": "session",
+      "sha256": "158c12692cfa603b2c6f066d178cd95d8ecdf61ebb7b8a530d969ae428a9340e",
+      "files": 1,
+      "physical": 327,
+      "code": 255,
+      "comment_docstring": 18,
+      "blank": 54
+    },
+    {
+      "path": "src/ruocun/skills/__init__.py",
+      "module": "skills",
+      "sha256": "fd0b260a9edae63431014c3425e1d4ad425a6a8e7d909ac42ab3244e7bdc5671",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/skills/adapt.py",
+      "module": "skills",
+      "sha256": "770c2d6b0eaf477710630e38887f39038bb0ff8a34eb77c5f9d9a46a7391cdc7",
+      "files": 1,
+      "physical": 20,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/skills/bundled.py",
+      "module": "skills",
+      "sha256": "c53031be8c1328dec8c4b9ec31997d7bf5627b931a9a6110a9c401342656709d",
+      "files": 1,
+      "physical": 39,
+      "code": 27,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/skills/control.py",
+      "module": "skills",
+      "sha256": "fa9fdab231aa15809d3c524399b42cf171426167a4932d40938997bc7b05f4c3",
+      "files": 1,
+      "physical": 141,
+      "code": 118,
+      "comment_docstring": 1,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/skills/convert.py",
+      "module": "skills",
+      "sha256": "5367ff0b12d7c33c335e3cbde58d29015b18cc72c6eccaced1f325258ba4f0ac",
+      "files": 1,
+      "physical": 83,
+      "code": 62,
+      "comment_docstring": 1,
+      "blank": 20
+    },
+    {
+      "path": "src/ruocun/skills/discover.py",
+      "module": "skills",
+      "sha256": "bc3f8121502aa9f6f7edd7b98d0b65865b4647884f7ac960dfcf424586e543bc",
+      "files": 1,
+      "physical": 143,
+      "code": 122,
+      "comment_docstring": 5,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/skills/install.py",
+      "module": "skills",
+      "sha256": "2dbfafca9d7cfd512ae6c0b119e3f7f29c275d979d68e4f647de74cdd390066f",
+      "files": 1,
+      "physical": 293,
+      "code": 244,
+      "comment_docstring": 4,
+      "blank": 45
+    },
+    {
+      "path": "src/ruocun/skills/runtime.py",
+      "module": "skills",
+      "sha256": "4f0e4ebeaa235b4bf9574176224f240376e42cc5c2f0c6d6ef7aed48d751707a",
+      "files": 1,
+      "physical": 151,
+      "code": 136,
+      "comment_docstring": 3,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/skills/skill_audit.py",
+      "module": "skills",
+      "sha256": "183b47b50a412a168a21e22be552fe4c64a7cad1be9af89cc0ad8774469a370e",
+      "files": 1,
+      "physical": 113,
+      "code": 90,
+      "comment_docstring": 1,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/skills/skills.py",
+      "module": "skills",
+      "sha256": "2d43371f33ab12ec053cd6a8f74f950b89a7bba03a9bbb9857270cf95ad0eec3",
+      "files": 1,
+      "physical": 142,
+      "code": 123,
+      "comment_docstring": 4,
+      "blank": 15
+    },
+    {
+      "path": "src/ruocun/skills/types.py",
+      "module": "skills",
+      "sha256": "48eae19b85a4db72d0b1d20a9394b19c1c4cacf9a2c9f1505cd0a4cddf6083a7",
+      "files": 1,
+      "physical": 17,
+      "code": 13,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/skills/usage.py",
+      "module": "skills",
+      "sha256": "c934c4756e07cf0866caf1f534565cb99ec5ccc3599b8a7fcfd31c58729c1bfc",
+      "files": 1,
+      "physical": 77,
+      "code": 56,
+      "comment_docstring": 2,
+      "blank": 19
+    },
+    {
+      "path": "src/ruocun/tools/__init__.py",
+      "module": "tools",
+      "sha256": "d05208785439c35f37019444ab0ee1c92dade11921e05d56f3402eda314160a2",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/tools/agent.py",
+      "module": "tools",
+      "sha256": "a7926ecfae8a8874c6168a2af1456f387f0566303091ed7c9d1a7b3244cdf0f6",
+      "files": 1,
+      "physical": 121,
+      "code": 100,
+      "comment_docstring": 2,
+      "blank": 19
+    },
+    {
+      "path": "src/ruocun/tools/ask_user.py",
+      "module": "tools",
+      "sha256": "902d3fcdb09750e2d9bf032b49fcd25fbfd5866175eaf216894f4e5cc932dedd",
+      "files": 1,
+      "physical": 88,
+      "code": 76,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/tools/config.py",
+      "module": "tools",
+      "sha256": "c740d4bc2664d2dc3de8d8020d6ff9a649c1ebda4032009fe6f9f46a158be595",
+      "files": 1,
+      "physical": 71,
+      "code": 60,
+      "comment_docstring": 2,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/cron_tools.py",
+      "module": "tools",
+      "sha256": "d66411b49bd72321c6ac0d92ba03d61d70fc3639ee515b1ed42590d1c10ea74a",
+      "files": 1,
+      "physical": 67,
+      "code": 55,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/tools/edit_file.py",
+      "module": "tools",
+      "sha256": "767d1da5cba74be274c64e4c355ad4d5161a6a9d4217c4733fb9512e42c171e1",
+      "files": 1,
+      "physical": 138,
+      "code": 116,
+      "comment_docstring": 2,
+      "blank": 20
+    },
+    {
+      "path": "src/ruocun/tools/enter_worktree.py",
+      "module": "tools",
+      "sha256": "2900f0fe205a8b880b590a7a6b32bb342cfdc6565320c6542c1f3a095a889b0f",
+      "files": 1,
+      "physical": 60,
+      "code": 51,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/exec_shell.py",
+      "module": "tools",
+      "sha256": "aee5a157cdc4f1f7df51bf330d4deb34d563b618df123ed57814e6ba16c1f00b",
+      "files": 1,
+      "physical": 240,
+      "code": 208,
+      "comment_docstring": 10,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/tools/exec_shell_kill.py",
+      "module": "tools",
+      "sha256": "bdb204a8861d9a51b23a48509ffa87a062f1da61c457dc861a09a99834445f69",
+      "files": 1,
+      "physical": 31,
+      "code": 23,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tools/exec_shell_poll.py",
+      "module": "tools",
+      "sha256": "22c55219b12573c8ede7df06581f28b4a02e3ab9afe024f5cc8f2a58e113c1a6",
+      "files": 1,
+      "physical": 52,
+      "code": 43,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/execute.py",
+      "module": "tools",
+      "sha256": "c0972bd0120f1159413a26d9de7b221ed24facc093a080c41d006ea63b24fb58",
+      "files": 1,
+      "physical": 30,
+      "code": 17,
+      "comment_docstring": 3,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/exit_worktree.py",
+      "module": "tools",
+      "sha256": "cb9a08740e9a42b841e4bb57147bb98294e039705dbeafdf0d91ba4be8c05aee",
+      "files": 1,
+      "physical": 51,
+      "code": 42,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/fetch_cache.py",
+      "module": "tools",
+      "sha256": "b644852cb0a6aec72bae3a2f4e3c64a0e9e873e43e4ecb6f2ac8521566b9dbc3",
+      "files": 1,
+      "physical": 30,
+      "code": 20,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/fetch_extract.py",
+      "module": "tools",
+      "sha256": "15775333690c15f26fc269347051dddb3de047308efa94327881c821a7deadd0",
+      "files": 1,
+      "physical": 10,
+      "code": 6,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/tools/fetch_url.py",
+      "module": "tools",
+      "sha256": "a3bb382af4ef077981a235b66c12e25065d25576a20cb8456123f6f0addf0b1c",
+      "files": 1,
+      "physical": 70,
+      "code": 56,
+      "comment_docstring": 1,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/tools/glob.py",
+      "module": "tools",
+      "sha256": "ee55b2ef2f1189e83422c76fffcd47c171b8a86084af6f8fefc6bf63344c9655",
+      "files": 1,
+      "physical": 56,
+      "code": 44,
+      "comment_docstring": 3,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/glob_files.py",
+      "module": "tools",
+      "sha256": "151072a1bbe9a6ab5a33a133ca2f38eb5d41789d5189a810b920394c9d577f29",
+      "files": 1,
+      "physical": 55,
+      "code": 43,
+      "comment_docstring": 2,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/grep_files.py",
+      "module": "tools",
+      "sha256": "1807687acf9f2d361c9b9f63699ca42492ce1433dc26d452963c2461e570e2f8",
+      "files": 1,
+      "physical": 225,
+      "code": 202,
+      "comment_docstring": 1,
+      "blank": 22
+    },
+    {
+      "path": "src/ruocun/tools/list_dir.py",
+      "module": "tools",
+      "sha256": "2075512d4cc082b88ebc4d9bb0d8ff373eb1006242b406e2f4516311e2e3c088",
+      "files": 1,
+      "physical": 59,
+      "code": 48,
+      "comment_docstring": 2,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/lsp.py",
+      "module": "tools",
+      "sha256": "e662343c33ca8ace9f20f3254f0cd1d35e847c9e182c6b548c7f3d70f79e2ecd",
+      "files": 1,
+      "physical": 45,
+      "code": 37,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tools/managed_shell.py",
+      "module": "tools",
+      "sha256": "a483d074797df31fe8c48cf09c61bfbc6bcbf3728824525051dd8644e883b41b",
+      "files": 1,
+      "physical": 874,
+      "code": 815,
+      "comment_docstring": 8,
+      "blank": 51
+    },
+    {
+      "path": "src/ruocun/tools/memory_read.py",
+      "module": "tools",
+      "sha256": "24aeec9545289c8ef00a125f6c7aebcdbb7c65a9afbda8ac3c859e13b5bd5e2f",
+      "files": 1,
+      "physical": 53,
+      "code": 43,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/memory_write.py",
+      "module": "tools",
+      "sha256": "5af12c3ca0ff50da3b86ad010b8ad7c81028b1d5c12ab8bc79aea694570cef55",
+      "files": 1,
+      "physical": 75,
+      "code": 67,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tools/message_parent.py",
+      "module": "tools",
+      "sha256": "6e94842f19c7abfc6a4ea4ff6a782f14dce084d15449f4bf1b9b72b8d5f2d9d8",
+      "files": 1,
+      "physical": 45,
+      "code": 34,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/monitor.py",
+      "module": "tools",
+      "sha256": "e9cb824f40321e50449967434bcbc53d0633dfacb0e06db368ac32705c327098",
+      "files": 1,
+      "physical": 62,
+      "code": 49,
+      "comment_docstring": 1,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/tools/notify_user.py",
+      "module": "tools",
+      "sha256": "18ab86783fc49bcc1375d3e0ffcb2c649faebf4c76be8823864bb1e54f7c7909",
+      "files": 1,
+      "physical": 29,
+      "code": 20,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/paths.py",
+      "module": "tools",
+      "sha256": "f8be910624122b41cc3b4c2d5f9f33a269545e817c40619cc84b1cf247bd40d7",
+      "files": 1,
+      "physical": 124,
+      "code": 91,
+      "comment_docstring": 2,
+      "blank": 31
+    },
+    {
+      "path": "src/ruocun/tools/plan_mode.py",
+      "module": "tools",
+      "sha256": "991aadad6d71cb61f6be52996e5759fa49cbc02ea11dfef9cd5e9c42fe236a62",
+      "files": 1,
+      "physical": 60,
+      "code": 51,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/read_file.py",
+      "module": "tools",
+      "sha256": "4bb6bb9c742be33dc1a49e31a1660a71bf5af744f9b6beb1fde51a0edb8dcaaf",
+      "files": 1,
+      "physical": 122,
+      "code": 107,
+      "comment_docstring": 4,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/tools/registry.py",
+      "module": "tools",
+      "sha256": "f648d6e510b108a1fd9243586df1ab75ab9ca7dc1911305e3921935509cc9df1",
+      "files": 1,
+      "physical": 226,
+      "code": 194,
+      "comment_docstring": 5,
+      "blank": 27
+    },
+    {
+      "path": "src/ruocun/tools/repo_map.py",
+      "module": "tools",
+      "sha256": "d8246bb6eb38411a4eddab45ec84418a6bc9dabce40073ab001f568e23c3f421",
+      "files": 1,
+      "physical": 39,
+      "code": 32,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/tools/schedule_tool.py",
+      "module": "tools",
+      "sha256": "2624b7931fd3267b57879e231d22d5bc8a02218cae4d26c172d02a9e7ff0c48b",
+      "files": 1,
+      "physical": 47,
+      "code": 37,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/schema.py",
+      "module": "tools",
+      "sha256": "223cbae844448fa80875d00165051f030f49ba4c3cb47c235ce8b0e403be4a91",
+      "files": 1,
+      "physical": 106,
+      "code": 90,
+      "comment_docstring": 2,
+      "blank": 14
+    },
+    {
+      "path": "src/ruocun/tools/send_message.py",
+      "module": "tools",
+      "sha256": "094e5cdd106082baa5b950951171377fc76f415e8f44a499c020afbcb9605406",
+      "files": 1,
+      "physical": 51,
+      "code": 43,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tools/shell_runner.py",
+      "module": "tools",
+      "sha256": "a0e909912bc0716c06d83a8f42cd465ae98159dd087723da32f960e2434c6f67",
+      "files": 1,
+      "physical": 407,
+      "code": 358,
+      "comment_docstring": 6,
+      "blank": 43
+    },
+    {
+      "path": "src/ruocun/tools/skill.py",
+      "module": "tools",
+      "sha256": "847f17a4acf001e78a6b5ab60344959693731072c70b2660067cd12304e718ab",
+      "files": 1,
+      "physical": 65,
+      "code": 55,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/skill_install.py",
+      "module": "tools",
+      "sha256": "16ebb7d8434834779860df6c35c9fc1c908b527361464472ff33de90e656eab4",
+      "files": 1,
+      "physical": 38,
+      "code": 31,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/tools/spill.py",
+      "module": "tools",
+      "sha256": "6a21adb52640b2bbf0b3f1168836275b39afef8d8af74f516d8867dc884a6942",
+      "files": 1,
+      "physical": 29,
+      "code": 24,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/tools/ssrf.py",
+      "module": "tools",
+      "sha256": "e50fc46fde69da51cdfaf4af95304b390139f7b673d362812dc71e431596e105",
+      "files": 1,
+      "physical": 68,
+      "code": 59,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/task_create.py",
+      "module": "tools",
+      "sha256": "b688b5ee67c6560f3e7242dc6e56758c6eb2de69d9329df3fdc4675fd88b9f74",
+      "files": 1,
+      "physical": 36,
+      "code": 25,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/task_get.py",
+      "module": "tools",
+      "sha256": "2066a5071008724157322f0334e66771b94967ab54c5d350d6398c1dbdc8bd2c",
+      "files": 1,
+      "physical": 49,
+      "code": 36,
+      "comment_docstring": 1,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/tools/task_list.py",
+      "module": "tools",
+      "sha256": "f4cda57f1e7640addcbf3e692913c18179d2c9ddc80166b2b0482b611b918688",
+      "files": 1,
+      "physical": 51,
+      "code": 34,
+      "comment_docstring": 1,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/tools/task_output.py",
+      "module": "tools",
+      "sha256": "dbaeabe7cce7881316bddfe2e64b455ac1df251c9f79346bf63f0ac46278b1f0",
+      "files": 1,
+      "physical": 77,
+      "code": 59,
+      "comment_docstring": 1,
+      "blank": 17
+    },
+    {
+      "path": "src/ruocun/tools/task_send.py",
+      "module": "tools",
+      "sha256": "ee080cb5f78b3fc93592b2720f7d3930607648155f0823db4bb310b7985c4e5f",
+      "files": 1,
+      "physical": 61,
+      "code": 48,
+      "comment_docstring": 1,
+      "blank": 12
+    },
+    {
+      "path": "src/ruocun/tools/task_stop.py",
+      "module": "tools",
+      "sha256": "5d4521461d2882e38aaa58bb456a337a1b3bc6ff8f6a4f4fdd8eacbeefb94f83",
+      "files": 1,
+      "physical": 40,
+      "code": 29,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/task_update.py",
+      "module": "tools",
+      "sha256": "3733507a1ae3588c7291f19544fbbf74628d994ab0d55e48996e0d073c996023",
+      "files": 1,
+      "physical": 45,
+      "code": 34,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/task_wait.py",
+      "module": "tools",
+      "sha256": "c4b80082c419eded0bff0d71fbe97106a08ab261b5f3ae32add81d12a0dc0842",
+      "files": 1,
+      "physical": 47,
+      "code": 38,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/todo_store.py",
+      "module": "tools",
+      "sha256": "036e62b3234d9cde3d43f84f63f358d88b1b142ac6ead7f2dbbb98eacb308a97",
+      "files": 1,
+      "physical": 25,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tools/todo_write.py",
+      "module": "tools",
+      "sha256": "9cc305cacb505398870d1cf8f43a9b6efefc9ee03bb9a2e03059a0d4da156503",
+      "files": 1,
+      "physical": 39,
+      "code": 30,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tools/tool_audit.py",
+      "module": "tools",
+      "sha256": "2d8dfb966d2a04b7bb564f0fb79cb952aa3cffd8fe298458e75a07f90069599d",
+      "files": 1,
+      "physical": 140,
+      "code": 114,
+      "comment_docstring": 5,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/tools/tool_batch.py",
+      "module": "tools",
+      "sha256": "5b6741a5a9e5a1f56f34a312507cc44598e6208848b4d21b1a9073ae9618f863",
+      "files": 1,
+      "physical": 364,
+      "code": 321,
+      "comment_docstring": 7,
+      "blank": 36
+    },
+    {
+      "path": "src/ruocun/tools/tool_search.py",
+      "module": "tools",
+      "sha256": "f7d56611bbd86d7d883b8d610b199b57ff6ee1713b3dd7390ffb8cc11cbae2d1",
+      "files": 1,
+      "physical": 22,
+      "code": 14,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tools/tools_for_mode.py",
+      "module": "tools",
+      "sha256": "69f2173cb81b6bbab6ca3f29bac1b200c65c4b0556c9f349817e372eaab5accc",
+      "files": 1,
+      "physical": 13,
+      "code": 8,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/tools/types.py",
+      "module": "tools",
+      "sha256": "f232bde5e122e0103635f524a3e0fcf95f6c68845a4be5af357089ad4c2797b8",
+      "files": 1,
+      "physical": 117,
+      "code": 99,
+      "comment_docstring": 2,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/tools/web_network.py",
+      "module": "tools",
+      "sha256": "09f1013bb44bf4edd53618c9d29b51047abd6a4d382fc55f0cc98cc9bac0b107",
+      "files": 1,
+      "physical": 38,
+      "code": 27,
+      "comment_docstring": 2,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tools/web_search.py",
+      "module": "tools",
+      "sha256": "23887fd6fb8551adca40b04d729d61617d4bf71c20fd8846dd82bf1c7d16477d",
+      "files": 1,
+      "physical": 71,
+      "code": 55,
+      "comment_docstring": 1,
+      "blank": 15
+    },
+    {
+      "path": "src/ruocun/tools/write_file.py",
+      "module": "tools",
+      "sha256": "8f8c12db28d1ed87b434dfcc62d39df04ca06675616b9a787073a949a37e612f",
+      "files": 1,
+      "physical": 65,
+      "code": 55,
+      "comment_docstring": 1,
+      "blank": 9
+    },
+    {
+      "path": "src/ruocun/tui/__init__.py",
+      "module": "tui",
+      "sha256": "6b5846771640366ce7c694d7b0720d014bc2fd483a06b86c5d8a36de29d4c0df",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/tui/app/__init__.py",
+      "module": "tui",
+      "sha256": "d7f1f1d0a5b9a9b5ac14155977d8d9b09773bcd413fb10d895d8cefafe0d8da4",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/tui/app/agent_tasks_panel.py",
+      "module": "tui",
+      "sha256": "734904d8b570ba2e88b938bbb7eae28326fafcebfd54927fb248ba3f14c18c50",
+      "files": 1,
+      "physical": 89,
+      "code": 77,
+      "comment_docstring": 1,
+      "blank": 11
+    },
+    {
+      "path": "src/ruocun/tui/app/app.py",
+      "module": "tui",
+      "sha256": "dff8a3db1dd97539910b1f2be187441a6b692bb48192ae2584703ab90418e805",
+      "files": 1,
+      "physical": 465,
+      "code": 411,
+      "comment_docstring": 5,
+      "blank": 49
+    },
+    {
+      "path": "src/ruocun/tui/app/format.py",
+      "module": "tui",
+      "sha256": "3d7e06d67fc5aaf6e6b84efd13b67a92c17f16e10dbd2d6e0eaa972862c0c637",
+      "files": 1,
+      "physical": 22,
+      "code": 15,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/tui/app/modals.py",
+      "module": "tui",
+      "sha256": "d88098679769346913102f765f94b722a3a1f2dbf389f04924fc82ba63f8b9f5",
+      "files": 1,
+      "physical": 251,
+      "code": 226,
+      "comment_docstring": 1,
+      "blank": 24
+    },
+    {
+      "path": "src/ruocun/tui/app/types.py",
+      "module": "tui",
+      "sha256": "59fda196ca93998fbe27e00c997b0dea63f71089ed40c6e61db2860f8d977b8d",
+      "files": 1,
+      "physical": 31,
+      "code": 22,
+      "comment_docstring": 1,
+      "blank": 8
+    },
+    {
+      "path": "src/ruocun/tui/background.py",
+      "module": "tui",
+      "sha256": "214548a8f462c8f62ffb9ca6c812ea9e01cb99d36fc9ce57c292fe3bdb17ca6b",
+      "files": 1,
+      "physical": 50,
+      "code": 39,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tui/banner.py",
+      "module": "tui",
+      "sha256": "575a4d7ee14ec738529990dc79285ed4205c37adae50ef9c191ccd8d02053a94",
+      "files": 1,
+      "physical": 64,
+      "code": 53,
+      "comment_docstring": 1,
+      "blank": 10
+    },
+    {
+      "path": "src/ruocun/tui/brand.py",
+      "module": "tui",
+      "sha256": "c8acbc5c25b73e4adeefe90947b25256a6392db476c5b485c06e5659f5065322",
+      "files": 1,
+      "physical": 4,
+      "code": 2,
+      "comment_docstring": 1,
+      "blank": 1
+    },
+    {
+      "path": "src/ruocun/tui/capabilities.py",
+      "module": "tui",
+      "sha256": "77b06b4ada1a65acdfd2cee227bc931fa6725f3cc80faeeb95bbb10ffbf831df",
+      "files": 1,
+      "physical": 23,
+      "code": 17,
+      "comment_docstring": 1,
+      "blank": 5
+    },
+    {
+      "path": "src/ruocun/tui/foreground_registry.py",
+      "module": "tui",
+      "sha256": "455ebec0a561a093451677ef2ceb170c0ceffd48b8cfcbb487c7fcc5d55dcb18",
+      "files": 1,
+      "physical": 14,
+      "code": 8,
+      "comment_docstring": 2,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/tui/image_paste.py",
+      "module": "tui",
+      "sha256": "e023dc00ab12644a823f029c8edfef52ab6ecd9fa8745c5a8246605b45077e85",
+      "files": 1,
+      "physical": 259,
+      "code": 234,
+      "comment_docstring": 1,
+      "blank": 24
+    },
+    {
+      "path": "src/ruocun/tui/input_text.py",
+      "module": "tui",
+      "sha256": "212df690ce869145b538fe06cb8c21344830e2fe8de78ba16123b58ac90d32ae",
+      "files": 1,
+      "physical": 99,
+      "code": 79,
+      "comment_docstring": 2,
+      "blank": 18
+    },
+    {
+      "path": "src/ruocun/tui/markdown.py",
+      "module": "tui",
+      "sha256": "c85f717052b8667594fadfa1a739515252013618356372b01156e5fed5acaf05",
+      "files": 1,
+      "physical": 142,
+      "code": 125,
+      "comment_docstring": 2,
+      "blank": 15
+    },
+    {
+      "path": "src/ruocun/tui/mascot.py",
+      "module": "tui",
+      "sha256": "198921e77872ee72988a68ced615d846483ed225edaf7850d55359ab31051fce",
+      "files": 1,
+      "physical": 241,
+      "code": 210,
+      "comment_docstring": 1,
+      "blank": 30
+    },
+    {
+      "path": "src/ruocun/tui/mascot_frames.py",
+      "module": "tui",
+      "sha256": "fa3576af3079ed6114ff794af16d056ee237c8d16e1deb0d9c1c9aa5bd6389d6",
+      "files": 1,
+      "physical": 76,
+      "code": 58,
+      "comment_docstring": 2,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/tui/maxim.py",
+      "module": "tui",
+      "sha256": "48d15a3ab6ba10c2f77346bf613d6b780f166fdf213cfca19128ee17548bbf39",
+      "files": 1,
+      "physical": 11,
+      "code": 6,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/tui/notifier.py",
+      "module": "tui",
+      "sha256": "d3d5cdaa48d1a438ce6fb669637181497a3404e63b3c85d3b40922e7a309af12",
+      "files": 1,
+      "physical": 28,
+      "code": 19,
+      "comment_docstring": 2,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/__init__.py",
+      "module": "tui",
+      "sha256": "411baa91471daf2c0d3bb8d49bac01ce7f27292f5e465998e014d11ebbf71bd2",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/onboarding.py",
+      "module": "tui",
+      "sha256": "e4a3955a9d47c94815bccd4cc63b2087fec9f1664e8964de69b0a21bddbd4b95",
+      "files": 1,
+      "physical": 80,
+      "code": 62,
+      "comment_docstring": 2,
+      "blank": 16
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/run.py",
+      "module": "tui",
+      "sha256": "a091c92ab5471078477c70c216cc6aa5dc6aac40ca36f6e6a042b39d1b9ded15",
+      "files": 1,
+      "physical": 6,
+      "code": 3,
+      "comment_docstring": 1,
+      "blank": 2
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/select.py",
+      "module": "tui",
+      "sha256": "e281e3ff480f064825ac6ee3c695ac29efeeaf6d0a248e87793bd71c3b931317",
+      "files": 1,
+      "physical": 25,
+      "code": 17,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/steps/__init__.py",
+      "module": "tui",
+      "sha256": "317360501eb4972ce9c1a1c2e791d2655c73572bab37e2e998160e485b1c1797",
+      "files": 1,
+      "physical": 1,
+      "code": 0,
+      "comment_docstring": 1,
+      "blank": 0
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/steps/key_step.py",
+      "module": "tui",
+      "sha256": "e9f2996f3df49d9c48e13a0bf5ac98ba8434f2347407716f3859651c9fc25ff5",
+      "files": 1,
+      "physical": 15,
+      "code": 8,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/steps/language_step.py",
+      "module": "tui",
+      "sha256": "053a43dc5e25be7cba66ed7010cb9a0889ff9b6e7f8e874c5161e89164867981",
+      "files": 1,
+      "physical": 10,
+      "code": 5,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/steps/provider_step.py",
+      "module": "tui",
+      "sha256": "33149acc62a0cd67745b155d70c47636943bfaeeab652258e6793d242c6a1121",
+      "files": 1,
+      "physical": 15,
+      "code": 8,
+      "comment_docstring": 1,
+      "blank": 6
+    },
+    {
+      "path": "src/ruocun/tui/onboarding/steps/trust_step.py",
+      "module": "tui",
+      "sha256": "3e2207b4e41ffe577ac2fa4e0f87f0efdb49f7417728fef8fba8f49d6a88077b",
+      "files": 1,
+      "physical": 16,
+      "code": 12,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/tui/render.py",
+      "module": "tui",
+      "sha256": "76f276b51276b76a111fdc5fc0cbce8b50f397c69bb9114ef019d5e63d924ae3",
+      "files": 1,
+      "physical": 86,
+      "code": 63,
+      "comment_docstring": 2,
+      "blank": 21
+    },
+    {
+      "path": "src/ruocun/tui/spinner_words.py",
+      "module": "tui",
+      "sha256": "70b03a523d6a368e8404a07c7521c415281a6e28c99130e35c3f9e775b18d03f",
+      "files": 1,
+      "physical": 7,
+      "code": 3,
+      "comment_docstring": 1,
+      "blank": 3
+    },
+    {
+      "path": "src/ruocun/tui/tab_attention.py",
+      "module": "tui",
+      "sha256": "9428762333c78c81d4150f138d5e850b4a4bf2081f6201f3e2d9c86eae354359",
+      "files": 1,
+      "physical": 78,
+      "code": 58,
+      "comment_docstring": 1,
+      "blank": 19
+    },
+    {
+      "path": "src/ruocun/tui/taiji.py",
+      "module": "tui",
+      "sha256": "b6f2f9aba86ce025474ebaa7b68ce6090602e446ace56430049755f622a6b56a",
+      "files": 1,
+      "physical": 37,
+      "code": 29,
+      "comment_docstring": 1,
+      "blank": 7
+    },
+    {
+      "path": "src/ruocun/tui/terminal_reports.py",
+      "module": "tui",
+      "sha256": "227f99b2b45b44988939f1efcf877757304ea821da0b8b95d9c7fab2a38320e5",
+      "files": 1,
+      "physical": 288,
+      "code": 250,
+      "comment_docstring": 10,
+      "blank": 28
+    },
+    {
+      "path": "src/ruocun/tui/theme.py",
+      "module": "tui",
+      "sha256": "2d15aa0e246a1ea74f76eb5b70bfc917be13aafd87625a0fd2df29675bfe3183",
+      "files": 1,
+      "physical": 69,
+      "code": 55,
+      "comment_docstring": 1,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/tui/tips.py",
+      "module": "tui",
+      "sha256": "45d3340415bf1d96f1375be7476b744937fdc968a1db8e1f7513fc2400e0fb89",
+      "files": 1,
+      "physical": 10,
+      "code": 5,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/tui/wakelock.py",
+      "module": "tui",
+      "sha256": "c7acfc9df1910771f97227fb61282d62a8c0b9461da460c854e8ddb115b01106",
+      "files": 1,
+      "physical": 113,
+      "code": 92,
+      "comment_docstring": 1,
+      "blank": 20
+    },
+    {
+      "path": "src/ruocun/tui/welcome.py",
+      "module": "tui",
+      "sha256": "f8604ac67882c95ec6df0aa2b2eca44efbdf6f40709a5ab94e8bf4904e2b4209",
+      "files": 1,
+      "physical": 124,
+      "code": 108,
+      "comment_docstring": 3,
+      "blank": 13
+    },
+    {
+      "path": "src/ruocun/tui/width.py",
+      "module": "tui",
+      "sha256": "7c5b852d74a02a81a33faf538cfb93bd96511fa407971cbde5421bdc4c782768",
+      "files": 1,
+      "physical": 12,
+      "code": 7,
+      "comment_docstring": 1,
+      "blank": 4
+    },
+    {
+      "path": "src/ruocun/version.py",
+      "module": "(root)",
+      "sha256": "c5d5c3432dc8f49bdb4b578265c5f1c72fa2a230e36641ae72b8b13c9462c93d",
+      "files": 1,
+      "physical": 3,
+      "code": 1,
+      "comment_docstring": 1,
+      "blank": 1
+    }
+  ],
+  "product_manifest_sha256": "10aead5950f55ad4863935da52c5a812939d82714b50eb5fa329f8cd1c81e810",
+  "changed_after_read": [],
+  "added_after_read": [],
+  "parse_errors": []
+}

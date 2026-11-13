@@ -1,0 +1,1 @@
+"""Configured command Hooks."""

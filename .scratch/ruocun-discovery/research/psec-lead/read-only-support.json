@@ -1,0 +1,27 @@
+{
+  "utc": "2026-11-05T08:17:05.405188+00:00",
+  "creates_environment": false,
+  "mxc_pin": "f4aa3fd59306d140ccf7448e914306fc6cdb74d0",
+  "os": {
+    "CurrentBuildNumber": "26200",
+    "UBR": 9711,
+    "EditionID": "Professional",
+    "DisplayVersion": "25H2"
+  },
+  "exports": {
+    "CreateProcessSecurityEnvironment": true,
+    "QueryProcessSecurityEnvironmentSupport": true,
+    "IsProcessSecurityEnvironmentVersionSupported": true,
+    "CloseProcessSecurityEnvironment": true
+  },
+  "support": {
+    "hresult": "0x00000000",
+    "flags": 15
+  },
+  "version_1": {
+    "hresult": "0x00000000",
+    "available": 1,
+    "minor": 1
+  },
+  "script_sha256": "b6e61cc7115054e582a8abe65ca5533810be31df45b4ca88c53e54447d32d786"
+}

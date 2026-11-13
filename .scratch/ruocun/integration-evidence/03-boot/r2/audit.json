@@ -1,0 +1,171 @@
+{
+  "unchanged_prior_inputs": [
+    {
+      "path": ".gitignore",
+      "sha256": "6d9c7e1087f2e7357267deaa5e80e08ffe68bcea0e5558e8d7f0c59b48f96ff4"
+    },
+    {
+      "path": "docs/development.md",
+      "sha256": "7ef80f04e881d70cdf3b1efd4655ceaaf11053994ad171c1b02aa0c8d0768dad"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "7eac0b4c36ce843dfca5dfe1d56314c8b48535c6aeed41550b8afceaa4c6b71d"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "dccbb3bce95d2757cbff43e0efc5fd80dbe05dff036c9a15485a11c3df4b0d26"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "6e3f166ca5b3e7d6cccdeedac472420f88f4153405c39d8247f4fa86af13e6b8"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7f5ab099a92d0ec190601ea3e0df3cacbbe01d2145007d16a7223523fd8d4cdd"
+    },
+    {
+      "path": "requirements-dev-win311.lock",
+      "sha256": "374c1af75ffda3ce284f2a5d2e6cd67af953cbd4133f1b929f8153f0dc8dc0af"
+    },
+    {
+      "path": "requirements-dev.in",
+      "sha256": "0244bdfac43ebde9ffa79885c536e363121333e1325362e23a709c22eca26e8e"
+    },
+    {
+      "path": "src/ruocun/__init__.py",
+      "sha256": "99cb7ee30f25199eb28f29de59c4b67f04205f273cdc0babf178ed47d37f5f06"
+    },
+    {
+      "path": "src/ruocun/__main__.py",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "path": "src/ruocun/cli.py",
+      "sha256": "e2ab0d6e553c39a8d6e1811711f06be7c5baa7e4d288498183ed489b0d47307f"
+    },
+    {
+      "path": "src/ruocun/resources/help.zh-CN.txt",
+      "sha256": "95f6e17fb6e25e9922348b1b0f3ef29de0038fc51b093891068d9289895d4748"
+    },
+    {
+      "path": "src/ruocun/version.py",
+      "sha256": "c5d5c3432dc8f49bdb4b578265c5f1c72fa2a230e36641ae72b8b13c9462c93d"
+    },
+    {
+      "path": "tests/.gitattributes",
+      "sha256": "69f0677a14f2b97c6871e32f74ad7489ee9bf5168e56b454ef19d289db46d892"
+    },
+    {
+      "path": "tests/support/LICENSE",
+      "sha256": "7eac0b4c36ce843dfca5dfe1d56314c8b48535c6aeed41550b8afceaa4c6b71d"
+    },
+    {
+      "path": "tests/support/oracle/.gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "tests/support/oracle/__init__.py",
+      "sha256": "2e1c0ce7776c6773aa8fa67bfb5f796141bcf5c44552c3f1051fc6fe7010664e"
+    },
+    {
+      "path": "tests/support/oracle/driver.py",
+      "sha256": "7b1b7b5d635721a82fa0496cdcd5b0d762628be2263586d32c93fcd864294e8e"
+    },
+    {
+      "path": "tests/support/oracle/network_guard.mjs",
+      "sha256": "c75a816079a5875df88283d5c828eec6aed68eaa3994c21ef4689fade4df03b2"
+    },
+    {
+      "path": "tests/support/oracle/README.md",
+      "sha256": "460d86ec870accdb8834b423dc26fa15e281c68137a85d7d29c1d66258a8ec2e"
+    },
+    {
+      "path": "tests/support/pyproject.toml",
+      "sha256": "4d11d854538ff7839015ea0b04ae9f4e713c8b380279c2b8a7e17c1220410573"
+    },
+    {
+      "path": "tests/support/ruocun_acceptance/__init__.py",
+      "sha256": "7b35455e8113899566979df802cb56a7e742b89810b41e964804f95d110f5e15"
+    },
+    {
+      "path": "tests/support/ruocun_acceptance/__main__.py",
+      "sha256": "f07fff5dcd6c1c57177934a313f68d73fcc9a44541391df12540f1a43f487a32"
+    },
+    {
+      "path": "tests/support/ruocun_acceptance/environment.py",
+      "sha256": "698372d0c163c4102a7e096d2ce38fe07cbc0c2ce4dca3980576e90d14aa6d0b"
+    },
+    {
+      "path": "tests/test_acceptance.py",
+      "sha256": "6cc6f138d7152cec4f95b7081a6db473e087355e15025652028c1af61790e301"
+    },
+    {
+      "path": "tests/test_boot.py",
+      "sha256": "0d2c1616701fa0dd33bafb1c8f04e4bcddb6c5afd9f1b9561dc1cb8ce4d0301f"
+    },
+    {
+      "path": "tests/test_package.py",
+      "sha256": "007ffc25d793cf74a1056776dd64750d5acd993f33ae21355ac2b57cbe1be7d1"
+    },
+    {
+      "path": "tests/test_source_oracle.py",
+      "sha256": "8e52625ac70573b45c8584b0f18c861b92acc8823033ce56bbc94ae7e0deb939"
+    },
+    {
+      "path": "tools/audit.py",
+      "sha256": "98a22350ab4f72a8bb62dd4c77bdc51bafb2f186cb4d05c27bb638f4d59be94c"
+    },
+    {
+      "path": "tools/lock.py",
+      "sha256": "d9fdf8b8cf61b75dee46f30b77799f5638b0afb5d2d55b00b14232e56497f82a"
+    },
+    {
+      "path": "tools/run.py",
+      "sha256": "88411bbe538309d5e1e46895404052c1016ce0ff3d75e07e898603a008973b8d"
+    }
+  ],
+  "prior_raw_and_artifact_archives_unchanged": true,
+  "development_wheels_reverified": 18,
+  "new_support_changed_members": [
+    "ruocun_acceptance/driver.py",
+    "ruocun_dev_support-0.1.0.dist-info/RECORD"
+  ],
+  "product_wheel_unchanged": true,
+  "artifacts": [
+    {
+      "path": ".cache/merge03/r2/product/ruocun-0.1.0.dev0-py3-none-any.whl",
+      "sha256": "feeb2e2d77d3aaeede79681536f90a8955faef8fbc68d054928626ab84e99a8c",
+      "size": 6413
+    },
+    {
+      "path": ".cache/merge03/r2/product/ruocun-0.1.0.dev0.tar.gz",
+      "sha256": "5b191e6d5194826e61713b4bba263c28c0e1aeb684e70f0fa61d4766b3190c75",
+      "size": 4878
+    },
+    {
+      "path": ".cache/merge03/r2/support/ruocun_dev_support-0.1.0-py3-none-any.whl",
+      "sha256": "58cf0ef5decc4f9df4ee57a562e0ec2e84ea57ff91382e172bf748b69ed11e21",
+      "size": 17799
+    },
+    {
+      "path": ".cache/merge03/r2/support/ruocun_dev_support-0.1.0.tar.gz",
+      "sha256": "b491970aadd4c729bbb02e4ea4665dbcaf130c49aa10e01cc100d921a903f00c",
+      "size": 14858
+    }
+  ],
+  "new_inputs": [
+    {
+      "path": "tests/support/ruocun_acceptance/driver.py",
+      "sha256": "784d4e707c1ce17eab1437e791d1d2a5591986c53241d241576cdb938e26f5ed"
+    },
+    {
+      "path": "tests/test_acceptance_process.py",
+      "sha256": "c82934cc9e5d29851cf5ed486bfc7e5bb601c12d2ad3a05d1c040f73a8314cb6"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "dfa92df35de82fe1021e06de704de0bf97095fe0584f068ee21a3482580bd05f"
+    }
+  ]
+}

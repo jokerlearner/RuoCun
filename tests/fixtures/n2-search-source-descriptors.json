@@ -1,0 +1,124 @@
+{
+  "frozen_sha256": {
+    "list_dir.ts": "ae1674d69e58406845eb09d9005c5c6c1aeb364770eb8dd2510d76ee82a2b6b6",
+    "file_search.ts": "de36654f6a95a77a04cb0c6d7159b6219f58c3da3d0ad06615c3a691718d966a",
+    "grep_files.ts": "9935493bce190590e5a34f9ad4e632e06fafb84871501fbf5440a26d9d159642"
+  },
+  "tools": {
+    "ListDir": {
+      "description": "列出工作区内某个目录的条目(只列这一层,不递归子目录),目录名以 / 结尾,按字典序排列。不给 path 就列工作区根目录。想探一层层往下看用它;想找某个具体文件/按名字模式找,直接用 Glob 更快,不用先 ListDir 一层层翻。超过 500 项会截断(如 node_modules),此时改用 Grep/Glob 精确定位而非翻列表。典型用法:刚接手一个陌生项目,先 ListDir 根目录看大致结构(有哪些顶层目录、配置文件),再决定往哪个子目录深入,而不是一上来就用 Glob 漫无目的地搜。目录本身不存在或不是目录会明确报错,不会静默返回空列表让你误以为它是空目录。目录项和文件混在同一层列表里,靠结尾的 / 区分,别把目录当文件直接拿去 Read。",
+      "descriptionEn": "Lists entries in a workspace directory (this level only, not recursive), directory names end with /, sorted alphabetically. Omit path to list the workspace root. Use this to explore level by level; to find a specific file or name pattern, use Glob directly — faster than browsing down one directory at a time. Truncates past 500 entries (e.g. node_modules) — use Grep/Glob to target precisely instead of browsing the list. Typical use: when first exploring an unfamiliar project, ListDir the root to see the overall structure (top-level directories, config files) before deciding which subdirectory to dig into, rather than searching aimlessly with Glob right away. A nonexistent path or non-directory path errors clearly, rather than silently returning an empty list that could be mistaken for a genuinely empty directory. Directories and files are listed together at the same level, distinguished only by the trailing / — don't mistake a directory entry for a file and pass it to Read.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "相对工作区根目录的目录路径,默认根目录"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "Glob": {
+      "description": "在工作区内按文件名/路径 glob 搜索文件(如 *.ts 只匹配文件名、**/*.test.ts 能跨目录匹配完整相对路径),按修改时间从新到旧排序——想找'最近改过的那个 xxx 文件'时这个排序很有用,不用自己再猜。可用 path 限定只搜某个子目录。按文件名/路径找文件优先用本工具,不要用 Bash 拼 find——不占审批。这是纯按名字/路径匹配,不看文件内容,按内容找用 Grep。\n边界:最多返回 100 个结果(比 Grep 的 200 更少,大仓库模糊 glob 容易一下命中很多,想要更精确用更窄的 glob或配合 path);查无匹配就是没有,不会像 Grep 那样回显搜索范围,自己确认 glob 写对了。举例:想找刚编辑过的那个测试文件但记不清具体名字,glob 传 *.test.ts 配合按修改时间排序,通常第一条就是。",
+      "descriptionEn": "Searches files by name/path glob in the workspace (e.g., *.ts matches by filename only, **/*.test.ts matches the full relative path across directories), sorted by modification time (newest first) — handy for finding 'the xxx file I just edited' without guessing. Use path to limit to a subdirectory. Prefer this over shelling out to find via Bash — no approval needed. This matches by name/path only, not content — use Grep for content search.\nBoundaries: at most 100 results (fewer than Grep's 200 — a loose glob on a large repo can match a lot; narrow the glob or add path for precision); an empty match just means nothing found — unlike Grep it doesn't echo back the search scope, so double-check the glob is correct. Example: you can't recall the exact name of a test file you just edited — pass *.test.ts and rely on the newest-first sort; the one you want is usually first.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "glob": {
+            "type": "string",
+            "description": "文件名/路径 glob"
+          },
+          "path": {
+            "type": "string",
+            "description": "搜索子目录或具体某个文件,默认工作区根"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "glob"
+        ]
+      }
+    },
+    "Grep": {
+      "description": "在工作区内按内容(正则,JS 语法)搜索文本文件。mode=content(默认)返回 路径:行号:行内容;mode=files 只返回命中文件名,只想知道哪些文件有匹配、不需要看具体行时用它更省。可用 glob(如 *.ts)过滤文件名、path 限定搜索子目录(也可以直接指向某个具体文件,只搜这一个)、ignore_case 忽略大小写、type 按文件类型过滤(js/ts/py/go/rust/java…)。\n上下文行:before/after/context 显示匹配行前/后/前后各 N 行(参考 Grep -A/-B/-C),便于理解匹配处的上下文。head_limit 限制返回条数(默认 200),offset 跳过前 N 条(分页)。multiline=true 启用跨行匹配(. 匹配换行符,模式可跨行)。\n内容搜索优先用本工具,不要用 Bash 拼 grep/rg--结果格式统一、不占审批。\n边界:结果最多 head_limit 条(默认 200,文件级或行级,按 mode 定),单行超 300 字符会截断,截断处会像 Read 一样标注'该行共 N 字符,已截断'(不是静默切断);二进制文件自动跳过,不会读出乱码。查无结果时会把'在哪个目录、按什么正则/glob 搜的'原样回显--据此判断是不是 path 设窄了或 pattern 写错了,别对着同一次失败的搜索盲目重试。搜大型仓库时如果结果被截断(提示会说明),缩小 path 或收紧 pattern/glob 再搜,而不是假设已经看到了全部匹配。\nonly_matching=true(类似 grep -o):只返回匹配到的文本本身(用 <<...>> 标出精确边界),不受整行 300 字符截断影响--命中出现在超长行(如压缩 JSON/日志里几万字符的一行)时,想确认这个匹配到底是不是真的命中了完整的预期内容(比如核实一段疑似密钥的完整值),用这个而不是被整行截断挡住看不到的部分误导。match_context 配合使用,指定匹配前后额外显示的字符数(非整行,默认 0)。",
+      "descriptionEn": "Searches text files in the workspace by content regex (JS syntax). mode=content (default) returns path:line:content; mode=files returns only matching filenames - cheaper when you just need to know which files match, not the specific lines. Filter by glob (e.g. *.ts), limit to a subdirectory via path (path can also point straight at a single file to search just that one), ignore_case for case-insensitive, type for file type filtering (js/ts/py/go/rust/java...).\nContext lines: before/after/context show N lines before/after/around matches (like CC Grep -A/-B/-C). head_limit caps result count (default 200), offset skips first N results (pagination). multiline=true enables cross-line matching (. matches newlines).\nPrefer this over shelling out to grep/rg via Bash - consistent output format, no approval needed.\nBoundaries: at most head_limit results (default 200, file- or line-level depending on mode); lines over 300 chars are truncated, and the truncation point says 'line has N chars, truncated' just like Read (never silent); binary files are silently skipped, never returned as garbage. An empty result echoes back exactly where and with what pattern/glob it searched - use that to tell whether path was too narrow or the pattern is wrong, rather than blindly retrying the same failed search. If results were truncated (the message says so) on a large repo, narrow path or tighten pattern/glob and search again - don't assume you've seen every match.\nonly_matching=true (like grep -o): returns only the matched text itself (bounded exactly with <<...>>), unaffected by the 300-char line truncation - use this when a hit lands on a huge line (minified JSON, a giant log line) and you need to confirm whether it actually matched the full expected content (e.g. verifying a suspected secret's complete value) instead of being misled by content the line truncation hid. Pair with match_context to show N extra chars (not lines) around the match, default 0.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "正则表达式"
+          },
+          "path": {
+            "type": "string",
+            "description": "搜索子目录或具体某个文件,默认工作区根"
+          },
+          "glob": {
+            "type": "string",
+            "description": "文件名 glob 过滤,如 *.ts"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "content",
+              "files"
+            ],
+            "description": "content(默认)或 files"
+          },
+          "ignore_case": {
+            "type": "boolean",
+            "description": "忽略大小写"
+          },
+          "before": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "匹配行前显示 N 行(参考 -B)"
+          },
+          "after": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "匹配行后显示 N 行(参考 -A)"
+          },
+          "context": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "匹配行前后各显示 N 行(参考 -C);与 before/after 取 max"
+          },
+          "head_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "限制返回条数,默认 200"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "跳过前 N 条结果(分页),默认 0"
+          },
+          "multiline": {
+            "type": "boolean",
+            "description": "跨行匹配(. 匹配换行符,模式可跨行)"
+          },
+          "type": {
+            "type": "string",
+            "description": "文件类型过滤(js/ts/py/go/rust/java/c/cpp/rb/php/swift/kt/scala/sh/sql/html/css/json/yaml/xml/md)"
+          },
+          "only_matching": {
+            "type": "boolean",
+            "description": "只返回匹配文本本身(用 <<...>> 标出边界,类似 grep -o),不受整行 300 字符截断影响;用于核实超长行里的匹配是否命中了完整预期内容"
+          },
+          "match_context": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 200,
+            "description": "仅 only_matching=true 时生效:匹配前后额外显示的字符数(非整行),默认 0"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "pattern"
+        ]
+      }
+    }
+  }
+}

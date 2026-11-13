@@ -1,0 +1,9 @@
+{
+  "merge": "3a00c588fbd685ac4086cafd7d00e16ed64bd7c5",
+  "candidate": "0419c42c3593a6b56f78e9cad063c2a0c6e56600",
+  "pytest_exit": 0,
+  "original_environment_unchanged": true,
+  "simple_test_runtime_also_exited": true,
+  "fresh_round_raw_archive_members": 181,
+  "scope": "合成契约实验；非产品、wheel/standalone、真实模型、Windows Terminal 或断电验收。"
+}

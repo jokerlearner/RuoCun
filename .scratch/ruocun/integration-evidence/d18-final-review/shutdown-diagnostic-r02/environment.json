@@ -1,0 +1,9 @@
+{
+  "harness_sha256": {
+    "shutdown_probe.py": "647ac342409f9f91a77dbb332c308390786ec7e3094e0ad53241a39eb86ce07f",
+    "probe.py": "fb7e3b3a1a6249e7d44c8441cb3d75dc00c67c65eb62ab4b2c2cb4e8907a4aae",
+    "pending.py": "6a1be104c7af7a1ac5f24798d6c974c009510f32bcf8fb0551cdbc4509afd418",
+    "safe_env.py": "ff17627c3463060b7706d635685b3ddf88f43b1e703097bac5fc6ff7bbc9e0c5"
+  },
+  "review_boundary": "controlled diagnostic/submission exception only"
+}

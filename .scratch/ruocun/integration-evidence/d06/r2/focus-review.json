@@ -1,0 +1,15 @@
+{
+  "normal_and_controlled_exception": [
+    {
+      "path": "t/test_focus_reporting_protocol_0/crash/events.jsonl",
+      "enabled_seq": 15,
+      "disabled_seq": 18
+    },
+    {
+      "path": "t/test_focus_reporting_protocol_0/exit/events.jsonl",
+      "enabled_seq": 13,
+      "disabled_seq": 16
+    }
+  ],
+  "exact_raw_enable_disable_counts": "existing test assertions passed against ProtocolOutput.write_raw"
+}

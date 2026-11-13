@@ -1,0 +1,58 @@
+name: Quality gates
+
+on:
+  push:
+    branches: [main, master, integration/ruocun-migration]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows x64 CPython 3.11 installed gate
+    runs-on: windows-2022
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+          architecture: x64
+      - name: Lint, type check, build, install and test
+        run: python -I -X utf8 .github/ci/windows_gate.py --state .cache/ci
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: windows-quality-receipts
+          path: |
+            .cache/ci/raw/
+            .cache/ci/windows-junit.xml
+            .cache/ci/SHA256SUMS
+          include-hidden-files: true
+
+  posix-design:
+    name: ${{ matrix.os }} source adapters and platform boundary
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile and exercise the source adapter
+        shell: bash
+        run: |
+          probe_home="$(mktemp -d)"
+          trap 'rm -rf -- "$probe_home"' EXIT
+          env -i HOME="$probe_home" TMPDIR="$probe_home" PATH=/usr/bin:/bin LC_ALL=C \
+            "$(command -v python)" -I -B -X utf8 .github/ci/posix_design.py

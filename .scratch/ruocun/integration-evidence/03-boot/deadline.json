@@ -1,0 +1,34 @@
+{
+  "case": {
+    "id": "CONTROLLED.deadline",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 \u4e2d\u6587 \u7a7a\u683c\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-c",
+      "import time; time.sleep(30)"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 \u4e2d\u6587 \u7a7a\u683c\\deadline\\CONTROLLED.deadline",
+    "expected": {
+      "exit": 0,
+      "contains": "",
+      "stderr": false
+    },
+    "expected_source": "D21/Task03 actual driver deadline; owned leaf process",
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "exit": 1,
+    "status": "failed",
+    "reason": "15 second command deadline",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true,
+      "workspace_retained": true
+    }
+  },
+  "elapsed_seconds": 15.030999999988126,
+  "observed_child_exit": 1,
+  "child_exited": true,
+  "delivery": "real communicate timeout after 15 seconds; not exception injection"
+}

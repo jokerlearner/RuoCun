@@ -1,0 +1,66 @@
+{
+  "artifacts": [
+    {
+      "path": "dist\\ruocun-0.1.0.dev0-py3-none-any.whl",
+      "sha256": "feeb2e2d77d3aaeede79681536f90a8955faef8fbc68d054928626ab84e99a8c",
+      "size": 6413
+    },
+    {
+      "path": ".cache\\merge03\\direct\\ruocun-0.1.0.dev0-py3-none-any.whl",
+      "sha256": "feeb2e2d77d3aaeede79681536f90a8955faef8fbc68d054928626ab84e99a8c",
+      "size": 6413
+    },
+    {
+      "path": "dist\\ruocun-0.1.0.dev0.tar.gz",
+      "sha256": "5b191e6d5194826e61713b4bba263c28c0e1aeb684e70f0fa61d4766b3190c75",
+      "size": 4878
+    },
+    {
+      "path": ".cache\\merge03\\support\\ruocun_dev_support-0.1.0-py3-none-any.whl",
+      "sha256": "96b7fead643bd4fd021caf700df0ae3ac878fc1b5e9cab03ebda7e4e3f820769",
+      "size": 16646
+    }
+  ],
+  "product_wheel_members": [
+    "ruocun/__init__.py",
+    "ruocun/__main__.py",
+    "ruocun/cli.py",
+    "ruocun/version.py",
+    "ruocun/resources/help.zh-CN.txt",
+    "ruocun-0.1.0.dev0.dist-info/METADATA",
+    "ruocun-0.1.0.dev0.dist-info/WHEEL",
+    "ruocun-0.1.0.dev0.dist-info/entry_points.txt",
+    "ruocun-0.1.0.dev0.dist-info/licenses/LICENSE",
+    "ruocun-0.1.0.dev0.dist-info/licenses/NOTICE.md",
+    "ruocun-0.1.0.dev0.dist-info/RECORD"
+  ],
+  "sdist_members": [
+    "ruocun-0.1.0.dev0/src/ruocun/__init__.py",
+    "ruocun-0.1.0.dev0/src/ruocun/__main__.py",
+    "ruocun-0.1.0.dev0/src/ruocun/cli.py",
+    "ruocun-0.1.0.dev0/src/ruocun/version.py",
+    "ruocun-0.1.0.dev0/src/ruocun/resources/help.zh-CN.txt",
+    "ruocun-0.1.0.dev0/.gitignore",
+    "ruocun-0.1.0.dev0/LICENSE",
+    "ruocun-0.1.0.dev0/NOTICE.md",
+    "ruocun-0.1.0.dev0/README.md",
+    "ruocun-0.1.0.dev0/pyproject.toml",
+    "ruocun-0.1.0.dev0/PKG-INFO"
+  ],
+  "support_members": [
+    "oracle/.gitattributes",
+    "oracle/README.md",
+    "oracle/__init__.py",
+    "oracle/driver.py",
+    "oracle/network_guard.mjs",
+    "ruocun_acceptance/__init__.py",
+    "ruocun_acceptance/__main__.py",
+    "ruocun_acceptance/driver.py",
+    "ruocun_acceptance/environment.py",
+    "ruocun_dev_support-0.1.0.dist-info/METADATA",
+    "ruocun_dev_support-0.1.0.dist-info/WHEEL",
+    "ruocun_dev_support-0.1.0.dist-info/licenses/LICENSE",
+    "ruocun_dev_support-0.1.0.dist-info/RECORD"
+  ],
+  "direct_sdist_identical": true
+}

@@ -1,0 +1,10 @@
+{
+  "pytest_exitcode": 0,
+  "all_original_hash_checks_match": true,
+  "all_75_original_assets_unchanged": true,
+  "full_backend_contract_met": false,
+  "known_failure": "outside RO permits WRITE_DAC and actual random SID read ACE mutation",
+  "owner_crash_psec_server_teardown": "not-independently-queryable",
+  "archive_sha256": "6647184698b96d71f6c62bdc9b233c31a4b160a1ee2f1b0ff273afbc7e6b4492",
+  "audit_passed": true
+}

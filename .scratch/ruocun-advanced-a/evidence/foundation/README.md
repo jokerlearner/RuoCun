@@ -1,0 +1,9 @@
+# 输入账本与上下文替换接缝
+
+基线0b9537a；root负责唯一Conversation/runtime。D09/StoragePort确认输入不丢失契约在摘要前需要独立于messages的账本。未改Checkpoint/StorageWorker/schema；未运行旧07探针。
+
+Conversation.accept_user先提交输入账本与模型消息后接纳；replace_context只在工具配对完整、系统前缀不变且会话未blocked时执行，先提交候选再替换内存。取消或提交未确认时block后续写，不把“等待取消”当回滚。恢复从checkpoint.accepted_inputs读回稳定ID/seq及title，不从已压缩messages重新推导账本。
+
+仅1个必要实际存储接线确认：原始需求接受→模型可见上下文替换为摘要→正常关闭重开→第二输入，检查完整账本与稳定第一ID保持。先red为旧Conversation缺accept_user；green该确认及现有MVP七工具/两轮/保存重开共2 passed in11.82s。定向Ruff和mypy2文件通过。原始命令/失败/stdout/stderr在raw。外层清空环境、合成HOME/config/temp、311.9及现有18包锁；无模型API调用，SQLite实际走既有固定门禁。
+
+此候选尚待独审，压缩产品接线须消费已独审版本；Q2失败策略尚未决定，本接缝不预设截断或停止。

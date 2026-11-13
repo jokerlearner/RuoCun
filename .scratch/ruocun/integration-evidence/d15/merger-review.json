@@ -1,0 +1,183 @@
+{
+  "branch": "merge/d15-verified",
+  "base": "13dd75b83ebadc7eb8a9cc6b48da6ef7da2ab55f",
+  "candidate": "30b92990b06646d9475bdee4631cbf79a699c1f5",
+  "merge_sha": "6945f41d3f450bde53a86682edd4d8a5ae32b128",
+  "commands": [
+    "git merge --ff-only integration/ruocun-migration",
+    "git merge --quiet --no-ff impl/d15-extensions -m \"Merge branch 'impl/d15-extensions' into merge/d15-verified\"",
+    "& \"D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\impl-d15-extensions\\.scratch\\ruocun-discovery\\experiments\\extensions\\.venv\\Scripts\\python.exe\" -B .scratch\\ruocun-discovery\\experiments\\extensions\\run_experiment.py"
+  ],
+  "execution_cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m15",
+  "asset_root": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m15\\.scratch\\ruocun-discovery\\experiments\\extensions",
+  "python_environment": "Read-only reuse of original implementation venv; experiment code/fixtures/source inputs are from m15",
+  "setup": {
+    "method": "shutil.copytree with explicit extended absolute Windows source and destination paths; read original cache; write own cache only",
+    "source": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\impl-d15-extensions\\.scratch\\ruocun-discovery\\experiments\\extensions\\.runtime\\source",
+    "destination": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m15\\.scratch\\ruocun-discovery\\experiments\\extensions\\.runtime\\source",
+    "global_git_or_windows_settings_changed": false
+  },
+  "run_id": "20261105T065113Z-9f6ae3",
+  "original_evidence_path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m15\\.scratch\\ruocun-discovery\\experiments\\extensions\\evidence\\20261105T065113Z-9f6ae3",
+  "relocated_evidence_path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m15\\.scratch\\ruocun-discovery\\experiments\\extensions\\.runtime\\merger-evidence\\20261105T065113Z-9f6ae3",
+  "relocation": "Only this newly created unique run moved after absolute path validation; original four runs retained in evidence",
+  "pytest_stdout": "...........                                                              [100%]\n11 passed in 13.99s",
+  "pytest_returncode": 0,
+  "tests": [
+    {
+      "classname": "tests.test_compat",
+      "name": "test_dotenv_preserves_source_subset_and_empty_values",
+      "result": "passed",
+      "seconds": 0.001
+    },
+    {
+      "classname": "tests.test_compat",
+      "name": "test_representative_parsers_match_independent_frozen_source_execution",
+      "result": "passed",
+      "seconds": 4.64
+    },
+    {
+      "classname": "tests.test_hooks",
+      "name": "test_hook_stdin_environment_result_codes_and_timeout",
+      "result": "passed",
+      "seconds": 3.207
+    },
+    {
+      "classname": "tests.test_lsp",
+      "name": "test_lsp_frames_correlation_utf16_uri_and_lifecycle",
+      "result": "passed",
+      "seconds": 0.259
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_sdk_stdio_rich_capabilities_and_explicit_environment",
+      "result": "passed",
+      "seconds": 0.238
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_sdk_http_transports_preserve_headers_and_capabilities[http]",
+      "result": "passed",
+      "seconds": 0.59
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_sdk_http_transports_preserve_headers_and_capabilities[sse]",
+      "result": "passed",
+      "seconds": 1.283
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_disconnect_after_effect_is_unknown_and_sdk_does_not_replay[stdio]",
+      "result": "passed",
+      "seconds": 0.319
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_disconnect_after_effect_is_unknown_and_sdk_does_not_replay[http]",
+      "result": "passed",
+      "seconds": 0.775
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_disconnect_after_effect_is_unknown_and_sdk_does_not_replay[sse]",
+      "result": "passed",
+      "seconds": 1.164
+    },
+    {
+      "classname": "tests.test_mcp",
+      "name": "test_sdk_default_environment_uses_allowlist_in_synthetic_parent",
+      "result": "passed",
+      "seconds": 0.851
+    }
+  ],
+  "observed_boundaries": {
+    "source_manager_automatic_replay": {
+      "response": "effect:2",
+      "effects": 2
+    },
+    "sdk_disconnect": {
+      "stdio": {
+        "first_error": "ExceptionGroup('unhandled errors in a TaskGroup', [ExceptionGroup('unhandled errors in a TaskGroup', [McpError('Connection closed')])])",
+        "effects_after_error": 1,
+        "explicit_second_call": "effect:2",
+        "effects_after_explicit_reconnect": 2,
+        "cleanup": true
+      },
+      "http": {
+        "first_error": "ExceptionGroup('unhandled errors in a TaskGroup', [ReadError('')])",
+        "effects_after_error": 1,
+        "explicit_second_call": "effect:2",
+        "effects_after_explicit_reconnect": 2,
+        "cleanup": true
+      },
+      "sse": {
+        "first_error": "ExceptionGroup('unhandled errors in a TaskGroup', [ExceptionGroup('unhandled errors in a TaskGroup', [McpError('Connection closed')])])",
+        "effects_after_error": 1,
+        "explicit_second_call": "effect:2",
+        "effects_after_explicit_reconnect": 2,
+        "cleanup": true
+      }
+    },
+    "source_hook_timeout_late_marker": true,
+    "candidate_hook_timeout_late_marker": false,
+    "source_unbound_elicitation": "elicit:error:-32601",
+    "source_bound_elicitation": "elicit:decline",
+    "sdk_default_capabilities": {},
+    "sdk_default_echo": "echo:default-env|env:<missing>"
+  },
+  "source805": {
+    "pre_members_checked": 805,
+    "post_members_checked": 805,
+    "mismatches": [],
+    "source_tree_sha256": "7ac654a0dc06a9724982c35119501d65a3863e000458dcc0e2765fa66b53180c"
+  },
+  "old_raw": {
+    "files_checked_before_and_after": 144,
+    "manifest_and_worktree_and_candidate_git_blob_equal": true,
+    "changed": []
+  },
+  "new_raw_hash_files_checked": 36,
+  "current_harness_and_snapshots_and_candidate_git_blobs_checked": 16,
+  "cleanup": {
+    "method": "Read-only Win32_Process scan restricted to this asset path + fixture filenames; no global kill",
+    "returncode": 0,
+    "remaining_owned_helpers": [],
+    "stderr": ""
+  },
+  "git": {
+    "diff_check_returncode": 0,
+    "status_porcelain": "",
+    "changed_files_from_base": 170,
+    "changed_paths_only_extensions_experiment": true,
+    "D19_b1b15b5_ancestor": false,
+    "D19_e9b9954_ancestor": false
+  },
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "executable": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\impl-d15-extensions\\.scratch\\ruocun-discovery\\experiments\\extensions\\.venv\\Scripts\\python.exe",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "architecture": "",
+    "mcp": "1.30.0",
+    "pytest": "9.0.2",
+    "pytest_asyncio": "1.3.0",
+    "node": "v24.15.0",
+    "source_mcp_sdk": "1.29.0",
+    "real_model_calls": 0,
+    "fixture_home": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m15\\.scratch\\ruocun-discovery\\experiments\\extensions\\.runtime\\home",
+    "synthetic_brand_inputs": {
+      "DAO_SAMPLE": "legacy",
+      "RUOCUN_SAMPLE": "new"
+    }
+  },
+  "limitations": [
+    "Representative offline selection probes only; no full product extension compatibility claim",
+    "No real model/paid API/third-party services/Windows Terminal UI/user experience acceptance",
+    "No SDK v2; no Linux/macOS; untested protocol cases remain as listed in implementation README",
+    "Cleanup receipt is a read-only Win32_Process scan restricted to this m15 asset path and fixture filenames; not a universal process escape proof"
+  ],
+  "protected_records_modified": false,
+  "product_or_test_expectations_modified": false,
+  "push_performed": false,
+  "worktree_cleanup_performed": false
+}

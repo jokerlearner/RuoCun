@@ -1,0 +1,42 @@
+{
+  "records": [
+    {
+      "tag": "n",
+      "returncode": 0,
+      "expected": 0,
+      "raw_hashes_verified": true,
+      "input_snapshots_verified": 25
+    },
+    {
+      "tag": "i3",
+      "returncode": 0,
+      "expected": 0,
+      "raw_hashes_verified": true,
+      "input_snapshots_verified": 28
+    },
+    {
+      "tag": "s3",
+      "returncode": 0,
+      "expected": 0,
+      "raw_hashes_verified": true,
+      "input_snapshots_verified": 28
+    },
+    {
+      "tag": "r5c",
+      "returncode": 1,
+      "expected": 1,
+      "raw_hashes_verified": true,
+      "input_snapshots_verified": 20
+    },
+    {
+      "tag": "g5",
+      "returncode": 1,
+      "expected": 0,
+      "raw_hashes_verified": true,
+      "input_snapshots_verified": 21
+    }
+  ],
+  "source_members_verified": 6,
+  "original_r5_stdout": "explicit redacted review copy; private payload never read",
+  "g5": "real corrected onefile WinError4551 remains ENV; not green or retried"
+}

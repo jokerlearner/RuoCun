@@ -1,0 +1,7 @@
+{
+  "description": "按 id 读取后台 Shell 自上次读取以来新增的标准输出、错误输出和当前状态。若进程已退出，结果包含可用的退出信息；需要回看完整日志时，从结果中的 runnerDir 定位文件。等待新结果时留出间隔。 任务结束时会收到通知。",
+  "descriptionEn": "Get new stdout and stderr since the previous read, plus the current state of the background shell identified by id. The result includes exit information when available. Use runnerDir to locate the complete log. Leave time for new output between reads. The session reports completion automatically.",
+  "parameters": {
+    "id": "启动后台 Bash 时返回的任务标识。"
+  }
+}

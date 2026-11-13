@@ -1,0 +1,911 @@
+{
+  "archive_sha256": "6d5409f0c670702218d685cf10f407855486e399bf29afc320a37ad3fb860474",
+  "member_count": 181,
+  "members": [
+    {
+      "member": "c/checkpoint-snapshot/boundary.db",
+      "bytes": 53248,
+      "sha256": "91f42703ba143e3c7fd7b7277a1a684369bb0742c65bef5115d386aa58dbae95"
+    },
+    {
+      "member": "c/checkpoint-snapshot/result.json",
+      "bytes": 197,
+      "sha256": "95c9a0e58d2058d22aad203ba68b558c8d37c5cad09c08246283d444d0628448"
+    },
+    {
+      "member": "c/concurrent-checkpoint/checkpointer/done.json",
+      "bytes": 1456,
+      "sha256": "4b8775e8e96fe757ef36e4fcf33aa0c1ed46e75a6857e7ad41ae0f65fea74481"
+    },
+    {
+      "member": "c/concurrent-checkpoint/checkpointer/ready.json",
+      "bytes": 136,
+      "sha256": "f6d4aa583ef7ae53eb554692a2c35e951a0b9b40b7c4ff1f81f8f9c9676dbc96"
+    },
+    {
+      "member": "c/concurrent-checkpoint/checkpointer/runtime-workload-checkpointer/runtime.json",
+      "bytes": 3642,
+      "sha256": "dc6bfed78f5cbf168a50890a0fdc0a94348788b99e306a21c4e765bc9a71ed0c"
+    },
+    {
+      "member": "c/concurrent-checkpoint/checkpointer/runtime-workload-checkpointer/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/checkpointer/stderr-workload.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/concurrent.db",
+      "bytes": 1163264,
+      "sha256": "31920a931e6f105946d58d103f262450c175b89ed537cfd9e13aa01b37bf62c7"
+    },
+    {
+      "member": "c/concurrent-checkpoint/go.json",
+      "bytes": 16,
+      "sha256": "f653cd1a21b85cda2457c77b4339f54623e82a5a3fe7775b725be4aa8ff2f6f5"
+    },
+    {
+      "member": "c/concurrent-checkpoint/reader/done.json",
+      "bytes": 1579,
+      "sha256": "48ce7cab5c76b8bbd72030fdf1867e2f00d3bd2289c41f5498346733093e2320"
+    },
+    {
+      "member": "c/concurrent-checkpoint/reader/ready.json",
+      "bytes": 135,
+      "sha256": "663cada5f387026f1274699dc03f7f309a836be1ba8fb54f7f851cb78ee3c20b"
+    },
+    {
+      "member": "c/concurrent-checkpoint/reader/runtime-workload-reader/runtime.json",
+      "bytes": 3622,
+      "sha256": "700c392395d2a6a1543a3c33fd7fb9f91334c56acb9f2ed4dd7abe07674860f8"
+    },
+    {
+      "member": "c/concurrent-checkpoint/reader/runtime-workload-reader/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/reader/stderr-workload.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/result.json",
+      "bytes": 3300,
+      "sha256": "3ee6730e21aec864b2b781baf80d4106c5e8b414526eaa95f5d5021cd960b1cf"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer0/done.json",
+      "bytes": 22,
+      "sha256": "47bef242a76d6ee3237d06fba235886fd27ffd0e708497d64f5c9e9ba87d143f"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer0/ready.json",
+      "bytes": 136,
+      "sha256": "0cde38d130a9d3d653f2c7edb06e415822c4e7a2014aac0fc9b8d02a663ffe18"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer0/runtime-workload-writer0/runtime.json",
+      "bytes": 3627,
+      "sha256": "6cf15dc05818ae72f0dfe87bf2613ad2a76e6f25d46216dfba8dca6ae7598152"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer0/runtime-workload-writer0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer0/stderr-workload.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer1/done.json",
+      "bytes": 22,
+      "sha256": "47bef242a76d6ee3237d06fba235886fd27ffd0e708497d64f5c9e9ba87d143f"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer1/ready.json",
+      "bytes": 136,
+      "sha256": "82ed164aab14b0c25a1dd02d9e8db0381181e5c16dc6d5a072dfbdcbc778f87c"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer1/runtime-workload-writer1/runtime.json",
+      "bytes": 3627,
+      "sha256": "d440a7057fa8699f9b17f612300700b4129706c4e845f27e4849c58547b6e38f"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer1/runtime-workload-writer1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/concurrent-checkpoint/writer1/stderr-workload.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/database-edges/corrupt.db",
+      "bytes": 36,
+      "sha256": "84ef08cb3c6785744748ca298867f28a9b21be90d90072b0aa626c514ad7d4b3"
+    },
+    {
+      "member": "c/database-edges/normal.db",
+      "bytes": 49152,
+      "sha256": "4fa370e664663c1fd7ff9a3c6ac0dd6bcd384f923277844c5d97d23255a7aa28"
+    },
+    {
+      "member": "c/database-edges/result.json",
+      "bytes": 219,
+      "sha256": "353da8f24e39b0432228fd083e4b54c80a1eb8e847e737dd8b4e6f1653bdf92b"
+    },
+    {
+      "member": "c/environment.json",
+      "bytes": 805,
+      "sha256": "c7fcc0d666837387ae551f9d19d9e680537cf1fa81684148e03d513db1e55866"
+    },
+    {
+      "member": "c/harness/.gitattributes",
+      "bytes": 106,
+      "sha256": "ccdfa7a89f33061b8545f5b078dbc2e28e0b231a18594f8d48fc347ac389f7c7"
+    },
+    {
+      "member": "c/harness/archive_evidence.py",
+      "bytes": 5349,
+      "sha256": "40b15803914ad2b7d5ca12e60bed36712dcf8658ba398a30e5172958586d284f"
+    },
+    {
+      "member": "c/harness/audit_evidence.py",
+      "bytes": 6577,
+      "sha256": "66717d3b2ccd416e56e53b7148edfd3f6bbaf4095886f5b88f78e673de5478aa"
+    },
+    {
+      "member": "c/harness/candidate.json",
+      "bytes": 1295,
+      "sha256": "f9c4bddc70426512d8074f811b7fa9c10e906d0b361f32d4cbb90ff106ef2d28"
+    },
+    {
+      "member": "c/harness/frozen-probe.py",
+      "bytes": 23476,
+      "sha256": "4e8685adfba0a5eff99eced8e776d0e9da1bfe44a674142e0484db9b81b1b3df"
+    },
+    {
+      "member": "c/harness/frozen-run_probe.py",
+      "bytes": 32810,
+      "sha256": "b1a4fae90d6fbebcf965aa71d3a9e801a323ab498e36922110caa6ac65650cda"
+    },
+    {
+      "member": "c/harness/prepare.py",
+      "bytes": 2766,
+      "sha256": "5a33f2b7ce3b3228d87fbeee532a01a3ecdc1513f7bc13b04895607f43c91559"
+    },
+    {
+      "member": "c/harness/runtime_probe.py",
+      "bytes": 17803,
+      "sha256": "3faea1e2114176cdaed73524483713034c89c04a2dfd7563c345dcdfc651d12c"
+    },
+    {
+      "member": "c/harness/test_runtime.py",
+      "bytes": 2775,
+      "sha256": "fcbcf9a3ee088acf86697d39d4bdd405e39cb59fcc9cb85ff4459cb306a37bea"
+    },
+    {
+      "member": "c/harness-sha256.json",
+      "bytes": 788,
+      "sha256": "41adca8ba1019d7ec8eeda5bc6cf5b80a845ad4319c259c8f2c26667c55ae962"
+    },
+    {
+      "member": "c/owner-and-identity/ready.json",
+      "bytes": 91,
+      "sha256": "49eb39058a4548ea4e13ee837b138da05da4e3a8b1a9b82ba8fae4a233bde0d1"
+    },
+    {
+      "member": "c/owner-and-identity/result.json",
+      "bytes": 351,
+      "sha256": "630a15d7957823eb4a9d9c45d4d49d8b9eac0c90c609db8d3ff2be7950d61541"
+    },
+    {
+      "member": "c/owner-and-identity/runtime-owner-owner/runtime.json",
+      "bytes": 3584,
+      "sha256": "d23ea4e3712acd058e7f5b2ead53a1b2ff28a3611ba0a2082dd5ebd727c4a081"
+    },
+    {
+      "member": "c/owner-and-identity/runtime-owner-owner/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/owner-and-identity/session.db",
+      "bytes": 49152,
+      "sha256": "caa72f4460035cf5ce1cf3783b3d6cbadf549047e94f1a8a003f2c53f9df4467"
+    },
+    {
+      "member": "c/owner-and-identity/stderr-owner.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/owner-and-identity/try-write.json",
+      "bytes": 18,
+      "sha256": "e79631523cbdad7b8f766fd7ef28dcdb349ff88f607a04016695ea7171db58bc"
+    },
+    {
+      "member": "c/owner-and-identity/write-result.json",
+      "bytes": 20,
+      "sha256": "3dd07d58d67d6815dc0c1e31bca3c4e9fece166d8235596b48a1ebdb3b6ab5a3"
+    },
+    {
+      "member": "c/runtime.json",
+      "bytes": 3594,
+      "sha256": "94733741ecba24939b3f495f7cdee96acd8a698312b496dfe6a81726ffc5bcdb"
+    },
+    {
+      "member": "c/sqlite-after_effect/effect.txt",
+      "bytes": 5,
+      "sha256": "5259d46a49644bf76792231ef7315b5293677c49ddd7e69d95557013e10320d4"
+    },
+    {
+      "member": "c/sqlite-after_effect/kill.json",
+      "bytes": 672,
+      "sha256": "6099b2aaf0cc57db6d9be803927d11258fb1ddf20ac374ab1e1a7b582986ef61"
+    },
+    {
+      "member": "c/sqlite-after_effect/ready.json",
+      "bytes": 85,
+      "sha256": "e119a9072ba5c7fa58c977401eabd9eedc2514afbc0130343df9d54f101fe7df"
+    },
+    {
+      "member": "c/sqlite-after_effect/recovery-0.json",
+      "bytes": 326,
+      "sha256": "03805fcc7e763f8961185a9cfeb4326597e5fddf53db70202c012cf6b8f19cc9"
+    },
+    {
+      "member": "c/sqlite-after_effect/recovery-1.json",
+      "bytes": 326,
+      "sha256": "d3c46eb302caaa41750488c0df37300e726c13c9d7aa6305e228c7fb8e92ec9d"
+    },
+    {
+      "member": "c/sqlite-after_effect/recovery-2.json",
+      "bytes": 326,
+      "sha256": "9ef37deff2770ab35f03d509b5a99d2069824921845d3f0a66f8bfcad8e42770"
+    },
+    {
+      "member": "c/sqlite-after_effect/result.json",
+      "bytes": 575,
+      "sha256": "350f4846af362e4a8b9d3ff3319b327ef35f1cb8cb8e7078143b3cd7adac803d"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-db-after_effect/runtime.json",
+      "bytes": 3604,
+      "sha256": "665215d8425b976eca47bb988ccf1b2de82d28c55cf6e475992b6418e9582dbd"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-db-after_effect/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-recover-tool-0/runtime.json",
+      "bytes": 3611,
+      "sha256": "90c74f02c415b54a5a0fd835096481857c54184a583b40369143fd68bfdb56dc"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-recover-tool-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-recover-tool-1/runtime.json",
+      "bytes": 3611,
+      "sha256": "7dfbb4554a1bb64ceb4115d7115b9727149f154967ebf3722e77cfb690e7be97"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-recover-tool-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-recover-tool-2/runtime.json",
+      "bytes": 3611,
+      "sha256": "ed3d0a4e80e41aeabfcac84b9495dd7c45a20ffac694833056066d9cd33e1650"
+    },
+    {
+      "member": "c/sqlite-after_effect/runtime-recover-tool-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_effect/session.db",
+      "bytes": 49152,
+      "sha256": "ac97d395cdf170f0b0af25aac30c42aaa52e103810d38e44676644158b3bb717"
+    },
+    {
+      "member": "c/sqlite-after_effect/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_effect/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/kill.json",
+      "bytes": 672,
+      "sha256": "29bdb1811a8788562c0b429d4924dc0cc8dca2b49c55057ce13af2735c306ac1"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/ready.json",
+      "bytes": 92,
+      "sha256": "a04669e5b2c852e9608d087837604d163df72472a7d7b9493c08c71ee0daac35"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/recovery-0.json",
+      "bytes": 326,
+      "sha256": "76f7d3a5aa4916471774b69c9548c8474e56170fe50f98d72e652daee3b53caf"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/recovery-1.json",
+      "bytes": 326,
+      "sha256": "ec7f4d70707ae7f97c3353aa7d2dc11f66915f2af03a8789aae7084e173e65ba"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/recovery-2.json",
+      "bytes": 326,
+      "sha256": "55e6ea039830b9a1e754e0a57cf26eb4e2a1ece8196d361f96c1c7e449cd1aad"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/result.json",
+      "bytes": 582,
+      "sha256": "03f4c28ebdc4e7acff0d59601735bc4161ca012623997b9a4fcbd333235094d0"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-db-after_intent_commit/runtime.json",
+      "bytes": 3625,
+      "sha256": "4c76418cce87cd2bc897df15cdeaae56e862b4bded5c4f93ca9969cc6ae6ebf0"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-db-after_intent_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-recover-tool-0/runtime.json",
+      "bytes": 3625,
+      "sha256": "3273e1cc7af269e7eda2fe6cb2fb1b28a8274727db39ace95ecdb69e639c5049"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-recover-tool-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-recover-tool-1/runtime.json",
+      "bytes": 3625,
+      "sha256": "acca8808457dff62d1d2e2de8a64628a4f2deb9d443c557c785db77d034c89c2"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-recover-tool-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-recover-tool-2/runtime.json",
+      "bytes": 3625,
+      "sha256": "3a2de766d36c9ffe2635be97ebb300c7a9b0bc958c5c70713c4fb7c778c58e81"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/runtime-recover-tool-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/session.db",
+      "bytes": 49152,
+      "sha256": "ac97d395cdf170f0b0af25aac30c42aaa52e103810d38e44676644158b3bb717"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_intent_commit/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/effect.txt",
+      "bytes": 5,
+      "sha256": "5259d46a49644bf76792231ef7315b5293677c49ddd7e69d95557013e10320d4"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/kill.json",
+      "bytes": 672,
+      "sha256": "94881e17c60bb09461b329734068f0a3336b231c05a3ae844342102b5c6ef928"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/ready.json",
+      "bytes": 92,
+      "sha256": "425722b38bd29b115b0e282a433e9a596a4a6203f5a099642f4fd88abbf9c06d"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/recovery-0.json",
+      "bytes": 330,
+      "sha256": "3540cb3a7f6c2eced6f32776986e71a9ab8a0b77ac984a8869dd88a12fe6ad64"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/recovery-1.json",
+      "bytes": 330,
+      "sha256": "a14da06d2ea95d5db70e0e01d19d0adf1eee2c06ff18ba44d46cb3e8b8cef964"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/recovery-2.json",
+      "bytes": 330,
+      "sha256": "3f1c78bf66a4a56900cd28a39e73a990338a5a9a17e0ba15e5f4ce97a81134d4"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/result.json",
+      "bytes": 614,
+      "sha256": "6161091594e81d2a383ae8bf17d869528be4bec75a5cce1a5867fd055c382127"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-db-after_result_commit/runtime.json",
+      "bytes": 3625,
+      "sha256": "7a7659ad42e80753cb9677fbeea437b10eef1f9b730965a1d46afc625951a013"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-db-after_result_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-recover-tool-0/runtime.json",
+      "bytes": 3625,
+      "sha256": "85e91f7c03c8cfe4e855989aef746fe197c62d1a27e75b5725ccaad5239c7e04"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-recover-tool-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-recover-tool-1/runtime.json",
+      "bytes": 3625,
+      "sha256": "319d5d396b420e6eb9c95ff703a3dd7cf4cf437b191dd52f252e1ac6d4acd080"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-recover-tool-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-recover-tool-2/runtime.json",
+      "bytes": 3625,
+      "sha256": "1a9af9bc24bb7106ee2ccc0a2ae7fc88154cb56d3a370b784bff3ff0ec4e1f10"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/runtime-recover-tool-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/session.db",
+      "bytes": 49152,
+      "sha256": "be31670075b23b23d9a5730c8485f3824f395230ecbfc0f4ae70ca11fae9f4e3"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-after_result_commit/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/kill.json",
+      "bytes": 672,
+      "sha256": "6ddef04f49f2534c30f2504ade6348813c379643161ca5b942c3e3888dbeb319"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/ready.json",
+      "bytes": 93,
+      "sha256": "e4b9ddbdfba1fafab050ca4fed6a3d743dce127c708ea852ffc7811d69821239"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/recovery-0.json",
+      "bytes": 299,
+      "sha256": "0321c257780491383ae70b302a3efdee2a51bdd4c38287019e5a56f70d4141be"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/recovery-1.json",
+      "bytes": 299,
+      "sha256": "11c7fa8c2552e2912f824dce4c0dcdd3239fab2633b520927ce3f137c4ef616f"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/recovery-2.json",
+      "bytes": 299,
+      "sha256": "db66d6ef9eed1c362789763e7f3f78592ea29c89b4937c8a90f34a734154cb3f"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/result.json",
+      "bytes": 564,
+      "sha256": "5a58b6b6405d8f9f755d276377f94564fa8c787348040fe6e3eaa01b76439a0d"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-db-before_intent_commit/runtime.json",
+      "bytes": 3628,
+      "sha256": "e8b0a2cbf18465e99220fa19bf74fe0db49ae3611bf9cf6c2f67955a4e5b046e"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-db-before_intent_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-recover-tool-0/runtime.json",
+      "bytes": 3627,
+      "sha256": "3edd9283db404b4ec75bc3b50e2f3472bd9568194f240c5e996d0c1f493b70e3"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-recover-tool-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-recover-tool-1/runtime.json",
+      "bytes": 3627,
+      "sha256": "264b5979af0c4b89d23c6ddefccfcf03e043dd145dba5b2a9325a4fdbf1a59da"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-recover-tool-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-recover-tool-2/runtime.json",
+      "bytes": 3627,
+      "sha256": "288919e4077030c35d8521cc8fcd38655d026e31f2c2948b2ed2c17a1203c95c"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/runtime-recover-tool-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/session.db",
+      "bytes": 49152,
+      "sha256": "bed7927b2df1bb9569d83bbb07a1f5ac27c61f7b453c2dd38c2798333754b00b"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_intent_commit/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/effect.txt",
+      "bytes": 5,
+      "sha256": "5259d46a49644bf76792231ef7315b5293677c49ddd7e69d95557013e10320d4"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/kill.json",
+      "bytes": 672,
+      "sha256": "c0e7cf92892e68e87fa3fbef3bc282862668a7742d2aa88d642bca51474ea5e5"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/ready.json",
+      "bytes": 93,
+      "sha256": "b9dd79e9a21a4f1173e7eff1ede32e88ddfe41e8cc12ba8ac1a797af90aa0184"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/recovery-0.json",
+      "bytes": 326,
+      "sha256": "094a396ec94f95f634fb99f2f2b7f196a5ae35389d8166cb2c108644daa23f72"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/recovery-1.json",
+      "bytes": 326,
+      "sha256": "0b6f9c1a9f4dabe2654b9d3e6b171d5ccc414bc0027891e78467b27ad9fa9d38"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/recovery-2.json",
+      "bytes": 326,
+      "sha256": "ac01fe0035cfc8ee653b9e8b364b8655f61c9130394abf596ce8ce0c3e0dee40"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/result.json",
+      "bytes": 583,
+      "sha256": "fe500a15c72c871805d98ccb3aefc52223cb9484b25274944e5cf55bc374a8b6"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-db-before_result_commit/runtime.json",
+      "bytes": 3628,
+      "sha256": "b9f91d0cd3c541d0363a00661e381e0e6c770aa51266a31413ab3939110ddaf9"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-db-before_result_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-recover-tool-0/runtime.json",
+      "bytes": 3627,
+      "sha256": "83cace6674e073eb06de367c8d678097c4bfd84edd9a029cac606c51849e44b4"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-recover-tool-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-recover-tool-1/runtime.json",
+      "bytes": 3627,
+      "sha256": "ecc784cbc0684bcfa804cbba20374cd27119b73e91cbdd64eaf5f71a3275c5e6"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-recover-tool-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-recover-tool-2/runtime.json",
+      "bytes": 3627,
+      "sha256": "ed28702a3b0f761410fc55fd66a75700de7a2c7dc6512fcafbc0fc927422d161"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/runtime-recover-tool-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/session.db",
+      "bytes": 49152,
+      "sha256": "ac97d395cdf170f0b0af25aac30c42aaa52e103810d38e44676644158b3bb717"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-before_result_commit/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/kill.json",
+      "bytes": 672,
+      "sha256": "3499ec66261203e92d309a0922eea0ba52fd0374e0a5f8476fe178a4164f43d0"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/ready.json",
+      "bytes": 96,
+      "sha256": "a92d267f0517556849aa92bc54fded1f999ecf407c8c358ca0e258d6819f85fc"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/recovery-0.json",
+      "bytes": 221,
+      "sha256": "91aaf28bd6a1e90b56fd2d6138d25d3c10c6b1a13e8dff632500758af2cd178e"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/recovery-1.json",
+      "bytes": 221,
+      "sha256": "6af709eb151d5b9e377d18c756bb2f8ce52f9b804a784ec18a5897aa14c49934"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/recovery-2.json",
+      "bytes": 221,
+      "sha256": "7c86055d66ef32ebe3f7e7817b57b23c22a99f814e1f1abf86e1016294025c71"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/result.json",
+      "bytes": 595,
+      "sha256": "57aa6337690ef21f60a2b55c1d59a6bbd98e46719552f31c1493f8b890b9c53f"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-db-checkpoint_after_commit/runtime.json",
+      "bytes": 3637,
+      "sha256": "8ce36e123876653aa6a52274df2f440d81d88420fed679b1c72b5cd8b0c290bc"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-db-checkpoint_after_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-recover-event-0/runtime.json",
+      "bytes": 3634,
+      "sha256": "fc853b46a00bd5ef1170ca313d07f12eebf24dd0e4cdf7f984c5f6d0b9107221"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-recover-event-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-recover-event-1/runtime.json",
+      "bytes": 3634,
+      "sha256": "5aab85aa153a0e52236046f4da220e4e662586b3bd316c142b400c545acdfa80"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-recover-event-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-recover-event-2/runtime.json",
+      "bytes": 3634,
+      "sha256": "a416e38f7f2da076d193b4439e7ffd4a0684352f2d600613eb43bf472a102068"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/runtime-recover-event-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/session.db",
+      "bytes": 49152,
+      "sha256": "c6e4e1818c05c4d1cc2701517b2e5ce5da747fc2bb20672f3ad3a59669d5ceba"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_after_commit/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/kill.json",
+      "bytes": 672,
+      "sha256": "784342d1d6ddc8c1393d6a57dd267dfe415327d987ebec8aa3c95dde2cd64b08"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/ready.json",
+      "bytes": 97,
+      "sha256": "a2d2dd752bc66c42d5f19fc382f11bfdfad2ea2d6670c72b391ac3e607e3c090"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/recovery-0.json",
+      "bytes": 220,
+      "sha256": "0adec7f02596d9eeaaef255417fc7019448e62db6b1a60b1bc2f41cb5f10bc95"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/recovery-1.json",
+      "bytes": 221,
+      "sha256": "8e2a6b40839394449d09fd4b6ee2cf87c7b3354ae967cd721628b328924587b2"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/recovery-2.json",
+      "bytes": 221,
+      "sha256": "d1b198b54316cfd6ca956fe8669d52d34544886053179cb3382da17831caca27"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/result.json",
+      "bytes": 609,
+      "sha256": "3d2fbdbd18a2aa5f861c1ba88d8d9e4ce1ee2469bcb464bae466284393a3bb5f"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-db-checkpoint_before_commit/runtime.json",
+      "bytes": 3640,
+      "sha256": "997c80477ce0ce10db37e5dfb4ac46ff2ad21d8ce19f6f1ecd661337e42b4447"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-db-checkpoint_before_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-recover-event-0/runtime.json",
+      "bytes": 3634,
+      "sha256": "9de19609f3b274ba37c03ac1ae3f9ce2e076af4fc2ae40a387f0dd22618e582e"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-recover-event-0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-recover-event-1/runtime.json",
+      "bytes": 3636,
+      "sha256": "768ff1a179855ad32c65a4167a7c1479a7362b288289a8b32caf4243ea87356c"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-recover-event-1/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-recover-event-2/runtime.json",
+      "bytes": 3636,
+      "sha256": "1e176a1e4c3eba1d880d9a4c6058d5897f3d6ebc82415d4c24a3f4be6fe15504"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/runtime-recover-event-2/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/session.db",
+      "bytes": 49152,
+      "sha256": "c6e4e1818c05c4d1cc2701517b2e5ce5da747fc2bb20672f3ad3a59669d5ceba"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-checkpoint_before_commit/stderr-recover.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/kill.json",
+      "bytes": 672,
+      "sha256": "5b8658e5cd4deaadfb0fd3403b44247da1fc82652b5120a0ac89531b21573421"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/ready.json",
+      "bytes": 92,
+      "sha256": "c80bddb0a098da5b4e6ed2e4d0e2e75a55cee43f4d1f5631c41d769ee67272d3"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/result.json",
+      "bytes": 332,
+      "sha256": "8aa808906f85baf4dbb8ef672290672545ea3840722d9485c97b264bc4c4e2c1"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/runtime-db-event_before_commit/runtime.json",
+      "bytes": 3625,
+      "sha256": "0ee0c7a7863a6a301a10c17db362bd16d97a32db9b100d929bbee1e2e1303f2a"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/runtime-db-event_before_commit/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/session.db",
+      "bytes": 49152,
+      "sha256": "60b2f7e5f16119df762dd757f305839d0f7f66598977e4b0af2746c2b0eb138c"
+    },
+    {
+      "member": "c/sqlite-event_before_commit/stderr-db.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "c/summary.json",
+      "bytes": 8758,
+      "sha256": "8f3d4fec379299d0eb0270c8a658beb4e92b653ff0ab215462a3c41212b47d56"
+    },
+    {
+      "member": "c/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "test_actual_runtime_is_the_off0/runtime.json",
+      "bytes": 3604,
+      "sha256": "751cce8972ed5a1ff210cd18384d08ed6b225ad0163b8d0a37558bb41e399b9e"
+    },
+    {
+      "member": "test_actual_runtime_is_the_off0/vfs.db",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

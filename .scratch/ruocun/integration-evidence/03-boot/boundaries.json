@@ -1,0 +1,365 @@
+[
+  {
+    "label": "console-priority",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\ruocun.exe",
+      "--help",
+      "--unknown-synthetic",
+      "-v"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\console-priority",
+    "expected_exit": 0,
+    "exit": 0,
+    "stdout_sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "long-help",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\ruocun.exe",
+      "--help"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\long-help",
+    "expected_exit": 0,
+    "exit": 0,
+    "stdout_sha256": "72e12c0a09d19e1ce44ba27daea8785e8a7583dc0b350c19589183cf4d720d88",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "short-help",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\ruocun.exe",
+      "-h"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\short-help",
+    "expected_exit": 0,
+    "exit": 0,
+    "stdout_sha256": "72e12c0a09d19e1ce44ba27daea8785e8a7583dc0b350c19589183cf4d720d88",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "offline",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "offline",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\offline"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\offline",
+    "expected_exit": 0,
+    "exit": 0,
+    "stdout_sha256": "dcb6cf4b6022c2ca0bdb6e0c9135d3a6bb97e0328c9df005aca6a50a89b49da3",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "oracle",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "oracle",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\oracle"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\oracle",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "007aec100a4bbedf5b766687b4d1b9f2802329c55e3cd4b06a830344bf87aee7",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "runtime",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "runtime",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\runtime"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\runtime",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "f2a1a2e49c3b05c3b0b0427738ab238c565f65373e92191e4574308c30c10458",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "protocol",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "protocol",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\protocol"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\protocol",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "98f74b07e1dc90a70ab3c01a6d5ea75f11d5e7f781a769db3c09ca18af16d0be",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "live",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "live",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\live"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\live",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "0f42dbd6e40f228e8cdbf81f44d7932a466319813975d0012144ce82ec8dabcd",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "terminal",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "terminal",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\terminal"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\terminal",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "beb4723650d31a64009fa390e3c53804a6fe521bff44830d9c4994edc29214b8",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "install",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "install",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\install"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\install",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "d113c9d3a2e905700777163a8440a9c5313a03802f35b0ef1825f1883da09fa3",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "empty",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "offline",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\empty",
+      "--case",
+      "unknown-synthetic"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\empty",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "b231d72c4f9b198e43680d4fce7f7867e4633b1140b4441131da6c852967a738",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "unknown-suite",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "unknown"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\unknown-suite",
+    "expected_exit": 2,
+    "exit": 2,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "87067f9d0665377af33c6ff5e1e56f8334dde47b452477ca8a4463203b92136b",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "missing-python",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "offline",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\absent.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\missing-python"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\missing-python",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "45d29b71118798bc77eebfa33a5671d2b46030fad3e38a2960604acd78e7d837",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "resource-missing-version",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\ruocun.exe",
+      "--version"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\resource-missing-version",
+    "expected_exit": 0,
+    "exit": 0,
+    "stdout_sha256": "59ec1f62082976c02ff452fbd64c2f0e0c85c59113788f1e4f7186a45fc25699",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "resource-missing-help",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\ruocun.exe",
+      "--help"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\resource-missing-help",
+    "expected_exit": 70,
+    "exit": 70,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "73ba11a47307db76d381d078e4b521c16ca773e35fdf086a6b9b22b12c19da8f",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "resource-missing-offline",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "offline",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\resource-missing-offline"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\resource-missing-offline",
+    "expected_exit": 1,
+    "exit": 1,
+    "stdout_sha256": "562bcea35dd24379861678867f8349dc26d14e7814a4b4dda319814075f28947",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  },
+  {
+    "label": "restored-offline",
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruocun_acceptance",
+      "offline",
+      "--python",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "--output",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\outputs\\restored-offline"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\checks\\restored-offline",
+    "expected_exit": 0,
+    "exit": 0,
+    "stdout_sha256": "9f3122a4067193ac94be8c61d577915f536c5c3c583ae19ec657e2e101972dd9",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": {
+      "command_joined": true
+    }
+  }
+]

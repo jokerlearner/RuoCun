@@ -1,0 +1,463 @@
+[
+  {
+    "report": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/report.json",
+    "report_sha256": "c42ed6dffdf4e8b1e621c9f186df52b904592d3a4749bc8fc3ac7258282f1646",
+    "head_before_run": "f2c96cbf5dad6f4ec011374d67bbd66210d65084",
+    "exit_code": 0,
+    "lock_matches": true,
+    "stdout_matches": true,
+    "stdout_tail": "14 passed in 1.12s",
+    "code_bindings": [
+      {
+        "path": "Copy-Case.ps1",
+        "declared_sha256": "6c8b4d61b12900dc893b7a9f1cce386166f2876631bf6829f6ba4a5091b6b036",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "launch.py",
+        "declared_sha256": "f39bcaad3590e24642c4009e95100f9f160f82e62476837db35ea958ea61882d",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "make_fixtures.py",
+        "declared_sha256": "b4bfa31bd1405d132e384e59b6601617fc88df4ddec196314465ab283348438f",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "model.py",
+        "declared_sha256": "e74231709118a50ce0904aaac442ade55412edd77c313a8f0f8c2e5dcc43cbc8",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "Open-Hitl.ps1",
+        "declared_sha256": "f8e5c8597008ad36e31237a26e0c17b3771fa22c32f4c4befd6e5a2564cf4402",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050"
+        ],
+        "matches_merged_code": false
+      },
+      {
+        "path": "protocol.py",
+        "declared_sha256": "2a9b7261b8fe792b07658ad3e6a8b953c1a636c2a868b14368625c5a32d84de3",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "run_automated.py",
+        "declared_sha256": "ef769c844e0a164e278ff71338c337fddc96f067a940c1ced925fdca90dcaaec",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "Start-Hitl.ps1",
+        "declared_sha256": "a1fd070c38121996cf9c7fa78c2ac9fdd5afde10c31d84218b44d8aecaf6b1e0",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "terminal_app.py",
+        "declared_sha256": "50d08062ea27a5953970ddbb3a643c5c728b84ca191810de3676d4ac80aa1b57",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "test_terminal.py",
+        "declared_sha256": "c529e30743f2c991a1947c902577af1ac692da7e1a898359d7820e6af3eeeb96",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "worker.py",
+        "declared_sha256": "be076a23068572d3fbcf0c2f4ec9744ce0f5b860afdc3d1d75e99d374903c2af",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "workers.py",
+        "declared_sha256": "d2de630c234d330cdf8cc5eb56e2a793639ad5875c93d61eed40c3c57d0f6397",
+        "present_in_recorded_head": false,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      }
+    ]
+  },
+  {
+    "report": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/report.json",
+    "report_sha256": "dfe8cdc5b9e26271506dc41a127d42e20b3022779f46111a54969686eea95df7",
+    "head_before_run": "acc85b71d2394c9c3527a3c746fd2f2621d37936",
+    "exit_code": 0,
+    "lock_matches": true,
+    "stdout_matches": true,
+    "stdout_tail": "14 passed in 1.16s",
+    "code_bindings": [
+      {
+        "path": "Copy-Case.ps1",
+        "declared_sha256": "6c8b4d61b12900dc893b7a9f1cce386166f2876631bf6829f6ba4a5091b6b036",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "launch.py",
+        "declared_sha256": "f39bcaad3590e24642c4009e95100f9f160f82e62476837db35ea958ea61882d",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "make_fixtures.py",
+        "declared_sha256": "b4bfa31bd1405d132e384e59b6601617fc88df4ddec196314465ab283348438f",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "model.py",
+        "declared_sha256": "e74231709118a50ce0904aaac442ade55412edd77c313a8f0f8c2e5dcc43cbc8",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "Open-Hitl.ps1",
+        "declared_sha256": "eadef163f83098ebecb9c784e988471ce38923b2340ac99bc8dddc085de4e69a",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": false,
+        "matching_committed_snapshots": [
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "protocol.py",
+        "declared_sha256": "2a9b7261b8fe792b07658ad3e6a8b953c1a636c2a868b14368625c5a32d84de3",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "run_automated.py",
+        "declared_sha256": "ef769c844e0a164e278ff71338c337fddc96f067a940c1ced925fdca90dcaaec",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "Start-Hitl.ps1",
+        "declared_sha256": "a1fd070c38121996cf9c7fa78c2ac9fdd5afde10c31d84218b44d8aecaf6b1e0",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "terminal_app.py",
+        "declared_sha256": "50d08062ea27a5953970ddbb3a643c5c728b84ca191810de3676d4ac80aa1b57",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "test_terminal.py",
+        "declared_sha256": "c529e30743f2c991a1947c902577af1ac692da7e1a898359d7820e6af3eeeb96",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "worker.py",
+        "declared_sha256": "be076a23068572d3fbcf0c2f4ec9744ce0f5b860afdc3d1d75e99d374903c2af",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "workers.py",
+        "declared_sha256": "d2de630c234d330cdf8cc5eb56e2a793639ad5875c93d61eed40c3c57d0f6397",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      }
+    ]
+  },
+  {
+    "report": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/report.json",
+    "report_sha256": "a9411fd94dc7daceb43a60ce0f8efe65a4af6b5818168b35977cabef2be0ca9e",
+    "head_before_run": "d295a156655f58cf20e9398a02941db6b5af449b",
+    "exit_code": 0,
+    "lock_matches": true,
+    "stdout_matches": true,
+    "stdout_tail": "14 passed in 1.09s",
+    "code_bindings": [
+      {
+        "path": "Copy-Case.ps1",
+        "declared_sha256": "6c8b4d61b12900dc893b7a9f1cce386166f2876631bf6829f6ba4a5091b6b036",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "launch.py",
+        "declared_sha256": "f39bcaad3590e24642c4009e95100f9f160f82e62476837db35ea958ea61882d",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "make_fixtures.py",
+        "declared_sha256": "b4bfa31bd1405d132e384e59b6601617fc88df4ddec196314465ab283348438f",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "model.py",
+        "declared_sha256": "e74231709118a50ce0904aaac442ade55412edd77c313a8f0f8c2e5dcc43cbc8",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "Open-Hitl.ps1",
+        "declared_sha256": "eadef163f83098ebecb9c784e988471ce38923b2340ac99bc8dddc085de4e69a",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "protocol.py",
+        "declared_sha256": "2a9b7261b8fe792b07658ad3e6a8b953c1a636c2a868b14368625c5a32d84de3",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "run_automated.py",
+        "declared_sha256": "ef769c844e0a164e278ff71338c337fddc96f067a940c1ced925fdca90dcaaec",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "Start-Hitl.ps1",
+        "declared_sha256": "a1fd070c38121996cf9c7fa78c2ac9fdd5afde10c31d84218b44d8aecaf6b1e0",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "terminal_app.py",
+        "declared_sha256": "50d08062ea27a5953970ddbb3a643c5c728b84ca191810de3676d4ac80aa1b57",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "test_terminal.py",
+        "declared_sha256": "c529e30743f2c991a1947c902577af1ac692da7e1a898359d7820e6af3eeeb96",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "worker.py",
+        "declared_sha256": "be076a23068572d3fbcf0c2f4ec9744ce0f5b860afdc3d1d75e99d374903c2af",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      },
+      {
+        "path": "workers.py",
+        "declared_sha256": "d2de630c234d330cdf8cc5eb56e2a793639ad5875c93d61eed40c3c57d0f6397",
+        "present_in_recorded_head": true,
+        "matches_recorded_head": true,
+        "matching_committed_snapshots": [
+          "7036050",
+          "d295a15",
+          "ad48d6c86d5e9b1dad0961c035c9f66641ac4b63"
+        ],
+        "matches_merged_code": true
+      }
+    ]
+  }
+]

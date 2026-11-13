@@ -1,0 +1,236 @@
+{
+  "processes": [
+    {
+      "pid": 7812,
+      "creation_filetime": 134383454175379706,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 12916,
+      "creation_filetime": 134383454093596520,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 21476,
+      "creation_filetime": 134383453917302186,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 22436,
+      "creation_filetime": 134383454067758745,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 23684,
+      "creation_filetime": 134383453910755888,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 24136,
+      "creation_filetime": 134383453920095474,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 24140,
+      "creation_filetime": 134383453918693582,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 27144,
+      "creation_filetime": 134383453914140287,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 29148,
+      "creation_filetime": 134383454080763205,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 29356,
+      "creation_filetime": 134383453913010851,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 32996,
+      "creation_filetime": 134383454122575092,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 34044,
+      "creation_filetime": 134383454172752411,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 36264,
+      "creation_filetime": 134383454158104727,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 36572,
+      "creation_filetime": 134383453951454513,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 37228,
+      "creation_filetime": 134383454179898381,
+      "current_creation_filetime": 134383454179898381,
+      "signaled": true,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 39972,
+      "creation_filetime": 134383454181301677,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 40332,
+      "creation_filetime": 134383453964325258,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 40404,
+      "creation_filetime": 134383454182671385,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 40844,
+      "creation_filetime": 134383454109456638,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 40848,
+      "creation_filetime": 134383454028782551,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 41524,
+      "creation_filetime": 134383453915322953,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 42260,
+      "creation_filetime": 134383453936862449,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 42684,
+      "creation_filetime": 134383454183983415,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 42720,
+      "creation_filetime": 134383453923326294,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 43372,
+      "creation_filetime": 134383453990405531,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 44556,
+      "creation_filetime": 134383454174089219,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    },
+    {
+      "pid": 45224,
+      "creation_filetime": 134383454139562298,
+      "open_error": 87,
+      "recorded_identity_exited": true
+    }
+  ],
+  "jobs": [
+    {
+      "name": "RuoCun.D20.3deb51525f1c40c08e1eafefb16dc0e4",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.4e2e9e988dd0432f8021130169d70c66",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.616645a33df34b779624324258163ffc",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.61a66b90982e4622abd85758f2314841",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.86b9ba57481c4db68e5f3e7347909f16",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.a1734c3fafdc4404b6012c8d87305b23",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.a500e5c8abc84240ba9d8c63cdb8916f",
+      "open_error": 2,
+      "absent": true
+    },
+    {
+      "name": "RuoCun.D20.acd3bda72da14721989b326b2b763eab",
+      "open_error": 2,
+      "absent": true
+    }
+  ],
+  "dacl_samples": [
+    {
+      "path": "cases/files0/outside/write_dac0.txt",
+      "random_read_ace_absent": true
+    },
+    {
+      "path": "cases/files0/outside/write_dac1.txt",
+      "random_read_ace_absent": true
+    },
+    {
+      "path": "cases/files0/outside/write_dac2.txt",
+      "random_read_ace_absent": true
+    }
+  ],
+  "junctions": [
+    {
+      "path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m20\\.scratch\\ruocun\\integration-evidence\\d20\\.r\\r1\\cases\\files0\\workspace\\jump",
+      "absent": true,
+      "outside_target_retained": true
+    }
+  ],
+  "environment_owner_crash_server_teardown": "not-independently-queryable",
+  "original_dacl_restored_and_read_back": true,
+  "all_recorded_identities_exited": true,
+  "all_exact_jobs_absent": true,
+  "all_sampled_random_aces_absent": true,
+  "all_owned_junctions_absent_target_retained": true
+}

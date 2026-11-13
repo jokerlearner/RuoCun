@@ -1,0 +1,11 @@
+# 批次02入口接线
+
+当前65入口接线在途，等待同owner渲染区完成。run_turn新增可选的已保存assistant和完整工具消息观察回调，旧调用沿默认None路径。实际主入口接入双语状态、恢复历史和事件渲染，65整票仍claimed。
+
+b02-root-headless实际先红，原因是65语言默认值沿冻结DAO选择en，而旧七工具合成fixture的图片结果断言指定中文。fixture显式设置RUOCUN_LANG=zh后，b02-root-headless-zh原七工具、权限拒绝和正常保存重开通过，原断言保留。TTY原fixture也显式选择zh，适用于源码和未来纯安装复用。未将此语言预期差异写成执行后端缺陷。
+
+b02-root-runtime-ruff为本次入口及两fixture定向静态检查，通过。后续TTY和整批固定产物验证在对应接线完成后记录。
+
+64多模态组合的原七工具与TTY两项通过，b02-root-image-entry/types记录相关接线与静态结果。16普通组合为2ad6ad8/70dbf8b，独审真实普通等待及其后同步登记/unknown守卫见review/b02-p1-review.md与n16-background的分段回执。
+
+66所需validate_key.py按同一冻结ZIP的src/config/validate_key.ts及validate_key.test.ts迁移。8项来源断言从缺模块红到绿，覆盖provider探针、所选模型、官方Responses参数、HTTP/网络失败和网关模型过滤。HTTP由注入合成函数完成，未使用真实账户或外部模型。默认端口使用标准库和现有Responses请求转换；等待HTTP超时为30秒，取消等待传播给上层，尚未宣称底层网络线程立即结束。相应mypy/Ruff通过。

@@ -1,0 +1,34 @@
+{
+  "approval_result": "rejected before execution: blocked by policy",
+  "delete_command_executed": false,
+  "original_i17_path_touched": false,
+  "results": [
+    {
+      "absolute_target": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m17\\.scratch\\ruocun-discovery\\experiments\\windows\\run\\m17d898598bfc",
+      "reparse_points": 0,
+      "removed": false,
+      "exists": true,
+      "within_owned_run_directory": true,
+      "resolved_path_matches": true
+    },
+    {
+      "absolute_target": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m17\\.scratch\\ruocun-discovery\\experiments\\windows\\run\\m17envb6c43ef2",
+      "reparse_points": 0,
+      "removed": false,
+      "exists": true,
+      "within_owned_run_directory": true,
+      "resolved_path_matches": true
+    },
+    {
+      "absolute_target": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m17\\.scratch\\ruocun-discovery\\experiments\\windows\\run\\m17pipb6c43ef2",
+      "reparse_points": 0,
+      "removed": false,
+      "exists": true,
+      "within_owned_run_directory": true,
+      "resolved_path_matches": true
+    }
+  ],
+  "later_action": "Read-only path verification only; no alternate deletion or bypass",
+  "more_specific_reason_provided": false,
+  "requested_action": "PowerShell Remove-Item -LiteralPath on only these three m17-owned directories, recursively"
+}

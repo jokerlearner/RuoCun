@@ -1,0 +1,177 @@
+[
+  {
+    "folder": "broken-read/",
+    "actual_pid": 13548,
+    "expected_creation_time": "134383408727022119",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "cancel-budget/",
+    "actual_pid": 41300,
+    "expected_creation_time": "134383408693135667",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "cancel-completed/",
+    "actual_pid": 44960,
+    "expected_creation_time": "134383408690463403",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "cancel-fail/",
+    "actual_pid": 32520,
+    "expected_creation_time": "134383408687895927",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/after-replace/",
+    "actual_pid": 40040,
+    "expected_creation_time": "134383408668736528",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/before-replace/",
+    "actual_pid": 39452,
+    "expected_creation_time": "134383408666500635",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/flush-osreplace/",
+    "actual_pid": 40884,
+    "expected_creation_time": "134383408674849958",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/flush-replacefile/",
+    "actual_pid": 27632,
+    "expected_creation_time": "134383408678718790",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/fsync-osreplace/",
+    "actual_pid": 44092,
+    "expected_creation_time": "134383408670978201",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/writethrough-move/",
+    "actual_pid": 30484,
+    "expected_creation_time": "134383408682377786",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "pipe/",
+    "actual_pid": 11008,
+    "expected_creation_time": "134383408657357317",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "read-cancel-fail/",
+    "actual_pid": 38928,
+    "expected_creation_time": "134383408720268410",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/denied-permanent/",
+    "actual_pid": 39948,
+    "expected_creation_time": "134383408653709752",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/denied-release/",
+    "actual_pid": 34244,
+    "expected_creation_time": "134383408645266968",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/sharing-permanent/",
+    "actual_pid": 6600,
+    "expected_creation_time": "134383408648866052",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/sharing-release/",
+    "actual_pid": 33216,
+    "expected_creation_time": "134383408641674355",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "result-error/",
+    "actual_pid": 37492,
+    "expected_creation_time": "134383408717785615",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "result-incomplete/",
+    "actual_pid": 44328,
+    "expected_creation_time": "134383408715507002",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "wait-fail/",
+    "actual_pid": 33452,
+    "expected_creation_time": "134383408710871367",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "wait-raise/",
+    "actual_pid": 41252,
+    "expected_creation_time": "134383408713201929",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "write-cancel-fail/",
+    "actual_pid": 27352,
+    "expected_creation_time": "134383408723709597",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "shutdown-diagnostic-r01/",
+    "actual_pid": 43816,
+    "expected_creation_time": "134383409165710599",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "shutdown-diagnostic-r02/",
+    "actual_pid": 35416,
+    "expected_creation_time": "134383411582897666",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "submission-interruption-r01/",
+    "actual_pid": 43020,
+    "expected_creation_time": "134383410906325962",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "submission-interruption-r02/",
+    "actual_pid": 37940,
+    "expected_creation_time": "134383411585787446",
+    "open_error": 87,
+    "original_exited": true
+  }
+]

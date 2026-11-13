@@ -1,0 +1,15 @@
+{
+  "pid": 43816,
+  "creation_time": "134383409165710599",
+  "returncode": 96,
+  "same_creation_time": true,
+  "held_handle_signaled": true,
+  "forced": false,
+  "process_handle_closed": true,
+  "pipe_absent": true,
+  "open_after_exit": {
+    "success": false,
+    "winerror": 2,
+    "errno": 2
+  }
+}

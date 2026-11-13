@@ -1,0 +1,144 @@
+{
+  "source": "src/index.ts:276-348",
+  "source_sha256": "47d4276c19d538220e0c784c001e1d5f830876bf7a30c6e6ba710b128a120753",
+  "method": "exact frozen argv expression block; permission extractor stub is identity for no-permission-flag cases",
+  "node": "v24.15.0",
+  "cases": {
+    "unknown_flag_as_prompt": {
+      "argv": [
+        "--unknown",
+        "hello"
+      ],
+      "argvPrompt": "--unknown hello",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": true
+    },
+    "case_sensitive_flag": {
+      "argv": [
+        "--Model",
+        "same",
+        "hello"
+      ],
+      "argvPrompt": "--Model same hello",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": true
+    },
+    "missing_model": {
+      "argv": [
+        "--model"
+      ],
+      "argvPrompt": "",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": false
+    },
+    "missing_provider": {
+      "argv": [
+        "--provider"
+      ],
+      "argvPrompt": "",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": false
+    },
+    "missing_api_key": {
+      "argv": [
+        "--api-key"
+      ],
+      "argvPrompt": "",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": false
+    },
+    "flag_as_model_value": {
+      "argv": [
+        "--model",
+        "--obs",
+        "hello"
+      ],
+      "argvPrompt": "hello",
+      "cliModel": "--obs",
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": true
+    },
+    "repeat_model_value_in_prompt": {
+      "argv": [
+        "--model",
+        "same",
+        "say",
+        "same"
+      ],
+      "argvPrompt": "say",
+      "cliModel": "same",
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": true
+    },
+    "repeat_resume_value_in_prompt": {
+      "argv": [
+        "-c",
+        "synthetic-session",
+        "synthetic-session",
+        "hello"
+      ],
+      "argvPrompt": "hello",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": "synthetic-session",
+      "continueFlag": true,
+      "isHeadlessOneShot": true
+    },
+    "resume_before_unknown_flag": {
+      "argv": [
+        "-c",
+        "--unknown",
+        "hello"
+      ],
+      "argvPrompt": "--unknown hello",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": true,
+      "isHeadlessOneShot": true
+    },
+    "equal_form_is_unknown_prompt": {
+      "argv": [
+        "--model=same",
+        "hello"
+      ],
+      "argvPrompt": "--model=same hello",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": true
+    },
+    "double_dash_is_prompt": {
+      "argv": [
+        "--",
+        "hello"
+      ],
+      "argvPrompt": "-- hello",
+      "cliModel": null,
+      "cliProvider": null,
+      "cliResumeId": null,
+      "continueFlag": false,
+      "isHeadlessOneShot": true
+    }
+  }
+}

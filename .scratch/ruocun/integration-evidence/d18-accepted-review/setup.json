@@ -1,0 +1,9 @@
+{
+  "short_root": "D:\\r18q-20261105-170333",
+  "venv": "D:\\r18q-20261105-170333\\v",
+  "cache": "D:\\r18q-20261105-170333\\c",
+  "merge": "d719be86b5d768270620dedc7d8db9ed870ff35e",
+  "candidate": "1860c70ad6109dbd09ac80ac7a2a118d77818012",
+  "collector_sha256_before_execution": "7415141281be5c1196e51857645df4059d54b7284bcc2c04e4093a79797f9159",
+  "audit_sha256_before_execution": "e6404796fcf50d2aafb9522d6b0af2d7525bf780918e00942d300beb37f98aa2"
+}

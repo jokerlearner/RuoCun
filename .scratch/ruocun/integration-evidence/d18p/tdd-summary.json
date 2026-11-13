@@ -1,0 +1,943 @@
+{
+  "archive": "tdd.zip",
+  "files": 750,
+  "rounds": [
+    {
+      "round": "f01",
+      "exit": 1
+    },
+    {
+      "round": "f02",
+      "exit": 0
+    },
+    {
+      "round": "f03",
+      "exit": 1
+    },
+    {
+      "round": "f04",
+      "exit": 0
+    },
+    {
+      "round": "f05",
+      "exit": 1
+    },
+    {
+      "round": "f06",
+      "exit": 0
+    },
+    {
+      "round": "f07",
+      "exit": 0
+    },
+    {
+      "round": "f08",
+      "exit": 0
+    }
+  ],
+  "workers": [
+    {
+      "path": "f01/cancel-fail",
+      "pid": 33136,
+      "creation_time": "134383397714382015",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f01\\cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f02/cancel-fail",
+      "pid": 11916,
+      "creation_time": "134383398125353319",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f02\\cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f03/cancel-completed",
+      "pid": 10716,
+      "creation_time": "134383399459342064",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-completed",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f03\\cancel-completed"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f04/cancel-completed",
+      "pid": 41900,
+      "creation_time": "134383399673790736",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-completed",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f04\\cancel-completed"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f05/broken-read",
+      "pid": 43680,
+      "creation_time": "134383400302519329",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "broken-read",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\broken-read"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f05/cancel-budget",
+      "pid": 32508,
+      "creation_time": "134383400267782379",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-budget",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\cancel-budget"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/cancel-completed",
+      "pid": 35880,
+      "creation_time": "134383400265124530",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-completed",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\cancel-completed"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f05/cancel-fail",
+      "pid": 22056,
+      "creation_time": "134383400262495300",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/read-cancel-fail",
+      "pid": 34836,
+      "creation_time": "134383400294595490",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "read-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\read-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/result-error",
+      "pid": 41800,
+      "creation_time": "134383400292362289",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-error",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\result-error"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/result-incomplete",
+      "pid": 44516,
+      "creation_time": "134383400289984001",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-incomplete",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\result-incomplete"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/wait-fail",
+      "pid": 36648,
+      "creation_time": "134383400285465753",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\wait-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/wait-raise",
+      "pid": 38772,
+      "creation_time": "134383400287709777",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-raise",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\wait-raise"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f05/write-cancel-fail",
+      "pid": 4732,
+      "creation_time": "134383400298950796",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "write-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f05\\write-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/broken-read",
+      "pid": 40868,
+      "creation_time": "134383400549410508",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "broken-read",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\broken-read"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f06/cancel-budget",
+      "pid": 44468,
+      "creation_time": "134383400514943145",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-budget",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\cancel-budget"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/cancel-completed",
+      "pid": 26024,
+      "creation_time": "134383400512321403",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-completed",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\cancel-completed"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f06/cancel-fail",
+      "pid": 12912,
+      "creation_time": "134383400509613121",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/read-cancel-fail",
+      "pid": 38908,
+      "creation_time": "134383400542715648",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "read-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\read-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/result-error",
+      "pid": 27272,
+      "creation_time": "134383400540333254",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-error",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\result-error"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/result-incomplete",
+      "pid": 35208,
+      "creation_time": "134383400538025423",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-incomplete",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\result-incomplete"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/wait-fail",
+      "pid": 6412,
+      "creation_time": "134383400532753512",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\wait-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/wait-raise",
+      "pid": 43292,
+      "creation_time": "134383400535057428",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-raise",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\wait-raise"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f06/write-cancel-fail",
+      "pid": 22572,
+      "creation_time": "134383400546127464",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "write-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f06\\write-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/broken-read",
+      "pid": 35472,
+      "creation_time": "134383401043954884",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "broken-read",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\broken-read"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f07/cancel-budget",
+      "pid": 23536,
+      "creation_time": "134383401010079290",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-budget",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\cancel-budget"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/cancel-completed",
+      "pid": 39560,
+      "creation_time": "134383401007411423",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-completed",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\cancel-completed"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f07/cancel-fail",
+      "pid": 396,
+      "creation_time": "134383401004772872",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/crash/after-replace",
+      "pid": 10948,
+      "creation_time": "134383400986399977",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "after-replace",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\crash\\after-replace"
+      ],
+      "base_interpreter": true,
+      "returncode": 92
+    },
+    {
+      "path": "f07/crash/before-replace",
+      "pid": 42812,
+      "creation_time": "134383400984171356",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "before-replace",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\crash\\before-replace"
+      ],
+      "base_interpreter": true,
+      "returncode": 92
+    },
+    {
+      "path": "f07/crash/flush-osreplace",
+      "pid": 10516,
+      "creation_time": "134383400992152849",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\crash\\flush-osreplace"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/crash/flush-replacefile",
+      "pid": 11056,
+      "creation_time": "134383400995625240",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\crash\\flush-replacefile"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/crash/fsync-osreplace",
+      "pid": 39368,
+      "creation_time": "134383400988651964",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\crash\\fsync-osreplace"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/crash/writethrough-move",
+      "pid": 40220,
+      "creation_time": "134383400999193622",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\crash\\writethrough-move"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/pipe",
+      "pid": 28608,
+      "creation_time": "134383400974900652",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "pipe",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\pipe"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/read-cancel-fail",
+      "pid": 41732,
+      "creation_time": "134383401037123666",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "read-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\read-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/refusals/denied-permanent",
+      "pid": 40520,
+      "creation_time": "134383400971389030",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "denied",
+        "10",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\refusals\\denied-permanent"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/refusals/denied-release",
+      "pid": 43264,
+      "creation_time": "134383400962546371",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "denied",
+        ".25",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\refusals\\denied-release"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/refusals/sharing-permanent",
+      "pid": 41308,
+      "creation_time": "134383400966541996",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "sharing",
+        "10",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\refusals\\sharing-permanent"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/refusals/sharing-release",
+      "pid": 38092,
+      "creation_time": "134383400958955573",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "sharing",
+        ".25",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\refusals\\sharing-release"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f07/result-error",
+      "pid": 39316,
+      "creation_time": "134383401034724392",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-error",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\result-error"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/result-incomplete",
+      "pid": 40576,
+      "creation_time": "134383401032459612",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-incomplete",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\result-incomplete"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/wait-fail",
+      "pid": 44616,
+      "creation_time": "134383401027943712",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\wait-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/wait-raise",
+      "pid": 42868,
+      "creation_time": "134383401030205449",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-raise",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\wait-raise"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f07/write-cancel-fail",
+      "pid": 31976,
+      "creation_time": "134383401040401374",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "write-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f07\\write-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/broken-read",
+      "pid": 45424,
+      "creation_time": "134383402181578281",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "broken-read",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\broken-read"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f08/cancel-budget",
+      "pid": 39392,
+      "creation_time": "134383402147497546",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-budget",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\cancel-budget"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/cancel-completed",
+      "pid": 42924,
+      "creation_time": "134383402144798319",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-completed",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\cancel-completed"
+      ],
+      "returncode": 0
+    },
+    {
+      "path": "f08/cancel-fail",
+      "pid": 23732,
+      "creation_time": "134383402142213047",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/crash/after-replace",
+      "pid": 9224,
+      "creation_time": "134383402122139019",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "after-replace",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\crash\\after-replace"
+      ],
+      "base_interpreter": true,
+      "returncode": 92
+    },
+    {
+      "path": "f08/crash/before-replace",
+      "pid": 7980,
+      "creation_time": "134383402119871232",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "before-replace",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\crash\\before-replace"
+      ],
+      "base_interpreter": true,
+      "returncode": 92
+    },
+    {
+      "path": "f08/crash/flush-osreplace",
+      "pid": 35064,
+      "creation_time": "134383402128654433",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\crash\\flush-osreplace"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/crash/flush-replacefile",
+      "pid": 16232,
+      "creation_time": "134383402133353145",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\crash\\flush-replacefile"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/crash/fsync-osreplace",
+      "pid": 6388,
+      "creation_time": "134383402124371909",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\crash\\fsync-osreplace"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/crash/writethrough-move",
+      "pid": 40220,
+      "creation_time": "134383402137036910",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "observer",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\crash\\writethrough-move"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/pipe",
+      "pid": 11588,
+      "creation_time": "134383402110768529",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "pipe",
+        "0",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\pipe"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/read-cancel-fail",
+      "pid": 46052,
+      "creation_time": "134383402174755690",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "read-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\read-cancel-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/refusals/denied-permanent",
+      "pid": 1972,
+      "creation_time": "134383402107181884",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "denied",
+        "10",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\refusals\\denied-permanent"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/refusals/denied-release",
+      "pid": 34320,
+      "creation_time": "134383402098659737",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "denied",
+        ".25",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\refusals\\denied-release"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/refusals/sharing-permanent",
+      "pid": 6644,
+      "creation_time": "134383402102299179",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "sharing",
+        "10",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\refusals\\sharing-permanent"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/refusals/sharing-release",
+      "pid": 34316,
+      "creation_time": "134383402095037830",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\probe.py",
+        "worker",
+        "sharing",
+        ".25",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\refusals\\sharing-release"
+      ],
+      "base_interpreter": true,
+      "returncode": 0
+    },
+    {
+      "path": "f08/result-error",
+      "pid": 39556,
+      "creation_time": "134383402172443882",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-error",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\result-error"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/result-incomplete",
+      "pid": 44572,
+      "creation_time": "134383402170037032",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "result-incomplete",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\result-incomplete"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/wait-fail",
+      "pid": 40536,
+      "creation_time": "134383402165288559",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\wait-fail"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/wait-raise",
+      "pid": 33020,
+      "creation_time": "134383402167612456",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "wait-raise",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\wait-raise"
+      ],
+      "returncode": 96
+    },
+    {
+      "path": "f08/write-cancel-fail",
+      "pid": 36176,
+      "creation_time": "134383402178179965",
+      "command": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\pending.py",
+        "worker",
+        "write-cancel-fail",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\i18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\raw\\f08\\write-cancel-fail"
+      ],
+      "returncode": 96
+    }
+  ],
+  "worker_receipts_verified": 66
+}

@@ -1,0 +1,31 @@
+# 正式工程记录；下方规则继续排除实验环境和缓存
+!/.scratch/
+!/.scratch/**
+
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+*.egg-info/
+.worktrees/
+.env
+.env.*
+!.env.example
+*.log
+.cache/
+
+# GitHub baseline: keep local runtime and research downloads private to the workspace
+/.ruocun/
+/论文参考/
+/.scratch/**/raw/
+/.scratch/**/state/
+/.scratch/**/runs/
+/.scratch/**/experiments/

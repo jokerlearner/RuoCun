@@ -1,0 +1,265 @@
+{
+  "path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\sqlite-runtime\\.venv\\q\\c",
+  "summary": {
+    "cases": 12,
+    "passed": 12,
+    "cleanup_passed": true,
+    "supervisor_job_active_processes": 0,
+    "owned_processes": 34,
+    "cold_recovery_processes": 21,
+    "runtime_manifests_verified": 35,
+    "frozen_harness_unchanged": true
+  },
+  "kill_receipts": [
+    {
+      "case": "sqlite-before_intent_commit",
+      "identity": {
+        "pid": 37348,
+        "start": "134383364022785297"
+      },
+      "retained_handle": 684,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 15.0
+    },
+    {
+      "case": "sqlite-after_intent_commit",
+      "identity": {
+        "pid": 43192,
+        "start": "134383364034421675"
+      },
+      "retained_handle": 736,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 0.0
+    },
+    {
+      "case": "sqlite-after_effect",
+      "identity": {
+        "pid": 32448,
+        "start": "134383364045671321"
+      },
+      "retained_handle": 824,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 0.0
+    },
+    {
+      "case": "sqlite-before_result_commit",
+      "identity": {
+        "pid": 12328,
+        "start": "134383364056870798"
+      },
+      "retained_handle": 584,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 16.0
+    },
+    {
+      "case": "sqlite-after_result_commit",
+      "identity": {
+        "pid": 40276,
+        "start": "134383364068095744"
+      },
+      "retained_handle": 724,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 16.0
+    },
+    {
+      "case": "sqlite-checkpoint_before_commit",
+      "identity": {
+        "pid": 20932,
+        "start": "134383364079380678"
+      },
+      "retained_handle": 832,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 16.0
+    },
+    {
+      "case": "sqlite-checkpoint_after_commit",
+      "identity": {
+        "pid": 41780,
+        "start": "134383364090648751"
+      },
+      "retained_handle": 980,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 0.0
+    },
+    {
+      "case": "sqlite-event_before_commit",
+      "identity": {
+        "pid": 42364,
+        "start": "134383364101813753"
+      },
+      "retained_handle": 920,
+      "wait_result": 0,
+      "exit_code": 1,
+      "worker_dead_immediately": true,
+      "wait_ms": 0.0
+    }
+  ],
+  "recovery_receipts": [
+    {
+      "file": "sqlite-after_effect/recovery-0.json",
+      "identity": {
+        "pid": 40360,
+        "start": "134383364048510803"
+      }
+    },
+    {
+      "file": "sqlite-after_effect/recovery-1.json",
+      "identity": {
+        "pid": 45684,
+        "start": "134383364051131844"
+      }
+    },
+    {
+      "file": "sqlite-after_effect/recovery-2.json",
+      "identity": {
+        "pid": 45320,
+        "start": "134383364053819775"
+      }
+    },
+    {
+      "file": "sqlite-after_intent_commit/recovery-0.json",
+      "identity": {
+        "pid": 38824,
+        "start": "134383364037260999"
+      }
+    },
+    {
+      "file": "sqlite-after_intent_commit/recovery-1.json",
+      "identity": {
+        "pid": 41528,
+        "start": "134383364039982235"
+      }
+    },
+    {
+      "file": "sqlite-after_intent_commit/recovery-2.json",
+      "identity": {
+        "pid": 34244,
+        "start": "134383364042691258"
+      }
+    },
+    {
+      "file": "sqlite-after_result_commit/recovery-0.json",
+      "identity": {
+        "pid": 17956,
+        "start": "134383364070915810"
+      }
+    },
+    {
+      "file": "sqlite-after_result_commit/recovery-1.json",
+      "identity": {
+        "pid": 28884,
+        "start": "134383364073681714"
+      }
+    },
+    {
+      "file": "sqlite-after_result_commit/recovery-2.json",
+      "identity": {
+        "pid": 43384,
+        "start": "134383364076373915"
+      }
+    },
+    {
+      "file": "sqlite-before_intent_commit/recovery-0.json",
+      "identity": {
+        "pid": 35816,
+        "start": "134383364025621739"
+      }
+    },
+    {
+      "file": "sqlite-before_intent_commit/recovery-1.json",
+      "identity": {
+        "pid": 28216,
+        "start": "134383364028423546"
+      }
+    },
+    {
+      "file": "sqlite-before_intent_commit/recovery-2.json",
+      "identity": {
+        "pid": 43240,
+        "start": "134383364031185998"
+      }
+    },
+    {
+      "file": "sqlite-before_result_commit/recovery-0.json",
+      "identity": {
+        "pid": 22832,
+        "start": "134383364059697079"
+      }
+    },
+    {
+      "file": "sqlite-before_result_commit/recovery-1.json",
+      "identity": {
+        "pid": 24696,
+        "start": "134383364062481920"
+      }
+    },
+    {
+      "file": "sqlite-before_result_commit/recovery-2.json",
+      "identity": {
+        "pid": 41028,
+        "start": "134383364065162204"
+      }
+    },
+    {
+      "file": "sqlite-checkpoint_after_commit/recovery-0.json",
+      "identity": {
+        "pid": 37260,
+        "start": "134383364093490510"
+      }
+    },
+    {
+      "file": "sqlite-checkpoint_after_commit/recovery-1.json",
+      "identity": {
+        "pid": 45896,
+        "start": "134383364096149823"
+      }
+    },
+    {
+      "file": "sqlite-checkpoint_after_commit/recovery-2.json",
+      "identity": {
+        "pid": 20752,
+        "start": "134383364098805571"
+      }
+    },
+    {
+      "file": "sqlite-checkpoint_before_commit/recovery-0.json",
+      "identity": {
+        "pid": 9320,
+        "start": "134383364082203767"
+      }
+    },
+    {
+      "file": "sqlite-checkpoint_before_commit/recovery-1.json",
+      "identity": {
+        "pid": 41812,
+        "start": "134383364084952367"
+      }
+    },
+    {
+      "file": "sqlite-checkpoint_before_commit/recovery-2.json",
+      "identity": {
+        "pid": 44000,
+        "start": "134383364087695451"
+      }
+    }
+  ],
+  "all_35_actual_runtime_identities_unique_and_exited": true,
+  "actual_manifests_and_harness_verified": true,
+  "runtime": "3.54.1",
+  "source_id": "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76",
+  "dll_sha256": "4b59d3cded9dc1608544160f3b4b10ac974c6ac0d6ffc23064e5f4c8dbd05aea"
+}

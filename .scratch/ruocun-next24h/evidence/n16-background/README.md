@@ -1,0 +1,40 @@
+# 16 后台事件与等待：分段证据
+
+阶段P1只交付后台事件模型、运行时收件箱、持久投递及共享SQLite接缝，16保持claimed。TaskWait工具、真实loop/scheduler事件唤醒、实际Shell观察及普通入口仍在实施，不能用此段代替整票。
+
+冻结来源为background_types.ts、background_runtime.ts及其test.ts、background_delivery.ts、tools/spill.ts与durable_store.test.ts；原ZIP只读，来源hash见manifest。纯内存来源9项覆盖any/all混合种类、其它任务失败/取消/attention、目标原子校验/不同ID上限、固定run、完成时序、去重、GC pin及reset/dispose。运行时publish使用async配合现有单线程存储，不另建DB或日志系统。
+
+真实SQLite覆盖run+event原子落盘、消息与delivered同事务确认后才内存ack、大结果先私有文件持久再登记hash、重开去重以及附件丢失形成未决。现有15原启动关联、control_epoch、runner身份及终态校验抽为同一函数，普通Shell提交与后台run/event复用；仅没有新关联版本且无事件的旧记录保留原兼容导入，不当作认证事件。原Bash真实结果继续保留，普通runner保存不能覆盖后台事件专属execution快照。
+
+Checkpoint兼容新增background可选快照；None时digest主动省略新字段，保持既有请求指纹。绑定background且材料核验后，pending events可交投递端处理，unknown、缺附件或未配对副作用继续阻止恢复。保存消费失败仅在handle确认failed时撤回consumed；pending或结果不明仍blocked并保留现场。已确认rollback的同请求不继续复用失败future，允许原因消除后重试同一阶段批次；未知回执仍复用/查询，不自动重发。
+
+原内存/存储缺模块red保留；save-rollback-red为真实事务更新delivered后注入StoreError，SQLite确实回滚，但重试复用了已失败handle而再失败。修复后storage-green3共22项通过（来源9、真实SQLite2、原15存储1、原worker/Conversation10），8源mypy/Ruff通过。green2记录严格认证校验最初拒绝旧格式无事件材料的回归及夹具外层GBK遮挡；按原兼容边界修正后原15断言复绿。没有单票构包或全量，未使用付费/真实模型。
+
+所有命令经tools/run.py环境白名单、合成HOME/配置/会话，测试加载本worktree/src。raw仅合成输入/失败日志，扫描false并审查。Root和独审应按P1具体SHA消费本段回执，后续接口与等待交付继续追加本目录，不重复长报告。
+
+
+## P2：等待、普通loop及真实Shell观察候选
+
+P2补TaskWait原schema/中英描述、每轮context scope、保存后yield waiting、冻结混批行为（只拒TaskWait，照常执行其它已授权工具），并保留9c33f1f的两个save后UI钩子。Scheduler由后台事件或用户输入唤醒，waiting期间不请求模型；等待handle固定task/run，恢复paused不自行启动。真实持久等待经历open重配对后仍保留background快照，避免bind前覆盖成None。
+
+ready消费不按历史同run猜测：request时固定waitId、工具结果全文和当时(eventId,seq)；仅本次checkpoint消息中同TaskWait call对应的完整结果正文匹配才ack已固定事件。后台数据只承认Delivery登记的确切消息。并发queue_user在工具结果尚未出现时不会提前ack。相关实际SQLite红→绿保留。存储同时核event.execution与RunRecord的kind/status及terminal type，completed快照配running记录被拒绝且零事件。
+
+真实manager观察端核同一原runner关闭收据和全部日志hash，将run+event原子登记。已有终态但旧background_execution仍running时显式导入真实终态，不根据旧快照虚报完成；已落盘的终态事件用持久快照去重。观察不推进UI或BashOutput游标；复用完整日志附件，模型只见有界摘要及路径。15回执是Shell run UUID，TaskWait仅把本会话已登记Shell run UUID识别为精确别名并固定规范(task_id,run_id)，继续接受规范任务ID。未知id不猜最近运行。16通知可用后，BashOutput恢复冻结“完成自动通知”指导，仅保留Windows/路径等事实适配。
+
+最终n16-p2-regression-final为55项定向通过（39.80s），11源mypy/Ruff通过。包括实际同包runner完成一次、通知持久ack且BashOutput原游标仍可读取，及持久等待重开后零模型调用、一次事件唤醒/投递。源恢复case先捕获匹配分支局部变量错误，再捕获bind前background丢失，修复后均绿。未跑全量/build，未调用付费模型；整16仍等root普通入口组合及高风险独审，17/63不在本候选宣布完成。
+
+
+## P3：Bash回执前完成可等待登记
+
+独审普通CLI原始红见review提交748f8d0的b02-review-n16-cli：后台Bash已返回真实run UUID，下一轮立即TaskWait却因250ms观察尚未登记而ValueError。该竞态在本地修复前同脚本重放碰巧通过（label虽叫red，实际exit0，不能计为故障红）；保留独审真实失败，不靠睡眠掩盖。
+
+修复由runtime同步manager.bind_background(bg)，Bash后台及同run转后台回执返回前await真实运行登记；周期观察和回执路径复用同一发布函数及每run锁。没有新增grant/业务spawn，也不改模型/日志消费游标。已有实际Shell来源case改为尚未启动周期观察时，在Bash ack之后立即prepare(TaskWait)，规范task/run必须已存在，随后才启动观察收尾。
+
+同一独审普通CLI脚本修复后通过：3次回环合成请求、真实等待、同run执行一次、通知一次、tool pair配齐；定向原生case1项通过（14.25s），2源mypy/Ruff通过。源文件仅managed_shell.py、runtime一行bind及上述既有case；66账户actions尚未实施，runtime接线后交还root。整16仍待独审同脚本确认。
+
+
+## P4：ack刷新已知unknown时停止
+
+独审P3普通CLI已绿后指出：ack前刷新若已观察到runner丢失，虽然unknown run/event保留，原代码仍会返回普通后台成功回执。沿既有真实runner-loss路径，只将强杀已核身份的原runner时点移至detach后、ack刷新前，n16-unknown-ack-red实际捕获该错误回执。修复后后台/转后台ack统一先完成发布，再只允许已确认running/canceling或真实关闭terminal状态；unknown抛错保留现场，不补Bash成功结果。已确认started的稳定id回执仍允许，不因其它任务未决而虚构本任务状态。
+
+同一case绿色9秒内完成，实际DB中同run为unknown、Bash结果仍缺失、unknown事件保留且会话blocked；Ruff/mypy通过。未再跑55组、没有修改runtime或扩大故障矩阵。16仍等独审最终收口。

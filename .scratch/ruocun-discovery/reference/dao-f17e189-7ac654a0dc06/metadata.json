@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "dao-f17e189-7ac654a0dc06",
+  "capture_date": "2026-11-05",
+  "reference_path": "D:\\java supplement\\Firstcode\\dao-code",
+  "base_commit": "f17e189dc68a0a0a0b9937784e1b7ce29aed80eb",
+  "source_remote": "https://github.com/tigicion/dao-code.git",
+  "source_version": "0.5.15",
+  "source_tree_sha256": "7ac654a0dc06a9724982c35119501d65a3863e000458dcc0e2765fa66b53180c",
+  "tracked_present": 797,
+  "untracked_present": 8,
+  "deleted_tracked": [],
+  "status_porcelain": " M patches/ink+7.0.5.patch\n M src/config/profiles.ts\n M src/session/process_identity.ts\n M src/tui/Welcome.test.tsx\n M src/tui/Welcome.tsx\n M src/tui/app/App.test.tsx\n M src/tui/app/App.tsx\n M src/tui/app/run.tsx\n M src/tui/app/types.ts\n M src/tui/onboarding/Onboarding.test.tsx\n M src/tui/tab_attention.test.ts\n M src/tui/tab_attention.ts\n?? scripts/generate-mascot-data.mjs\n?? src/session/process_identity.test.ts\n?? src/tui/brand.ts\n?? src/tui/mascot.test.ts\n?? src/tui/mascot.ts\n?? src/tui/mascot_frames.ts\n?? src/tui/terminal_reports.test.ts\n?? src/tui/terminal_reports.ts\n",
+  "git_version": "git version 2.53.0.windows.2",
+  "scope": "All tracked working-tree bytes plus all non-ignored untracked files. No .git directory, ignored dependencies, credentials or runtime state."
+}

@@ -1,0 +1,1152 @@
+{
+  "archive_and_all_members_verified": true,
+  "archive_members": 223,
+  "full_backend_contract_met": false,
+  "network": [
+    {
+      "network": false,
+      "host_external": [
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        },
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        },
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        }
+      ],
+      "worker_external": [
+        {
+          "tcp": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "https": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          }
+        },
+        {
+          "tcp": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "https": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          }
+        },
+        {
+          "tcp": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "https": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          }
+        }
+      ],
+      "host_loopback_controls": [
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        }
+      ],
+      "worker_host_loopback": [
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        },
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        },
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        }
+      ],
+      "worker_self_loopback": [
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        },
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        },
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        }
+      ],
+      "worker_parent_loopback": [
+        {},
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        },
+        {
+          "tcp4": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "tcp6": {
+            "ok": false,
+            "errno": 13,
+            "winerror": 10013,
+            "type": "PermissionError"
+          },
+          "udp4": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          },
+          "udp6": {
+            "ok": false,
+            "errno": null,
+            "winerror": null,
+            "type": "TimeoutError"
+          }
+        }
+      ],
+      "host_nonce_receipts": 12,
+      "self_and_child_nonce_receipts": 0
+    },
+    {
+      "network": true,
+      "host_external": [
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        },
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        },
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        }
+      ],
+      "worker_external": [
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        },
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        },
+        {
+          "tcp": {
+            "ok": true
+          },
+          "https": {
+            "ok": true,
+            "status": "HTTP/1.1 200 OK",
+            "tls_verified": true
+          }
+        }
+      ],
+      "host_loopback_controls": [
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        }
+      ],
+      "worker_host_loopback": [
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        }
+      ],
+      "worker_self_loopback": [
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        }
+      ],
+      "worker_parent_loopback": [
+        {},
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        },
+        {
+          "tcp4": {
+            "ok": true
+          },
+          "tcp6": {
+            "ok": true
+          },
+          "udp4": {
+            "ok": true
+          },
+          "udp6": {
+            "ok": true
+          }
+        }
+      ],
+      "host_nonce_receipts": 24,
+      "self_and_child_nonce_receipts": 20
+    }
+  ],
+  "normal_close": [
+    {
+      "case": "run/cases/files0/result.json",
+      "started": true,
+      "failure": null,
+      "cleanup": {
+        "original_dacl_restored": true,
+        "exited_before_environment_close": true,
+        "same_identity": true,
+        "retained": [],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "owned_junction_removed": true,
+        "inheritable_fixture_handle_closed": true,
+        "fixture_cleanup_errors": []
+      }
+    },
+    {
+      "case": "run/cases/test_failed_create_closes_envi0/result.json",
+      "started": false,
+      "failure": {
+        "type": "FileNotFoundError",
+        "errno": 2,
+        "winerror": null
+      },
+      "cleanup": {
+        "retained": [],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "fixture_cleanup_errors": []
+      }
+    },
+    {
+      "case": "run/cases/test_host_git_and_windows_powe0/result.json",
+      "started": true,
+      "failure": null,
+      "cleanup": {
+        "exited_before_environment_close": true,
+        "same_identity": true,
+        "retained": [],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "fixture_cleanup_errors": []
+      }
+    },
+    {
+      "case": "run/cases/test_job_cancel_waits_for_reta0/result.json",
+      "started": true,
+      "failure": null,
+      "cleanup": {
+        "exited_before_environment_close": true,
+        "same_identity": true,
+        "retained": [
+          {
+            "pid": 34044,
+            "creation_filetime": 134383454172752411,
+            "signaled": true,
+            "identity_matches": true,
+            "exitcode": 3360,
+            "heartbeat_stopped": true
+          },
+          {
+            "pid": 44556,
+            "creation_filetime": 134383454174089219,
+            "signaled": true,
+            "identity_matches": true,
+            "exitcode": 3360,
+            "heartbeat_stopped": true
+          },
+          {
+            "pid": 7812,
+            "creation_filetime": 134383454175379706,
+            "signaled": true,
+            "identity_matches": true,
+            "exitcode": 3360,
+            "heartbeat_stopped": true
+          }
+        ],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "fixture_cleanup_errors": []
+      }
+    },
+    {
+      "case": "run/cases/test_native_environment_runs_h0/result.json",
+      "started": true,
+      "failure": null,
+      "cleanup": {
+        "exited_before_environment_close": true,
+        "same_identity": true,
+        "retained": [],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "fixture_cleanup_errors": []
+      }
+    },
+    {
+      "case": "run/cases/test_real_network_and_descenda0/result.json",
+      "started": true,
+      "failure": null,
+      "cleanup": {
+        "exited_before_environment_close": true,
+        "same_identity": true,
+        "retained": [],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "host_sockets_closed": true,
+        "fixture_cleanup_errors": []
+      }
+    },
+    {
+      "case": "run/cases/test_real_network_and_descenda1/result.json",
+      "started": true,
+      "failure": null,
+      "cleanup": {
+        "exited_before_environment_close": true,
+        "same_identity": true,
+        "retained": [],
+        "job_query_ok": true,
+        "job_active_before_close": 0,
+        "job_name_absent": true,
+        "environment_close_called": true,
+        "host_sockets_closed": true,
+        "fixture_cleanup_errors": []
+      }
+    }
+  ],
+  "owner_crash": {
+    "retained": [
+      {
+        "pid": 39972,
+        "creation_filetime": 134383454181301677,
+        "signaled": true,
+        "identity_matches": true,
+        "heartbeat_stopped": true
+      },
+      {
+        "pid": 40404,
+        "creation_filetime": 134383454182671385,
+        "signaled": true,
+        "identity_matches": true,
+        "heartbeat_stopped": true
+      },
+      {
+        "pid": 42684,
+        "creation_filetime": 134383454183983415,
+        "signaled": true,
+        "identity_matches": true,
+        "heartbeat_stopped": true
+      }
+    ],
+    "environment_close_api": "not-called-after-os._exit",
+    "environment_server_teardown": "not-independently-queryable",
+    "job_name": "RuoCun.D20.3deb51525f1c40c08e1eafefb16dc0e4",
+    "owner_identity": {
+      "pid": 37228,
+      "creation_filetime": 134383454179898381
+    },
+    "owner_exitcode": 29,
+    "job_name_absent": true,
+    "open_job_error": 2
+  },
+  "files": {
+    "generations": 3,
+    "acl_confirmation": {
+      "ok": true,
+      "random_read_ace_observed_by_host": true,
+      "original_restored_and_read_back": true
+    },
+    "worker_outside": [
+      {
+        "read": {
+          "ok": true
+        },
+        "create": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "overwrite": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "append": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "rename": {
+          "ok": false,
+          "errno": 13,
+          "winerror": 5
+        },
+        "delete": {
+          "ok": false,
+          "errno": 13,
+          "winerror": 5
+        },
+        "write_dac_open": {
+          "ok": true
+        },
+        "write_dac": {
+          "ok": true
+        }
+      },
+      {
+        "read": {
+          "ok": true
+        },
+        "create": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "overwrite": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "append": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "rename": {
+          "ok": false,
+          "errno": 13,
+          "winerror": 5
+        },
+        "delete": {
+          "ok": false,
+          "errno": 13,
+          "winerror": 5
+        },
+        "write_dac_open": {
+          "ok": true
+        },
+        "write_dac": {
+          "ok": true
+        }
+      },
+      {
+        "read": {
+          "ok": true
+        },
+        "create": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "overwrite": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "append": {
+          "ok": false,
+          "errno": 13,
+          "winerror": null
+        },
+        "rename": {
+          "ok": false,
+          "errno": 13,
+          "winerror": 5
+        },
+        "delete": {
+          "ok": false,
+          "errno": 13,
+          "winerror": 5
+        },
+        "write_dac_open": {
+          "ok": true
+        },
+        "write_dac": {
+          "ok": true
+        }
+      }
+    ],
+    "worker_allowed": [
+      {
+        "workspace": {
+          "read": {
+            "ok": true
+          },
+          "create": {
+            "ok": true
+          },
+          "overwrite": {
+            "ok": true
+          },
+          "append": {
+            "ok": true
+          },
+          "rename": {
+            "ok": true
+          },
+          "delete": {
+            "ok": true
+          },
+          "write_dac_open": {
+            "ok": true
+          },
+          "write_dac": {
+            "ok": true
+          }
+        },
+        "tmp": {
+          "read": {
+            "ok": true
+          },
+          "create": {
+            "ok": true
+          },
+          "overwrite": {
+            "ok": true
+          },
+          "append": {
+            "ok": true
+          },
+          "rename": {
+            "ok": true
+          },
+          "delete": {
+            "ok": true
+          },
+          "write_dac_open": {
+            "ok": true
+          },
+          "write_dac": {
+            "ok": true
+          }
+        }
+      },
+      {
+        "workspace": {
+          "read": {
+            "ok": true
+          },
+          "create": {
+            "ok": true
+          },
+          "overwrite": {
+            "ok": true
+          },
+          "append": {
+            "ok": true
+          },
+          "rename": {
+            "ok": true
+          },
+          "delete": {
+            "ok": true
+          },
+          "write_dac_open": {
+            "ok": true
+          },
+          "write_dac": {
+            "ok": true
+          }
+        },
+        "tmp": {
+          "read": {
+            "ok": true
+          },
+          "create": {
+            "ok": true
+          },
+          "overwrite": {
+            "ok": true
+          },
+          "append": {
+            "ok": true
+          },
+          "rename": {
+            "ok": true
+          },
+          "delete": {
+            "ok": true
+          },
+          "write_dac_open": {
+            "ok": true
+          },
+          "write_dac": {
+            "ok": true
+          }
+        }
+      },
+      {
+        "workspace": {
+          "read": {
+            "ok": true
+          },
+          "create": {
+            "ok": true
+          },
+          "overwrite": {
+            "ok": true
+          },
+          "append": {
+            "ok": true
+          },
+          "rename": {
+            "ok": true
+          },
+          "delete": {
+            "ok": true
+          },
+          "write_dac_open": {
+            "ok": true
+          },
+          "write_dac": {
+            "ok": true
+          }
+        },
+        "tmp": {
+          "read": {
+            "ok": true
+          },
+          "create": {
+            "ok": true
+          },
+          "overwrite": {
+            "ok": true
+          },
+          "append": {
+            "ok": true
+          },
+          "rename": {
+            "ok": true
+          },
+          "delete": {
+            "ok": true
+          },
+          "write_dac_open": {
+            "ok": true
+          },
+          "write_dac": {
+            "ok": true
+          }
+        }
+      }
+    ],
+    "host_outside": [
+      {
+        "read": {
+          "ok": true
+        },
+        "create": {
+          "ok": true
+        },
+        "overwrite": {
+          "ok": true
+        },
+        "append": {
+          "ok": true
+        },
+        "rename": {
+          "ok": true
+        },
+        "delete": {
+          "ok": true
+        },
+        "write_dac_open": {
+          "ok": true
+        },
+        "write_dac": {
+          "ok": true
+        }
+      },
+      {
+        "read": {
+          "ok": true
+        },
+        "create": {
+          "ok": true
+        },
+        "overwrite": {
+          "ok": true
+        },
+        "append": {
+          "ok": true
+        },
+        "rename": {
+          "ok": true
+        },
+        "delete": {
+          "ok": true
+        },
+        "write_dac_open": {
+          "ok": true
+        },
+        "write_dac": {
+          "ok": true
+        }
+      },
+      {
+        "read": {
+          "ok": true
+        },
+        "create": {
+          "ok": true
+        },
+        "overwrite": {
+          "ok": true
+        },
+        "append": {
+          "ok": true
+        },
+        "rename": {
+          "ok": true
+        },
+        "delete": {
+          "ok": true
+        },
+        "write_dac_open": {
+          "ok": true
+        },
+        "write_dac": {
+          "ok": true
+        }
+      }
+    ],
+    "junction": {
+      "worker": {
+        "ok": false,
+        "errno": 13,
+        "winerror": null
+      },
+      "host": {
+        "ok": true
+      }
+    },
+    "inherited_handle": {
+      "worker": {
+        "ok": false,
+        "errno": 22,
+        "winerror": -1073741816
+      },
+      "host": {
+        "ok": true
+      }
+    }
+  },
+  "tools": {
+    "git_version": {
+      "exitcode": 0,
+      "stdout": "git version 2.53.0.windows.2\n",
+      "stderr": ""
+    },
+    "git_status": {
+      "exitcode": 0,
+      "stdout": "?? synthetic.txt\n",
+      "stderr": ""
+    },
+    "powershell": {
+      "exitcode": 0,
+      "stdout": "synthetic-psec-ps/5.1.26100.9711",
+      "stderr": ""
+    }
+  }
+}

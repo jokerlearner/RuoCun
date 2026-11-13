@@ -1,0 +1,23 @@
+{
+  "candidate": "90efe4f7a271c8c39f9fc6d35479bdeed6813028",
+  "merge": "e11a20d9cc004c8d2fc02170dd112fa21f3ae6b9",
+  "status": "passed-for-task03-defined-paths",
+  "default_pytest": {
+    "passed": 29,
+    "deselected": 3
+  },
+  "mypy_source_files": 11,
+  "independent_real_child_boundary_checks": 4,
+  "outside_final_wheel_offline_passed": 4,
+  "engineering_commands": 13,
+  "prior_source_oracle": {
+    "passed": 12,
+    "rerun": false,
+    "unchanged_inputs_verified": true
+  },
+  "prior_failure_evidence_preserved": true,
+  "owned_children_reaped": true,
+  "paid_model_calls": 0,
+  "task04_started": false,
+  "scope": "ENT-01/TEST-07 task03 child paths; not full Agent/TUI/SQLite/release/terminal acceptance"
+}

@@ -1,0 +1,72 @@
+{
+  "method": "OpenProcess QUERY_LIMITED_INFORMATION|SYNCHRONIZE, creation time, zero-time wait; no kill",
+  "all_original_workers_stopped": true,
+  "workers": [
+    {
+      "pid": 45296,
+      "expected_creation_time": "134383390712495955",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 36440,
+      "expected_creation_time": "134383390710231504",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 42632,
+      "expected_creation_time": "134383390719128485",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 13096,
+      "expected_creation_time": "134383390724232909",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 42664,
+      "expected_creation_time": "134383390714802367",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 40060,
+      "expected_creation_time": "134383390727952606",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 43472,
+      "expected_creation_time": "134383390701104111",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 37976,
+      "expected_creation_time": "134383390697490089",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 40276,
+      "expected_creation_time": "134383390688522709",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 8812,
+      "expected_creation_time": "134383390692541441",
+      "open_error": 87,
+      "status": "pid-absent"
+    },
+    {
+      "pid": 34668,
+      "expected_creation_time": "134383390684947244",
+      "open_error": 87,
+      "status": "pid-absent"
+    }
+  ]
+}

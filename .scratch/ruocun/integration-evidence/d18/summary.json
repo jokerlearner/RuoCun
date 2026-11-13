@@ -1,0 +1,324 @@
+{
+  "reviewed_merge": "75265981726fb7ea2f29b646f9960fa7a2120b8c",
+  "candidate": "14fcde35586374480c8ac917a2cfb4dce638e8e3",
+  "archive": "m18-independent-r01.zip",
+  "archive_sha256": "d306080b1a76567988920c282de66c69b8488d49d5ee160ba59c17e018f25704",
+  "archive_files": 134,
+  "archive_harness_snapshots_verified": 4,
+  "original_inventory_files_verified": 874,
+  "original_round_snapshots_verified": 19,
+  "pytest": {
+    "passed": 6,
+    "failed": 0,
+    "seconds": 5.21
+  },
+  "all_11_workers_pid_and_creation_matched": true,
+  "all_11_workers_held_handle_signaled_and_closed": true,
+  "publish_paths": {
+    "fsync-osreplace": {
+      "published": true,
+      "receipt": {
+        "version": 2,
+        "status": "completed",
+        "text": "合成回执"
+      },
+      "acl_read_back": true
+    },
+    "flush-osreplace": {
+      "published": true,
+      "receipt": {
+        "version": 2,
+        "status": "completed",
+        "text": "合成回执"
+      },
+      "acl_read_back": true
+    },
+    "flush-replacefile": {
+      "published": true,
+      "receipt": {
+        "version": 2,
+        "status": "completed",
+        "text": "合成回执"
+      },
+      "acl_read_back": true
+    },
+    "writethrough-move": {
+      "published": true,
+      "receipt": {
+        "version": 2,
+        "status": "completed",
+        "text": "合成回执"
+      },
+      "acl_read_back": true
+    }
+  },
+  "directory_flush": {
+    "2147483648": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    },
+    "3221225472": {
+      "success": true
+    },
+    "posix_fsync": {
+      "success": false,
+      "winerror": null,
+      "errno": 13
+    }
+  },
+  "refusals": {
+    "sharing-release": {
+      "published": true,
+      "elapsed": 0.235000000015134,
+      "attempts": 7,
+      "observed_winerrors": [
+        5
+      ],
+      "receipt": {
+        "version": 2
+      },
+      "error_class": null
+    },
+    "denied-release": {
+      "published": true,
+      "elapsed": 0.28099999998812564,
+      "attempts": 8,
+      "observed_winerrors": [
+        5
+      ],
+      "receipt": {
+        "version": 2
+      },
+      "error_class": null
+    },
+    "sharing-permanent": {
+      "published": false,
+      "elapsed": 0.35899999999674037,
+      "attempts": 10,
+      "observed_winerrors": [
+        5
+      ],
+      "receipt": {
+        "version": 1
+      },
+      "error_class": "retry_exhausted"
+    },
+    "denied-permanent": {
+      "published": false,
+      "elapsed": 0.0,
+      "attempts": 1,
+      "observed_winerrors": [
+        5
+      ],
+      "receipt": {
+        "version": 1
+      },
+      "error_class": "permanent"
+    }
+  },
+  "pipe": {
+    "server_events_opened": 51,
+    "server_events_closed": 51,
+    "server_cancelled_pending": 3,
+    "server_handles_ready": 144,
+    "server_handles_after": 143,
+    "client_events_opened": 48,
+    "client_events_closed": 48,
+    "pipe_absent": true,
+    "connections": [
+      {
+        "connection": 1,
+        "response": {
+          "ok": true,
+          "epoch": 1,
+          "request_bytes": 156
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 2,
+        "response": {
+          "error": "auth"
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 3,
+        "response": {
+          "error": "run"
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 4,
+        "response": {
+          "ok": true,
+          "epoch": 2,
+          "request_bytes": 156
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 5,
+        "response": {
+          "error": "epoch"
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 6,
+        "response": {
+          "ok": true,
+          "epoch": 2,
+          "request_bytes": 4096
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 7,
+        "response": {
+          "error": "too_large"
+        },
+        "ack": "a",
+        "elapsed": 0.0
+      },
+      {
+        "connection": 8,
+        "error": "timeout",
+        "elapsed": 0.3590000000258442
+      },
+      {
+        "connection": 9,
+        "error": "disconnected",
+        "winerror": 109,
+        "errno": 32,
+        "elapsed": 0.0
+      }
+    ]
+  },
+  "cold_crash_reads": {
+    "before-replace": {
+      "receipt": {
+        "version": 1
+      },
+      "pid": 26772,
+      "creation_time": "134383390711387262"
+    },
+    "after-replace": {
+      "receipt": {
+        "version": 2
+      },
+      "pid": 45788,
+      "creation_time": "134383390713650434"
+    }
+  },
+  "concurrent_readers": {
+    "fsync-osreplace": {
+      "reads": 202,
+      "versions_seen": 41,
+      "malformed": [],
+      "open_errors": [],
+      "successful_publications": 40
+    },
+    "flush-osreplace": {
+      "reads": 253,
+      "versions_seen": 41,
+      "malformed": [],
+      "open_errors": [],
+      "successful_publications": 40
+    },
+    "flush-replacefile": {
+      "reads": 152,
+      "versions_seen": 41,
+      "malformed": [],
+      "open_errors": [
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "FileNotFoundError",
+          "winerror": 2
+        },
+        {
+          "error": "PermissionError",
+          "winerror": 32
+        }
+      ],
+      "successful_publications": 40
+    },
+    "writethrough-move": {
+      "reads": 233,
+      "versions_seen": 41,
+      "malformed": [],
+      "open_errors": [],
+      "successful_publications": 40
+    }
+  },
+  "anonymous_attempt": {
+    "directory": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    },
+    "capability": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    },
+    "pipe": {
+      "success": false,
+      "winerror": 5,
+      "errno": 13
+    }
+  },
+  "independent_account": {
+    "status": "not-run",
+    "reason": "No independent test account/token supplied; anonymous impersonation is not cross-account validation."
+  },
+  "scope": "standalone Windows native probe; not product, power loss, independent-account or full Agent acceptance",
+  "blocking_finding": {
+    "kind": "static-review-only",
+    "not_triggered_by_independent_round": true,
+    "lines": [
+      132,
+      152
+    ],
+    "pending_io_can_unwind_and_release_event_before_completion": true
+  }
+}

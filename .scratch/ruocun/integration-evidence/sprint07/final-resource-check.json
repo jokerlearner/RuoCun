@@ -1,0 +1,10 @@
+{
+  "protected_targets_checked": 26,
+  "protected_target_reparses": 0,
+  "guards_remaining": 0,
+  "direct_commands_joined": true,
+  "wheel_demo_processes_exited": true,
+  "wheel_demo_server_closed": true,
+  "scope": "exact synthetic protected targets only; fixture junctions and historical worktrees retained",
+  "state_retained": true
+}

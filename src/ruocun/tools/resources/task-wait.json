@@ -1,0 +1,4 @@
+{
+  "description": "等待本会话的后台任务，例如 Shell 或 Agent。提供 1 至 32 个不同的任务 ID，用 any 等任一任务成功，用 all 等全部成功。失败、取消或需要处理的消息可提前返回。请单独调用，返回后按任务类型读取结果。 等待期间用户仍可输入，收到输入后按实际唤醒原因处理。手工待办和前台执行不可作为等待目标。先处理其他独立工作；只在用户询问或具体排查时读取输出，不要循环调用 TaskOutput、BashOutput、TaskGet 或 sleep 等待。",
+  "descriptionEn": "Wait for background work in this session, such as a shell run or child agent. Provide 1–32 distinct IDs. Use any for the first successful task or all for every task to succeed. A failure, cancellation, or event that needs attention can wake the session early. Call it separately and read the resulting output afterward. The user can still type while waiting; check the wake reason when input arrives. Manual records and foreground executions cannot be waited on. Do independent work first. Read output for a user-requested update or diagnosis, and do not wait by looping over TaskOutput, BashOutput, TaskGet, or sleep."
+}

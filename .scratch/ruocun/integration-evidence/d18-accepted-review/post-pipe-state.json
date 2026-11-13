@@ -1,0 +1,91 @@
+{
+  "independent_native_api": "CreateFileW",
+  "access": "read/write data and attributes; excludes FILE_CREATE_PIPE_INSTANCE",
+  "all_14_pipe_names_absent_error_2": true,
+  "endpoints": [
+    {
+      "source": "broken-read/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-d17232261b834b219d03b8aad4323106",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "cancel-budget/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-33acb0079503400eb7d05c17070c6103",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "cancel-completed/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-1e7468cd78fa44c58d8cf4ce8ad5234f",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "cancel-fail/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-b429ecc2594547e4b17f50896c4c6872",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "diagnostic-fail/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-dac77ed4bfcd4a68ade27731e010c6b4",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "pipe/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-aab2b1c09ecb407f8f1abb0e2aeef1cb",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "read-cancel-fail/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-a2889cfd76e6435c97ccdcd1ca760f98",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "result-error/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-7b6abcd8f40c4d1c9d23f2590943e070",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "result-incomplete/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-1348071f04a54d728ca2d0b9aff96914",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "submit-raise/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-4f1342121fe9410e91e3bc8d55e02dd8",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "wait-fail/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-2463a9f142d647f5b3100541d4123438",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "wait-raise/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-1a2683ea3ba54e7d93ce92fa3e01df2d",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "write-cancel-fail/ready.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-fault-95939d760f7a4c9baeb1527ec547e1b8",
+      "success": false,
+      "winerror": 2
+    },
+    {
+      "source": "acl/result.json",
+      "pipe_name": "\\\\.\\pipe\\ruocun-d18-9692d898528848e8a46456dda74f4abb",
+      "success": false,
+      "winerror": 2
+    }
+  ]
+}

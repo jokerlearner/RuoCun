@@ -1,0 +1,6 @@
+{
+  "sensitive_values_present": true,
+  "sensitive_match": false,
+  "scope": "maintained sources/configs/licenses; all new evidence including ZIP members; product/support/development wheels; candidate raw/artifact ZIP members",
+  "secret_names_or_values_logged": false
+}

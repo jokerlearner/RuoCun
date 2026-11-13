@@ -1,0 +1,15 @@
+# 批次02固定包：五条旧夹具失败收口
+
+本修复只改test_n16_background_storage.py、test_session_product.py和本证据；产品门禁、runtime、存储实现、全量与构包均未修改/执行。目标是恢复原五条断言对当前真实契约的覆盖。完整原红为root固定5be452c产品全量1520passed/7failed，raw指纹见manifest；本地只选择其中本领域5条，原样复现5失败，保留b02-five-installed-red。
+
+按diagnosing-bugs先用原五个精确节点构建红色反馈，再逐项核假设：
+
+1. 安装模式两条原生Shell夹具无条件拼tests/support/n15_role_loader.py，实际runner.log明确找`.venv/Lib/tests/support/n15_role_loader.py`不存在，exit2。唯一改变为仅源码包根名src时选已有测试loader，安装模式选真实同包`-I -X utf8 -m ruocun`内部角色。未换runner实现、未延长超时，原完成一次/独立日志游标/真实runner丢失保持unknown断言完整保留。installed2条通过。
+2. 两条事件夹具仍提交只有result/value的旧事件，以及未按15登记的Shell，先被16快照/启动身份guard正确拒绝。夹具现经真实commit_intent与prepare_shell生成唯一工具/launch/控制租约关联，再在存储信任接缝给出合成已核验manager metadata（包括收据摘要、稳定工具回执），事件execution精确匹配task/run/kind/status/background。这里没有声明实际OS收据核验；真实runner仍由上面两条原生用例验证。第二条的独立run也独立登记，不复用另一run的启动身份。第一次最小修只补登记而无稳定工具结果时，下一意图仍被未知guard拒绝；保留该中间红，补齐实际管理器会提交的工具回执后通过。
+3. Worker公开工厂用例把普通Write意图硬配未登记Shell与phase=start，缺control_epoch被15guard拒绝。新调用明确为Bash，经同一StorageWorker的enqueue_prepare_shell登记，再走原run/event/result/checkpoint公开方法；终态合成收据摘要仅代表存储接缝的可信上游输入。原unknown resolve、seq、checkpoint回执、已提交结果和关闭后拒写断言原样保留。
+
+冲突事件专门保持当前快照身份/状态合法，只令相同eventID正文及可变run metadata不同，从而真实到达event正文冲突、回滚此前run变更的原路径；不让新guard提前拒绝掩盖事务断言。最终该单例installed1通过。断言与失败哨兵行全部逐字相同，manifest含前后相等证明。Source与installed六个真实产品/guard模块字节相同，不改产品换绿。
+
+最后installed原2+3均绿，冲突正文最后单项再次绿；源码入口明确传worktree包根到每个子进程，已有source5请求在root要求仅复跑source2之前已启动，为避免强杀runner留下现场而收完此次请求（5绿），之后未加任何复跑。Ruff两测试文件通过。无新增测试、无全量、无构包、无真实或付费模型。
+
+所有验证经tools/run.py明确白名单及合成HOME/配置/会话；后续basetemp全部为仓外专用合成目录，避免git上溯误入本仓。runner/SQLite测试均走原finally完成关闭，raw只含合成输入，扫描false并人工检查。防止再现的方法是夹具选择跟随实际包根、通过公开准备端口登记Shell、事件携带真实契约快照；本修复无需新增框架或架构改动。

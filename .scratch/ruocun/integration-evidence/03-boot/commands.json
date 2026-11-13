@@ -1,0 +1,542 @@
+[
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "venv",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.cache\\merge03\\dev"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pip",
+      "download",
+      "--index-url",
+      "https://pypi.org/simple",
+      "--only-binary=:all:",
+      "--require-hashes",
+      "-r",
+      "requirements-dev-win311.lock",
+      "--dest",
+      ".cache/merge03/wheels"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pip",
+      "install",
+      "--no-index",
+      "--find-links",
+      ".cache/merge03/wheels",
+      "--require-hashes",
+      "-r",
+      "requirements-dev-win311.lock"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      ".scratch/ruocun/integration-evidence/03-boot/review.py",
+      "closure"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "build"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "build",
+      "tests/support",
+      "--outdir",
+      ".cache/merge03/support"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "build",
+      "--wheel",
+      "--outdir",
+      ".cache/merge03/direct"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pip",
+      "install",
+      "--no-index",
+      "--no-deps",
+      "dist/ruocun-0.1.0.dev0-py3-none-any.whl",
+      ".cache/merge03/support/ruocun_dev_support-0.1.0-py3-none-any.whl"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruff",
+      "check",
+      "."
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "mypy"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pip",
+      "check"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "ruff",
+      "check",
+      ".",
+      "--show-files"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      ".scratch/ruocun/integration-evidence/03-boot/review.py",
+      "artifacts"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "venv",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "venv",
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      ".scratch/ruocun-discovery/reference_tool.py",
+      "extract",
+      ".scratch/ruocun-discovery/reference/dao-f17e189-7ac654a0dc06",
+      "--destination",
+      ".cache/merge03/oracle/source"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      ".scratch/ruocun/integration-evidence/03-boot/copy_public.py"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pip",
+      "install",
+      "--no-index",
+      "--no-deps",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\dist\\ruocun-0.1.0.dev0-py3-none-any.whl"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pip",
+      "install",
+      "--no-index",
+      "--no-deps",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\dist\\ruocun-0.1.0.dev0-py3-none-any.whl",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.cache\\merge03\\support\\ruocun_dev_support-0.1.0-py3-none-any.whl"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      ".cache/merge03/dev/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "tests/test_source_oracle.py",
+      "-o",
+      "addopts=--strict-markers",
+      "--basetemp=.cache/merge03/oracle-pytest"
+    ],
+    "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\product\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.scratch\\ruocun\\integration-evidence\\03-boot\\origin.py"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.scratch\\ruocun\\integration-evidence\\03-boot\\origin.py"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.scratch\\ruocun\\integration-evidence\\03-boot\\boundaries.py"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.scratch\\ruocun\\integration-evidence\\03-boot\\cancellation.py"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 1,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  },
+  {
+    "argv": [
+      "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m03\\.scratch\\ruocun\\integration-evidence\\03-boot\\deadline.py"
+    ],
+    "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格",
+    "exit": 0,
+    "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+    "sensitive_values_present": true,
+    "sensitive_match": false,
+    "cleanup": {
+      "command_joined": true,
+      "state_retained": true
+    }
+  }
+]

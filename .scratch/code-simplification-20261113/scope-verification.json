@@ -1,0 +1,25 @@
+{
+  "compared_with": "before-hashes.json captured before this task; not Git HEAD",
+  "before_files": 474,
+  "after_files": 474,
+  "changed": {
+    "src/ruocun/tools/edit_file.py": {
+      "before_physical": 140,
+      "after_physical": 138,
+      "removed_physical": 2,
+      "before_sha256": "2ef44797b690022bd8f204b22ce0f8f4e9b73296b4022a3333b07996efd87252",
+      "after_sha256": "767d1da5cba74be274c64e4c355ad4d5161a6a9d4217c4733fb9512e42c171e1"
+    },
+    "src/ruocun/tui/app/app.py": {
+      "before_physical": 469,
+      "after_physical": 465,
+      "removed_physical": 4,
+      "before_sha256": "ed5e0258e3a71a9e855a881491ee28595d2104fddaef81ebfbc264e598b5f2e7",
+      "after_sha256": "dff8a3db1dd97539910b1f2be187441a6b692bb48192ae2584703ab90418e805"
+    }
+  },
+  "added": [],
+  "removed": [],
+  "tests_unchanged": true,
+  "physical_lines_removed": 6
+}

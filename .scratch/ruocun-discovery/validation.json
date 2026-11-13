@@ -1,0 +1,65 @@
+{
+  "checked_date": "2026-11-05",
+  "python": "3.11.9",
+  "snapshot_id": "dao-f17e189-7ac654a0dc06",
+  "base_commit": "f17e189dc68a0a0a0b9937784e1b7ce29aed80eb",
+  "source_tree_sha256": "7ac654a0dc06a9724982c35119501d65a3863e000458dcc0e2765fa66b53180c",
+  "archive_sha256": "1f8308959d8b9ac0783b6ce6ddbffe7a71cc60bc59332f309f0d62083efac078",
+  "snapshot_files_extracted_and_verified": 805,
+  "independent_worktree_snapshot_verification": "passed at checkpoint 2de90f1",
+  "active_reference_matches_frozen_source": true,
+  "confirmed_goals_unchanged": true,
+  "source_directories": 19,
+  "tool_definitions_crosschecked": 43,
+  "tickets": 17,
+  "resolved": 5,
+  "unresolved": 12,
+  "claimed": 0,
+  "dependency_cycle_check": "passed",
+  "frontier": [
+    "用最小 Python 实验验证取消与崩溃恢复契约",
+    "用真实 Python 终端实验确定输入与渲染路线",
+    "验证 Python 安装与打包的最小闭环",
+    "用最小 Python 适配器验证扩展协议与兼容解析",
+    "用最小 Python 探针验证 Windows 平台能力"
+  ],
+  "research_reports": [
+    {
+      "path": ".scratch/ruocun-discovery/research/02-function-runtime.md",
+      "branch": "research/ruocun-core",
+      "commit": "1ee8428b1cff394c65268c12ceba2d43080c047f",
+      "sha256": "dbb42965eb6214167d18f3e6bed8e4a8174d5d42bf990aa3de87eddf813f4c36",
+      "source_locations_checked": 661,
+      "product_or_tests_run": false
+    },
+    {
+      "path": ".scratch/ruocun-discovery/research/03-data-extension.md",
+      "branch": "research/ruocun-compatibility",
+      "commit": "3cdcb246ceefe59be07990175fdf08874114edef",
+      "sha256": "f0167c8b1ecb078fb6a6cc970f8a8960193143602c943021b05f42a679d7d199",
+      "source_locations_checked": 224,
+      "product_or_tests_run": false
+    },
+    {
+      "path": ".scratch/ruocun-discovery/research/04-terminal-platform-delivery.md",
+      "branch": "research/ruocun-platform",
+      "commit": "1d844fd07756b2c98503a45f50f33b4b2c7c5c1f",
+      "sha256": "7ebcbc8037409baa5cf4d8a160d02cc69639582cffc2ee31d9c47a863db8b2c1",
+      "source_locations_checked": 143,
+      "product_or_tests_run": false
+    },
+    {
+      "path": ".scratch/ruocun-discovery/research/16-windows-capabilities.md",
+      "branch": "research/ruocun-windows-capabilities",
+      "commit": "1a6329dad33e3a6ea3703a5f15b6273ab74afbfb",
+      "sha256": "c4e3d5589f1b15bc82846e19715cfe6659df69a267fa8bba639460892d646ea0",
+      "source_locations_checked": 30,
+      "product_or_tests_run": false
+    }
+  ],
+  "link_targets_checked": 215,
+  "terminal_experiments_executed": false,
+  "product_tests_executed": false,
+  "product_implementation_started": false,
+  "limits": "Source location checks validate existence and line bounds; they do not prove every semantic claim. No prototype, live model, product test or Windows feature acceptance was run."
+}

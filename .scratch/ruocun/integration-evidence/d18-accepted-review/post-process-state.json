@@ -1,0 +1,163 @@
+[
+  {
+    "folder": "broken-read/",
+    "pid": 42664,
+    "expected_creation_time": "134383430412338153",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "cancel-budget/",
+    "pid": 25136,
+    "expected_creation_time": "134383430378042193",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "cancel-completed/",
+    "pid": 24820,
+    "expected_creation_time": "134383430375273184",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "cancel-fail/",
+    "pid": 23528,
+    "expected_creation_time": "134383430372452839",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/after-replace/",
+    "pid": 44148,
+    "expected_creation_time": "134383430353666808",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/before-replace/",
+    "pid": 31308,
+    "expected_creation_time": "134383430351198577",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/flush-osreplace/",
+    "pid": 43944,
+    "expected_creation_time": "134383430359886540",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/flush-replacefile/",
+    "pid": 38848,
+    "expected_creation_time": "134383430363423981",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/fsync-osreplace/",
+    "pid": 4656,
+    "expected_creation_time": "134383430355959047",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "crash/writethrough-move/",
+    "pid": 39844,
+    "expected_creation_time": "134383430367257888",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "diagnostic-fail/",
+    "pid": 24324,
+    "expected_creation_time": "134383430417753109",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "pipe/",
+    "pid": 40556,
+    "expected_creation_time": "134383430341772506",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "read-cancel-fail/",
+    "pid": 30852,
+    "expected_creation_time": "134383430405242158",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/denied-permanent/",
+    "pid": 45836,
+    "expected_creation_time": "134383430337913440",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/denied-release/",
+    "pid": 17024,
+    "expected_creation_time": "134383430329457561",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/sharing-permanent/",
+    "pid": 5292,
+    "expected_creation_time": "134383430333072634",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "refusals/sharing-release/",
+    "pid": 44524,
+    "expected_creation_time": "134383430325827918",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "result-error/",
+    "pid": 33340,
+    "expected_creation_time": "134383430402842177",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "result-incomplete/",
+    "pid": 45244,
+    "expected_creation_time": "134383430400532591",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "submit-raise/",
+    "pid": 41280,
+    "expected_creation_time": "134383430415353448",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "wait-fail/",
+    "pid": 15864,
+    "expected_creation_time": "134383430395748646",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "wait-raise/",
+    "pid": 22652,
+    "expected_creation_time": "134383430398180544",
+    "open_error": 87,
+    "original_exited": true
+  },
+  {
+    "folder": "write-cancel-fail/",
+    "pid": 38000,
+    "expected_creation_time": "134383430408709065",
+    "open_error": 87,
+    "original_exited": true
+  }
+]

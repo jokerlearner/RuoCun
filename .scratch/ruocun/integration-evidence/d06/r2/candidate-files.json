@@ -1,0 +1,512 @@
+[
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/.gitattributes",
+    "bytes": 320,
+    "sha256": "8320bbd2f2eee7d80e345715196b6b3c8c5471ed843b41ccbf76cfdf0f8d350c",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/Copy-Case.ps1",
+    "bytes": 872,
+    "sha256": "6c8b4d61b12900dc893b7a9f1cce386166f2876631bf6829f6ba4a5091b6b036",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/HITL-feedback.md",
+    "bytes": 2133,
+    "sha256": "df75f46b71ed339643333f6686c622d8474ce4334074bde2b9efa81fe1ce8527",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/Open-Hitl.ps1",
+    "bytes": 489,
+    "sha256": "eadef163f83098ebecb9c784e988471ce38923b2340ac99bc8dddc085de4e69a",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/README.md",
+    "bytes": 11756,
+    "sha256": "a57c6394ec2664bb5b56e9dc736a1ef0a40c0ae20fedd892796d4e9ff7c970a3",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/Start-Hitl.ps1",
+    "bytes": 520,
+    "sha256": "a1fd070c38121996cf9c7fa78c2ac9fdd5afde10c31d84218b44d8aecaf6b1e0",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/audit.md",
+    "bytes": 6075,
+    "sha256": "92722be19f4d66040b68c3ebe74bd33f93a8c0d303c60304ecb82bc09aafd142",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/01-paste-green.txt",
+    "bytes": 100,
+    "sha256": "20ee3f7b7e36d0f92a6c8c7a068f6ae5d7546cd4a3fd061d2250832019002977",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/01-paste-red.txt",
+    "bytes": 1050,
+    "sha256": "3c5b8ca24faa7254e322b75ec37f205d073df8a7219bc6624940f52ef88c4ce1",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/02-state-green.txt",
+    "bytes": 100,
+    "sha256": "18733c6117d6aa7220f7ea4380b3c5572239664c79b32655e5bff1cd992f93d6",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/02-state-red.txt",
+    "bytes": 1456,
+    "sha256": "1fe1f62fa3ab52b589b4f151b05ce7e9d975c85bc0f61f14cd1346b1680f8774",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/03-protocol-green.txt",
+    "bytes": 100,
+    "sha256": "86a571f4a2acfabd986d10c6800052647a53dea2d8ecc8641eecc2c37173cd9e",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/03-protocol-red.txt",
+    "bytes": 1750,
+    "sha256": "06a758ef0fc645071bf3bb17615b1916caac1cbafc9bd445c22688f6525b7999",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/04-worker-green.txt",
+    "bytes": 100,
+    "sha256": "329ed2185adaf9c8b092dca263076f89d828287b0e5bc184384ff91deef7423a",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/04-worker-red.txt",
+    "bytes": 917,
+    "sha256": "6f1000f51bc2fa9f25502eed9966022d33dbe7aa3c504c6813ed1512915a103b",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/05-inline-green-attempt.txt",
+    "bytes": 100,
+    "sha256": "d377223f0e89124918d60b8e8e23a06cb8e85dc68a8abc6ca70a5b3448f065bf",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/05-inline-red.txt",
+    "bytes": 1047,
+    "sha256": "099de8766075d9a70b6bd30d5ac1dcb32cd9372342229dfacc7303bfca4f320d",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/06-source-trim-green.txt",
+    "bytes": 100,
+    "sha256": "9a9ddfa88f5bcc5379515ff04c257c1af986350802f22d769e0b7534c146d227",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/06-source-trim-red.txt",
+    "bytes": 4756,
+    "sha256": "6b78a5506df683ec436f1bd2b2ba60861b31e06033da85c2026095fae9ee82ed",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/07-extended-checks-green.txt",
+    "bytes": 101,
+    "sha256": "a0b1a877291e4cc37388c668ed29c389256a9be5707490de50cf11b55534ffd7",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/07-extended-checks.txt",
+    "bytes": 4043,
+    "sha256": "3779de1e3141bc99eff3a148ed58290c574a1df5d64306f607e766e386de295a",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/08-focus-green.txt",
+    "bytes": 101,
+    "sha256": "43f109b0f7b50447b32dc265698a115af2c875832e364fd2d316ce216aba6368",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/08-focus-red.txt",
+    "bytes": 4219,
+    "sha256": "0d4bd2af70cc6661aea97f15cca1ba3a2a588840a87e31428662fc041e92380a",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-stdout.txt",
+    "bytes": 101,
+    "sha256": "f4ba6dc2fc07878b820796f9e1b4d269e5f423d94d17f0fc7972dd6efbe6ef19",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_actual_pipe_filters_repor0/environment.json",
+    "bytes": 654,
+    "sha256": "3f4f3c2cdbecae4ee9001f2bfd6431478817411866bc3a3f6be5d7b83896f333",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_actual_pipe_filters_repor0/events.jsonl",
+    "bytes": 13623,
+    "sha256": "43e222d5a437ce9e9ea816fe8bda524e934a7957afb7f995416f94afb3b1eea2",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_actual_prompt_input_chain0/environment.json",
+    "bytes": 655,
+    "sha256": "d165714d23f289347bd0076be9486cd22fc5e169c75d4519abd344e5194fdc59",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_actual_prompt_input_chain0/events.jsonl",
+    "bytes": 38615,
+    "sha256": "bddc6aa6c2d5d0727c56f0f16b1fbc33d2e073806761097305882f24134542f3",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_focus_reporting_protocol_0/crash/environment.json",
+    "bytes": 657,
+    "sha256": "60e2e8a5ae70c1cd866590d9d214ca966b90186116af986a0a9bf6b53f6f3116",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_focus_reporting_protocol_0/crash/events.jsonl",
+    "bytes": 11250,
+    "sha256": "1067e14514e47e90c21dd021dbee9d0e60be7213558499d5bfe8f3bbc959d02d",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_focus_reporting_protocol_0/exit/environment.json",
+    "bytes": 657,
+    "sha256": "60e2e8a5ae70c1cd866590d9d214ca966b90186116af986a0a9bf6b53f6f3116",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_focus_reporting_protocol_0/exit/events.jsonl",
+    "bytes": 10081,
+    "sha256": "50b682f61b6db224e2fd163398747d43fb1a87069546de68c1e2444c0bb83ed7",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_submission_trims_small_dr0/environment.json",
+    "bytes": 655,
+    "sha256": "ccef0685e34636ee17dc5950625dfa33d695c9460fe960dcae3129f3b7185a70",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/pytest-temp/test_submission_trims_small_dr0/events.jsonl",
+    "bytes": 21202,
+    "sha256": "4b99f35f4105ad460aefb30e6aa7ca227ff450b1e5475c9de93c776ba6292ddf",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070254Z-df27ed/report.json",
+    "bytes": 2723,
+    "sha256": "c42ed6dffdf4e8b1e621c9f186df52b904592d3a4749bc8fc3ac7258282f1646",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-stdout.txt",
+    "bytes": 101,
+    "sha256": "b0018fc86457a7bd8d94d43d5e20f747e28b1219cfbe7c205ba0b04c1147d8b6",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_actual_pipe_filters_repor0/environment.json",
+    "bytes": 654,
+    "sha256": "3f4f3c2cdbecae4ee9001f2bfd6431478817411866bc3a3f6be5d7b83896f333",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_actual_pipe_filters_repor0/events.jsonl",
+    "bytes": 13623,
+    "sha256": "42a2685954f14f675206c73b24363691b015572ef9c8e36d166ced02ef74f590",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_actual_prompt_input_chain0/environment.json",
+    "bytes": 655,
+    "sha256": "d165714d23f289347bd0076be9486cd22fc5e169c75d4519abd344e5194fdc59",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_actual_prompt_input_chain0/events.jsonl",
+    "bytes": 38630,
+    "sha256": "9b7ba8d2b6e5804b51166683214b3c7aa5bee7e1208ce8eb391ae099c501166b",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_focus_reporting_protocol_0/crash/environment.json",
+    "bytes": 657,
+    "sha256": "60e2e8a5ae70c1cd866590d9d214ca966b90186116af986a0a9bf6b53f6f3116",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_focus_reporting_protocol_0/crash/events.jsonl",
+    "bytes": 11250,
+    "sha256": "1dac05b4b0921d59fff02eaee4e46763f4896e1bd3449a4e0f2889386a862653",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_focus_reporting_protocol_0/exit/environment.json",
+    "bytes": 657,
+    "sha256": "60e2e8a5ae70c1cd866590d9d214ca966b90186116af986a0a9bf6b53f6f3116",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_focus_reporting_protocol_0/exit/events.jsonl",
+    "bytes": 10081,
+    "sha256": "763dc3adf65e00bb078c0ea711d6f68e94d8c289fbf4ee842b184dc9043ed2ba",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_submission_trims_small_dr0/environment.json",
+    "bytes": 655,
+    "sha256": "ccef0685e34636ee17dc5950625dfa33d695c9460fe960dcae3129f3b7185a70",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/pytest-temp/test_submission_trims_small_dr0/events.jsonl",
+    "bytes": 21202,
+    "sha256": "52e9d878d20c4387d3f4a34437464858e4fc035947da15cf52a01aade45da818",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070544Z-f70652/report.json",
+    "bytes": 2723,
+    "sha256": "dfe8cdc5b9e26271506dc41a127d42e20b3022779f46111a54969686eea95df7",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-stdout.txt",
+    "bytes": 101,
+    "sha256": "eca19c56b5c1b94ab355781c6afe9004728b0272e0265e3a8616d905dc0e05a9",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_actual_pipe_filters_repor0/environment.json",
+    "bytes": 654,
+    "sha256": "3f4f3c2cdbecae4ee9001f2bfd6431478817411866bc3a3f6be5d7b83896f333",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_actual_pipe_filters_repor0/events.jsonl",
+    "bytes": 13623,
+    "sha256": "df43dc2382c0437febf2d1b3c514548dcc57775fe20b9652ff05517e5660446e",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_actual_prompt_input_chain0/environment.json",
+    "bytes": 655,
+    "sha256": "d165714d23f289347bd0076be9486cd22fc5e169c75d4519abd344e5194fdc59",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_actual_prompt_input_chain0/events.jsonl",
+    "bytes": 38634,
+    "sha256": "9c17dc5c9c0628354504963b78d7c9c77282554167cb4a1f2ac335b9bda6ead4",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_focus_reporting_protocol_0/crash/environment.json",
+    "bytes": 657,
+    "sha256": "60e2e8a5ae70c1cd866590d9d214ca966b90186116af986a0a9bf6b53f6f3116",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_focus_reporting_protocol_0/crash/events.jsonl",
+    "bytes": 11250,
+    "sha256": "62e44a26058e61e77085d573c6f2d8030a5421bba7610250a5857490070cb69b",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_focus_reporting_protocol_0/exit/environment.json",
+    "bytes": 657,
+    "sha256": "60e2e8a5ae70c1cd866590d9d214ca966b90186116af986a0a9bf6b53f6f3116",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_focus_reporting_protocol_0/exit/events.jsonl",
+    "bytes": 10067,
+    "sha256": "4618a02bea7914d98524065483e03c7f34a735b4f953d9fbbcbc88eb4345e6b4",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_submission_trims_small_dr0/environment.json",
+    "bytes": 655,
+    "sha256": "ccef0685e34636ee17dc5950625dfa33d695c9460fe960dcae3129f3b7185a70",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/pytest-temp/test_submission_trims_small_dr0/events.jsonl",
+    "bytes": 21193,
+    "sha256": "e2c2b9cd813363f62ac849066c138cf28ab4545ce8b35b6e6c76dbe5bfb62034",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/20261105T070609Z-e9ad63/report.json",
+    "bytes": 2723,
+    "sha256": "a9411fd94dc7daceb43a60ce0f8efe65a4af6b5818168b35977cabef2be0ca9e",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/locked-install.txt",
+    "bytes": 2604,
+    "sha256": "38332454616422720e6abb80bad6c3cf4b3508a1e00100f769151bbc97cac1fe",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/1MiB.txt",
+    "bytes": 1048576,
+    "sha256": "8ec2db2dec39cb937e2403a83c5c3a316abc80800df41fe8bfac1f63fb3eeb10",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/280-units.txt",
+    "bytes": 560,
+    "sha256": "874bf7a3c0797cc1933ee767a6315bb85059156d76e908b30d51a354d8a7a24f",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/281-units.txt",
+    "bytes": 563,
+    "sha256": "f7e95fc8f1e31e341668a9d9a00a9c52b85df38587bec33ca775dd0c35ab535b",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/64KiB.txt",
+    "bytes": 65536,
+    "sha256": "09da701a6f48716d2014a8f20672c49ac0c5bdae1e69f93b4e9ce8c3ef928eb1",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/bare-cr.txt",
+    "bytes": 27,
+    "sha256": "443484de9d179767491b460796b561c2b6c99d59117f6622f829259a38df94e0",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/broken.png",
+    "bytes": 16,
+    "sha256": "9fe060f20b454af20c0fb9855ea975ff754dfa9691734099eccd57ced06b2854",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/crlf.txt",
+    "bytes": 30,
+    "sha256": "4c01ec62fabf495cb164ae5baa69b7ac9cf552ff9bd6f6d725203dba7be31588",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/literal-reports.txt",
+    "bytes": 82,
+    "sha256": "120e22df52cfb8e0902ee7d0f33815e8e9553631b0f30ae56d9dd9403ed15d93",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/manifest.json",
+    "bytes": 5440,
+    "sha256": "c75fd06056609f2ac99c998f34181e49417f69318064671ada39ea27e5ee6db6",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/seven-lines.txt",
+    "bytes": 28,
+    "sha256": "9497b6928cdfbb5a02c4059028cb4f010087b516e93074871c9a306c0f09e83e",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/single.txt",
+    "bytes": 73,
+    "sha256": "652997ab18aaade4904f54255409511681ea8f6add80856fc081b2dd6bec69b1",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/six-lines.txt",
+    "bytes": 24,
+    "sha256": "3668c1e9d7e907334dce037f05fdfe8a2fe1ecc46467b37ad10298556da7363f",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/fixtures/合成 image.png",
+    "bytes": 68,
+    "sha256": "472ab6c2c2662c27aa68ab64190db9ea7357fb2c672894c3668f39c125293925",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/latest-automated.json",
+    "bytes": 157,
+    "sha256": "0fb65ea6c8b51c6d1bc80fc20c011b6d488663e91b9566d4be7b4a89f42950df",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/launch.py",
+    "bytes": 3162,
+    "sha256": "f39bcaad3590e24642c4009e95100f9f160f82e62476837db35ea958ea61882d",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/make_fixtures.py",
+    "bytes": 2332,
+    "sha256": "b4bfa31bd1405d132e384e59b6601617fc88df4ddec196314465ab283348438f",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/model.py",
+    "bytes": 6385,
+    "sha256": "e74231709118a50ce0904aaac442ade55412edd77c313a8f0f8c2e5dcc43cbc8",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/protocol.py",
+    "bytes": 6688,
+    "sha256": "2a9b7261b8fe792b07658ad3e6a8b953c1a636c2a868b14368625c5a32d84de3",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/requirements.in",
+    "bytes": 191,
+    "sha256": "7a4d2b286dba223a5a8668d5bfd83f69b85f009df127e3dd02fe6f6888ce3354",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/requirements.lock",
+    "bytes": 5635,
+    "sha256": "79df88ff07692194aeb33f5a737166ed48ce954673f5d333a7968b6fba03ae7e",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/run_automated.py",
+    "bytes": 2922,
+    "sha256": "ef769c844e0a164e278ff71338c337fddc96f067a940c1ced925fdca90dcaaec",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/terminal_app.py",
+    "bytes": 24591,
+    "sha256": "50d08062ea27a5953970ddbb3a643c5c728b84ca191810de3676d4ac80aa1b57",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/test_terminal.py",
+    "bytes": 14196,
+    "sha256": "c529e30743f2c991a1947c902577af1ac692da7e1a898359d7820e6af3eeeb96",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/worker.py",
+    "bytes": 761,
+    "sha256": "be076a23068572d3fbcf0c2f4ec9744ce0f5b860afdc3d1d75e99d374903c2af",
+    "matches_candidate_blob": true
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/workers.py",
+    "bytes": 4570,
+    "sha256": "d2de630c234d330cdf8cc5eb56e2a793639ad5875c93d61eed40c3c57d0f6397",
+    "matches_candidate_blob": true
+  }
+]

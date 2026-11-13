@@ -1,0 +1,26 @@
+{
+  "candidate": "dc049ed0acf19e4f3adbc983d18a8cc2d17a44db",
+  "latest_integration": "6fbbda843979de465d94e525669870577e2a9c82",
+  "files": {
+    ".gitattributes": "9337ac6b9700b1afee877297697477530716e359fc6059987b011bb1b370e8cc",
+    "m17d898598bfc-post-audit-initial.json": "02f4b6b8d21db669717be9634dedb20bdf474bab17ca199214ed34261d5e92d6",
+    "security-audit.json": "88c512d45f4c73c9b6c98ea6503ee77b388f79ba4e16088b488b18e4aeecb14f",
+    "audit_conftest.py": "a311b5ddd36c7fcf0c80c16d853984502a19a703231bdb46e9324082674f6a87",
+    "cleanup-filesystem.json": "8d7b842d3e7306cebbb1427a5da6bb8714550934e63898a8482854072aca154a",
+    "m17d898598bfc.zip": "06928637bba5e5f2f3f3a0d6e1d0a584458e50b915f7b85849b0130aa5001799",
+    "m17d898598bfc-task-byte.diff": "52a8c3bf4a029bc322e6af0963026aa6d1f9ba49eff8d3cf0d6f5721d359523d",
+    "review.py": "e40cc1c5e6d6a979c7cc114aafbb6dc748f343630b8843654c91007dd284e28c",
+    "verify_artifacts.py": "9893b6a6ccb8bd463e26fcfa25fe52455d5c11eaeb9a86e6765274f8ccc3655b",
+    "audit_existing.py": "f1967bcd2a8ec674162567134bf4b9ec55735f2058d87045a4f4471d9d043bb5",
+    "archive_existing.py": "113905c6be3cf93e9c1bc9385848f71859be6f8f6c69fabcfe41386ac865f368",
+    "m17d898598bfc-post-audit.json": "ba2b8a80c22009fabfca40d34d7cb2e82d6d2874e29f067578e6b1b6f24724e8",
+    "m17d898598bfc-manifest.json": "6195653c60f7d7bed43b3e914faa82371c98c46876ac5e206dfec5ec4ef95086",
+    "README.md": "268655ab248603bb1ff43ed4ade8d3a86f184cbbd5485eb0f3c4588bb63b0ef8",
+    "m17d898598bfc-raw-supplement.manifest.json": "528912ee65d2fb2cf6abaa2fd65cef7a2fbd013f49ef65e7674cc246add0a323",
+    "m17d898598bfc-raw-supplement.zip": "30f3403bb3a3b6f123cb726dd50cb56f82448792c5edacac16d634d8b1fcfb98",
+    "safe-python.ps1": "e2293121c0b516fe741ed654aa0e241a47c84eb4fe817a3d15fc6bf728ffc3dd",
+    "m17d898598bfc-verification.json": "2add113768c30b0b9fd75ebab029aca17f4fe9247fd622078e4116fd47aeee72",
+    "m17d898598bfc-verification-initial.json": "49dcc0426c03e5e6f156cfb4a87dc167976e58bfcc6ebd5997e7343a0e953ffb"
+  },
+  "merge_tip_before_evidence": "742afe5284d91bc27ba7f0d12df50941f3e7b1f7"
+}

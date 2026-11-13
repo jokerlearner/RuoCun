@@ -1,0 +1,9 @@
+{
+  "history_and_round_audit_already_passed": true,
+  "sensitive_parent_scan_before_seal": "sensitive-scan-preseal.json",
+  "no_business_test_rerun": true,
+  "excluded": [
+    "__pycache__",
+    "*.pyc"
+  ]
+}

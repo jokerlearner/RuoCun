@@ -1,0 +1,296 @@
+{
+  "utc": "2026-11-05T08:47:53.544900+00:00",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "executable": "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "machine": "",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "windows": [
+    10,
+    0,
+    26200,
+    2,
+    ""
+  ],
+  "elevated": false,
+  "external_root": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105",
+  "clean_vm": false,
+  "host_has_python": true,
+  "env_policy": "explicit allowlist; synthetic HOME/config/TEMP; no real credentials/config read",
+  "input_sha256": [
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\.gitattributes",
+      "size": 151,
+      "sha256": "4ea6e0e6d42035a4877a587c623663aa14e2deb9f4e083c585b260867ad5ebe8"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\.gitignore",
+      "size": 70,
+      "sha256": "db54604d3e65a54eeac895dd9d1c3b6f4841ec68ab920a8b4d794d49977295b8"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\audit.py",
+      "size": 8086,
+      "sha256": "455d0d250597bba0902e43542470fe3e21becdd38cac6b5d855615ed713bbd73"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\candidate.json",
+      "size": 1686,
+      "sha256": "9a0119bb1245cc6d5ca62819566d2a7d248fc4ea4de9c9ea1859505e4df3443d"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\cleanup_probe.py",
+      "size": 3308,
+      "sha256": "35e62c22368f75d172ab90fa006dc93060b33702e82b70740a29dd63582f926d"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\entry.py",
+      "size": 140,
+      "sha256": "be4a31d0048ea6762a91c85e95e457fae114c8f124735b0a98c59b59127cbc8b"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\freeze.py",
+      "size": 1134,
+      "sha256": "24284bfe1f295aae2ad957b3e565d4c41d6d6e21ef991e447ee91dbdc5df17c4"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\install_probe.py",
+      "size": 7674,
+      "sha256": "7fcdfaa563517732ddd0b7d1315d619c5dec9f087eb7cc325bd396e238204240"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\lifecycle.py",
+      "size": 3787,
+      "sha256": "3ec7b734861b704ec4f849c115c2851ab774353cfca24ed2e6e229c0302439fa"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\notices.py",
+      "size": 2001,
+      "sha256": "256766dabfb19a46e78f57ef9c83c20575ec6a3cfbb3b64ec404a6242a96a6ec"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pin_frozen.py",
+      "size": 1065,
+      "sha256": "a02729295e706d156aa2b17d5edd834db50a34eac6f892c89ced70a7a8271bf9"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\hatch_build.py",
+      "size": 390,
+      "sha256": "b7558bc4554e6ca1a62b990f2c641e8cfc9ce417a0cfa56fe45d5844436e23c1"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\LICENSE",
+      "size": 1091,
+      "sha256": "ea664fbcbe21d4d9da278d5cdbeb94705bb32424c8a75b7bc97dcc7662649fef"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\pyproject.toml",
+      "size": 728,
+      "sha256": "95ec7d5050313c7c1c7e4d19c605cced4195d0125c9652a8177495d8bf844150"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\README.md",
+      "size": 260,
+      "sha256": "b2ed3a5dbc137c93d812c26f0afe1fbfa5a900ab1f985ca16f74d4a1ec343679"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\__init__.py",
+      "size": 22,
+      "sha256": "b172e1ee0dca0b84021717191814e91b6b1c47b866981b0c8eae8ba91a6d9118"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\__main__.py",
+      "size": 48,
+      "sha256": "a67c172046323b0efcafe92cb83abc266d5dd4bc931d9312cde1b7bed50643db"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\app.py",
+      "size": 1627,
+      "sha256": "3dc37a45aeed0e41dea98cb9b267a3014cfeaa6b581f86460f5c77137e65df4e"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\assets\\frames.json",
+      "size": 92,
+      "sha256": "f56648ee02e23b7b35d208e6fa8c4e766fd7b8767f327ae6dcc3fc80ecdc4d2c"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\assets\\grammar.json",
+      "size": 82,
+      "sha256": "6b09063749ed234d47ae92a559b99bfb30368282c44bb14ac6191dde1005922d"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\assets\\prompt.md",
+      "size": 73,
+      "sha256": "70bb8b94018ef9640fc1bab803cfd3f351dd5301cbd5c2e9a57dabab0ab2c015"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\assets\\zh.txt",
+      "size": 28,
+      "sha256": "d3d1e24a31aaf88ef27c9d2e0ab357dee05569f9df4158186e99b494b483bfc1"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\check.py",
+      "size": 5436,
+      "sha256": "031e53724fd0b0b207541917faf57dbd381cc72523f7ddd2778655a1d4617ff8"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\index.json",
+      "size": 3375,
+      "sha256": "6d1ecf3b9953042f510a16d6fd36946d71272dbd5efbfcaaa9171c09279479f5"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l0.txt",
+      "size": 1493,
+      "sha256": "303574d9bdd85c757d6025017942bf17baeedf2778f62bd7f425d07d880f4c4a"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l1.txt",
+      "size": 1056,
+      "sha256": "deed7c17a4318158190a3ea239cc879a5a50271cebb98ae7025f48fbe58dca15"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l2.txt",
+      "size": 1349,
+      "sha256": "dff08668b8cfca00ec90011eb318e450c3719fcd40893bf375781a6beef7143a"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l3.txt",
+      "size": 1331,
+      "sha256": "a9d66f1d526df02e29dce73436d34e56e8632f46c275bbdffc70569e882f9f17"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l4.txt",
+      "size": 1078,
+      "sha256": "4a2260d6e2cd0f5a151a1e86dbfe7d3ed552b1e2beabf9941c1ba5c49cbce484"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l5.txt",
+      "size": 1073,
+      "sha256": "792c48c5a849a15fdf9e37e8bcf9e6d1dd13b32b46c642a748a0a46a9919d473"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l6.txt",
+      "size": 2338,
+      "sha256": "7c605df6e28667a9603118e98274f64a49ce3eed0d26fccce9534a345e0ef955"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l7.txt",
+      "size": 32604,
+      "sha256": "0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\l8.txt",
+      "size": 27666,
+      "sha256": "91d0baaff00773038e72c0a1fc9d5d2d38706b7a2b9c04f34296608f931b9cd0"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\licenses\\python.txt",
+      "size": 36874,
+      "sha256": "e502c6b880ff58d614901495a9009c136539cd0b1e2a2abb8fc00b934c203419"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\pkg\\src\\ruocun_probe\\roles.py",
+      "size": 3042,
+      "sha256": "767b44bd06135ff21a2d4d3ec496a371ffe45a81bf2a0edbdcce3f34bc505d3d"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\prepare.py",
+      "size": 2517,
+      "sha256": "2938b5fea036d289e2a024e32b259ac3494ae304046d75f58f58a088fd0f44d5"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\protect.py",
+      "size": 2739,
+      "sha256": "2d32f11e54002a43683329f3c94a9a93cfd21c4e95ac2c5550b8d07909cd7320"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\README.md",
+      "size": 12093,
+      "sha256": "c5071c0096f44f58ec4400d271934bea95c563ea50e85a954f0d7e63b3bf3e59"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\record.py",
+      "size": 2505,
+      "sha256": "3f93a937f3ee1baae6b036734c21ad4b9255935ea5ed6abe322e6ce33b93d956"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\requirements.in",
+      "size": 231,
+      "sha256": "886914584191867cc0f39f1e7b9fff93312852a87e9ac53023b8976b589f0f95"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\requirements.lock",
+      "size": 9369,
+      "sha256": "22e8def4ebb850049705099e082b91c7345b49acda6f83338d3fb6679e35c0a1"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\safe_env.py",
+      "size": 666,
+      "sha256": "f2cfbef74a03440491dc1cb1baeb9f7ae52e4217d00845b53b6a6f31b5ca4ccc"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\source_contract.py",
+      "size": 1672,
+      "sha256": "a8a0b5a779b93ad4e7478ba9103e82e56c7bc3c7d9202b674ab8c6e54f0c0ad9"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\sources\\frozen.json",
+      "size": 19872,
+      "sha256": "247322f1c11fe0e7b8248e9585e5f158fc62aa6eb8092421da7c47eacceb4dac"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\sources\\pi-features.rst",
+      "size": 82272,
+      "sha256": "69cabd2da509ac6ecd8e4206cad61fa61054a4611c91dd7ca0507ee58bfb1d97"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\sources\\pi-pitfalls.rst",
+      "size": 27838,
+      "sha256": "134e14b073dd65be62e96dad16806129d28b190988d804323351129dd0f22d49"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\sources\\pi-runtime.rst",
+      "size": 9174,
+      "sha256": "faa7ac53e8d94d2fd4d04565097ec3f9e5f3cc99bef6d834b0475a7fd6691703"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\sources\\sqlite-wal.html",
+      "size": 42143,
+      "sha256": "f3467b530b883d4a00574fe1a898b3d121ed72764ae28cf66941080ac0badb9e"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\standalone_probe.py",
+      "size": 3855,
+      "sha256": "e1d751ad9f39f300ba30aab57a2f76edad5ce389477aa750738d8a7ef6912e5b"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\test_artifacts.py",
+      "size": 1041,
+      "sha256": "e78e69b6b8bf1b4f98c8200a381cebc90cad5191ed61dd5dac4a2a1263f3ff98"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\test_cli.py",
+      "size": 2833,
+      "sha256": "a9904dd9cb4b3b4ddfa1f0c6bf40e8df05c0bb5025bff48977b4e1b3e957dcc8"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\test_frozen.py",
+      "size": 985,
+      "sha256": "169b37cc729cb1bfacb91a7be06e743ca5cf050660597ba1eebf82706a4b4261"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\upgrade.py",
+      "size": 916,
+      "sha256": "ef7b4c7057693ea5bc7327dc2710cbd5426fa4da7e069ca952d20adbbb1519c5"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\verify_git.py",
+      "size": 2055,
+      "sha256": "17b1e59cb0fadf387525205a6dd212b0d44e80ac96f9baf4101ff8a1d5f10570"
+    },
+    {
+      "path": ".scratch\\ruocun-discovery\\experiments\\distribution\\win_handle.py",
+      "size": 1374,
+      "sha256": "f497ca374514eca738d5a1db172cf1baaa394c136b62e87d2173fa2854ae818b"
+    }
+  ]
+}

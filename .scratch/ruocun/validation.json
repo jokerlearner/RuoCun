@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-05",
+  "kind": "documentation-validation-only",
+  "result": "pass",
+  "coverage": {
+    "source_members": 805,
+    "non_test_src": 234,
+    "source_tests": 215,
+    "source_scripts": 58,
+    "case_families": 215,
+    "tool_cases": 43,
+    "command_cases": 52,
+    "core_skill_cases": 8,
+    "terminal_case_families": 9,
+    "user_stories": 68,
+    "new_entrypoints_confirmed": 5,
+    "new_entrypoints_pending_once": 0
+  },
+  "internal_links_checked": 480,
+  "python_target_collisions": {},
+  "discovery_status": {
+    "tickets": 19,
+    "resolved": 6,
+    "claimed": 0
+  },
+  "source_sha": "f17e189dc68a0a0a0b9937784e1b7ce29aed80eb",
+  "source_tree_sha256": "7ac654a0dc06a9724982c35119501d65a3863e000458dcc0e2765fa66b53180c",
+  "files": {
+    ".scratch/ruocun/spec.md": {
+      "sha256_lf_text": "a25e43521f55109da2296e2574b5140233b1a6bb042b7afa71d37681ba1f51e2",
+      "lines": 435
+    },
+    ".scratch/ruocun/module-map.md": {
+      "sha256_lf_text": "f1bb5d299e3a5ebf925621a2352871b92f8ca5db349baf15f7c2895e7cf8cd37",
+      "lines": 1080
+    },
+    ".scratch/ruocun/acceptance-matrix.md": {
+      "sha256_lf_text": "eb966afcd53c0e64e2f58ff2e8ec396e7148105e804f66e85d3e6ddb19ecf914",
+      "lines": 355
+    },
+    ".scratch/ruocun/issues/01-test-entrypoints.md": {
+      "sha256_lf_text": "b25a84bc8162b06c7f29a17c77f5043024d4070e28a983a24d40097329bc9c2f",
+      "lines": 32
+    },
+    "CONTEXT.md": {
+      "sha256_lf_text": "b4e73474fbf9a3232c3fdac360c18f8f6b194e6410c50e2fd50db0c709775dd2",
+      "lines": 60
+    },
+    "docs/migration/module-map.md": {
+      "sha256_lf_text": "c3e7f3ea2c1969187fac0690f7a8fb2e01596ad5819052e228cd5cc5764f2109",
+      "lines": 6
+    },
+    "docs/migration/acceptance-matrix.md": {
+      "sha256_lf_text": "16d4e6436427c99df1eb2e8c74d16d430abf171cc1c77bcf9c3da0b6f4681e8a",
+      "lines": 6
+    },
+    ".scratch/ruocun-migration/spec.md": {
+      "sha256_lf_text": "cd7519d5a2224d30c21af99dbb324ecb33464177de09f9d567650234d9f1cfaa",
+      "lines": 6
+    },
+    ".scratch/ruocun-discovery/map.md": {
+      "sha256_lf_text": "1de6933887c1604daee8bfacd03495917a491def9e9d7bd98cc44f71a9085acf",
+      "lines": 52
+    },
+    ".scratch/ruocun-discovery/issues/11-test-replay-decision.md": {
+      "sha256_lf_text": "a333eaec8155ae6746cc3f1759105623525cbd009475156d1cd68ead85fc333b",
+      "lines": 38
+    }
+  },
+  "limitations": [
+    "No product implementation or product test was performed.",
+    "All product acceptance remains not started/unverified.",
+    "Technical decision tickets remain open; recommendations are not accepted ADRs.",
+    "All five new Python test entrypoints were confirmed by the user; implementation and execution are still pending."
+  ],
+  "errors": []
+}

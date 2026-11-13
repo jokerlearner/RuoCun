@@ -1,0 +1,12 @@
+{
+  ".gitattributes": "212cec2ec810d639d9ed3b57d2a81c6a6c96640632677ab3a22e45a5458be269",
+  "audit.py": "73ae3f79befee67bbe9274a2e1900541dc3c5503da1ef26bf6eb60c0c6ad711f",
+  "candidate-verify.exit.json": "b4cb863ff5cbb6bdbda9f414e2e18839031cbba7ea6e30a14583b07b1e2dbcb1",
+  "candidate-verify.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate-verify.stdout.json": "52ad2fd9dc48c0fa6c7febe8e410166cd82e1b1e65b9ac6a6f7f0469d72ff5c4",
+  "m18-independent-r01.zip": "d306080b1a76567988920c282de66c69b8488d49d5ee160ba59c17e018f25704",
+  "post-process-state.json": "54773986ae753d90975b39656dbac27d77d827b29a3b494fa09b0ebcc35e0c6a",
+  "README.md": "3318de9e3d8821a726c401e68b3298bf044bdd888b9b88c17dd73bcf2d7e25d8",
+  "round-member-sha256.json": "8f49751a72fe3edc2f7f373e71b562b5f68641ebbc472a7b23a25d0b7b0bcdd1",
+  "summary.json": "9a28624aa1cc0f24ed3aa2afad881e0b21606e9cc33b001e3bb9ce9ef6274de7"
+}

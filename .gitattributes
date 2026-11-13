@@ -1,0 +1,19 @@
+/.gitattributes text eol=lf
+/README.md text eol=lf
+/src/ruocun/** text eol=lf
+/src/ruocun/resources/runtime/*.zip -text
+/tools/*.py text eol=lf
+/pyproject.toml text eol=lf
+/requirements-dev.in text eol=lf
+/requirements-runtime.in text eol=lf
+/requirements-runtime-win311.lock -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/requirements-dev-win311.lock -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/tests/support/pyproject.toml text eol=lf
+/tests/support/LICENSE -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/tests/support/ruocun_acceptance/** text eol=lf
+/tests/test_boot.py text eol=lf
+/tests/test_acceptance.py text eol=lf
+/tests/test_acceptance_process.py text eol=lf
+/tests/test_package.py text eol=lf
+/tests/test_source_oracle.py text eol=lf
+/docs/development.md text eol=lf

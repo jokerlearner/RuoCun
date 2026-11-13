@@ -1,0 +1,50 @@
+[
+  {
+    "name": "simplify",
+    "description": "仅在用户要求清理代码、压缩复杂度或复查代码质量时，执行保持行为的整理。",
+    "core": true,
+    "body_sha256": "448b67d5c694cce80b782fa881eb560a4cef6c3f48eed3fd180608853bb312db"
+  },
+  {
+    "name": "debug",
+    "description": "遇到报错、卡住、异常输出或原因不明的行为时，先定位再修复。",
+    "core": true,
+    "body_sha256": "46495b0c7641d8bf193e8d44c4916f35b149ed0a2b3e88e2d3ff8693ac0bf1d2"
+  },
+  {
+    "name": "make-plan",
+    "description": "复杂任务或多步任务需要先确认现状、范围和实施顺序时使用。",
+    "core": true,
+    "body_sha256": "18acc957264309af30336c62672b5b1c464476243f38b0c8411fa3a4252c155d"
+  },
+  {
+    "name": "verify",
+    "description": "改动或结论即将交付时，依据真实运行结果或原始资料核验完成条件。",
+    "core": true,
+    "body_sha256": "68c22bfe77461be4b5e1930ff6e22efd3813f10d14204c644bdde2c138987ffb"
+  },
+  {
+    "name": "code-review",
+    "description": "审查改动、复核风险或在提交前检查正确性时使用。",
+    "core": true,
+    "body_sha256": "1bee922cb0e5f89e6f3a591fdd9320bca9dce427a37741a2d3582b2447d5eefa"
+  },
+  {
+    "name": "deep-research",
+    "description": "问题需要跨来源检索和核实证据，并给出可追溯的联网研究结论时使用。",
+    "core": true,
+    "body_sha256": "971c414f1853f4536707617800632f6ccaddc7cdfffa1f638200be80f82ff44e"
+  },
+  {
+    "name": "fewer-permission-prompts",
+    "description": "用户希望减少重复审批，并为已反复批准的安全操作设置窄范围许可时使用。",
+    "core": true,
+    "body_sha256": "b971a4485c6b98d93ead2523d16eca271322eae687b11eb59ad6d822798bb5cb"
+  },
+  {
+    "name": "run-skill-generator",
+    "description": "用户想把当前项目的构建、启动或测试方式保存为可反复调用的技能时使用。",
+    "core": true,
+    "body_sha256": "cccfbab6ab2ff1a70836d677c9fabc900089348fb29ecf52242935038a4ed9e6"
+  }
+]

@@ -1,0 +1,1914 @@
+[
+  {
+    "id": 2,
+    "key": "oracle",
+    "title": "隔离运行冻结参考并生成一条可比对轨迹",
+    "deps": [],
+    "cases": [
+      "TEST-01",
+      "TEST-02",
+      "TEST-05"
+    ],
+    "mm": [
+      "MM-483",
+      "MM-305",
+      "MM-805"
+    ],
+    "shared": "证据",
+    "out": "用受控配置/Git fixture跑通参考任务，产请求/schema/结果与原故障分类；解锁所有迁移oracle。"
+  },
+  {
+    "id": 3,
+    "key": "boot",
+    "title": "安装开发包并从仓库外调用ruocun",
+    "deps": [
+      "D11",
+      "D21"
+    ],
+    "cases": [
+      "ENT-01",
+      "TEST-07"
+    ],
+    "mm": [
+      "MM-305",
+      "MM-801",
+      "NEW-11"
+    ],
+    "shared": "工程",
+    "out": "版本/帮助与五个已确认开发入口可运行；统一驱动先完成offline最小套件，解锁后续切片。"
+  },
+  {
+    "id": 4,
+    "key": "chat",
+    "title": "用兼容账户配置完成首轮流式对话",
+    "deps": [
+      "boot",
+      "oracle",
+      "D08",
+      "D09"
+    ],
+    "cases": [
+      "CFG-01",
+      "CFG-02",
+      "CFG-03",
+      "CFG-04",
+      "CFG-05",
+      "CFG-06",
+      "CFG-09",
+      "WIRE-01",
+      "WIRE-02",
+      "WIRE-03",
+      "WIRE-05"
+    ],
+    "mm": [
+      "MM-455",
+      "MM-457",
+      "MM-460",
+      "MM-462",
+      "MM-464",
+      "MM-466",
+      "MM-439",
+      "MM-443",
+      "MM-444",
+      "MM-566",
+      "MM-475"
+    ],
+    "shared": "模型/配置",
+    "out": "从profile/dotenv及模型覆盖→冻结提示/参数→Chat SSE→回答；无效配置、UTF8分片与请求golden可验。"
+  },
+  {
+    "id": 5,
+    "key": "responses",
+    "title": "通过Responses路由完成同一对话/工具回合",
+    "deps": [
+      "chat"
+    ],
+    "cases": [
+      "WIRE-04"
+    ],
+    "mm": [
+      "MM-441",
+      "MM-444"
+    ],
+    "shared": "模型",
+    "out": "现有桥路由、function输入输出/reasoning items和结束事件可回放。"
+  },
+  {
+    "id": 6,
+    "key": "resilient",
+    "title": "模型断流/限流后可重试或可靠停止",
+    "deps": [
+      "chat"
+    ],
+    "cases": [
+      "WIRE-07",
+      "WIRE-08"
+    ],
+    "mm": [
+      "MM-439",
+      "MM-404"
+    ],
+    "shared": "模型",
+    "out": "前产出重试/非流式fallback、240秒idle、429/529分支、部分输出不重复。"
+  },
+  {
+    "id": 7,
+    "key": "store",
+    "title": "保存一次会话并拒绝并发owner写入",
+    "deps": [
+      "chat"
+    ],
+    "cases": [
+      "REC-01",
+      "REC-02",
+      "REC-03",
+      "REC-09",
+      "REC-12",
+      "REC-15"
+    ],
+    "mm": [
+      "MM-591",
+      "MM-593",
+      "MM-595",
+      "MM-597",
+      "MM-600",
+      "MM-601",
+      "NEW-03"
+    ],
+    "shared": "存储",
+    "out": "对话commit→退出→重启读回；WAL/FULL/修复运行库、epoch、文件占用/坏库拒绝有真实证据。"
+  },
+  {
+    "id": 8,
+    "key": "readloop",
+    "title": "模型用TodoWrite和Read完成首个工具回合",
+    "deps": [
+      "store"
+    ],
+    "cases": [
+      "TOOL-Read",
+      "TOOL-TodoWrite",
+      "WIRE-10"
+    ],
+    "mm": [
+      "MM-404",
+      "MM-642",
+      "MM-691",
+      "MM-693",
+      "MM-702",
+      "MM-729",
+      "MM-735",
+      "MM-736",
+      "MM-727",
+      "MM-682"
+    ],
+    "shared": "工具",
+    "out": "请求→校验/注册→计划与读文件→journal/结果→模型回答；headless首批和非法JSON明确拒绝。"
+  },
+  {
+    "id": 9,
+    "key": "permissions",
+    "title": "按分层权限审批并完成一次文件写入",
+    "deps": [
+      "readloop"
+    ],
+    "cases": [
+      "PERM-01",
+      "PERM-02",
+      "CFG-07",
+      "TOOL-Write",
+      "TOOL-EnterPlanMode",
+      "TOOL-ExitPlanMode",
+      "CMD-plan",
+      "CMD-mode",
+      "CMD-bypass",
+      "CMD-yolo",
+      "CMD-permissions"
+    ],
+    "mm": [
+      "MM-434",
+      "MM-436",
+      "MM-545",
+      "MM-547",
+      "MM-549",
+      "MM-554",
+      "MM-560",
+      "MM-687",
+      "MM-742",
+      "MM-437"
+    ],
+    "shared": "工具/权限",
+    "out": "deny/ask/allow、plan双层限制、批量/永久允许及无stdin拒绝可演示；仅批准最终参数才实际写。"
+  },
+  {
+    "id": 10,
+    "key": "editjournal",
+    "title": "编辑文件并在崩溃后识别未知副作用",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "TOOL-Edit",
+      "REC-05"
+    ],
+    "mm": [
+      "MM-631",
+      "MM-633",
+      "MM-653",
+      "MM-657",
+      "MM-602",
+      "MM-629"
+    ],
+    "shared": "存储/工具",
+    "out": "读后Edit/Write、并发改动检测/锁/原子替换；意图前后/结果前后kill，三次恢复不盲重放。"
+  },
+  {
+    "id": 11,
+    "key": "scheduler",
+    "title": "忙时排队、暂停及取消流不会污染新轮",
+    "deps": [
+      "readloop",
+      "resilient"
+    ],
+    "cases": [
+      "RUN-01",
+      "RUN-02",
+      "RUN-04",
+      "WIRE-12"
+    ],
+    "mm": [
+      "MM-422",
+      "MM-385",
+      "MM-762"
+    ],
+    "shared": "调度",
+    "out": "多输入安全边界保序；pause清队列/当前轮、迟到回调隔离，paused可再次继续。"
+  },
+  {
+    "id": 12,
+    "key": "batch",
+    "title": "混合工具批次保持并发上限与写屏障",
+    "deps": [
+      "editjournal",
+      "scheduler"
+    ],
+    "cases": [
+      "RUN-05"
+    ],
+    "mm": [
+      "MM-642",
+      "MM-693"
+    ],
+    "shared": "工具/调度",
+    "out": "读类最多8并行、写/exec屏障、结果原序和allSettled；source失败标记疑点独立oracle。"
+  },
+  {
+    "id": 13,
+    "key": "shellpolicy",
+    "title": "Shell命令按实际方言审批后执行",
+    "deps": [
+      "permissions",
+      "D10"
+    ],
+    "cases": [
+      "PERM-03"
+    ],
+    "mm": [
+      "MM-529",
+      "MM-531",
+      "MM-532",
+      "MM-533",
+      "MM-535",
+      "MM-537",
+      "MM-543",
+      "MM-637",
+      "MM-685"
+    ],
+    "shared": "权限/平台",
+    "out": "Bash AST及PowerShell/cmd复杂语法裁决与真实argv一致；允许命令产生受控文件，拒绝不执行。"
+  },
+  {
+    "id": 14,
+    "key": "shell",
+    "title": "前台Shell输出及整个受管进程树可取消",
+    "deps": [
+      "shellpolicy",
+      "scheduler"
+    ],
+    "cases": [
+      "TOOL-Bash",
+      "WIN-01"
+    ],
+    "mm": [
+      "MM-637",
+      "MM-689",
+      "MM-696",
+      "NEW-01"
+    ],
+    "shared": "平台/调度",
+    "out": "中文/空格/引号/env/管道/.cmd和退出码正确；子孙忽略温和取消仍可有界收口。"
+  },
+  {
+    "id": 15,
+    "key": "runner",
+    "title": "Shell转后台后可重连、读输出和停止",
+    "deps": [
+      "shell"
+    ],
+    "cases": [
+      "TOOL-BashOutput",
+      "TOOL-KillShell",
+      "REC-10",
+      "WIN-02",
+      "WIN-03",
+      "RUN-10"
+    ],
+    "mm": [
+      "MM-668",
+      "MM-704",
+      "MM-639",
+      "MM-640",
+      "NEW-02"
+    ],
+    "shared": "平台/存储/调度",
+    "out": "独立runner、ACL/token/run/epoch、start.claim/grant、detach与owner强杀后接管；真实close才终止。"
+  },
+  {
+    "id": 16,
+    "key": "wait",
+    "title": "后台事件持久投递并以TaskWait唤醒",
+    "deps": [
+      "runner"
+    ],
+    "cases": [
+      "TOOL-TaskWait",
+      "RUN-03",
+      "RUN-11",
+      "RUN-12",
+      "REC-06",
+      "REC-11"
+    ],
+    "mm": [
+      "MM-381",
+      "MM-383",
+      "MM-385",
+      "MM-726",
+      "MM-709",
+      "MM-384"
+    ],
+    "shared": "调度/存储",
+    "out": "any/all和1–32限制、run身份固定；run/event与消息/delivered原子，溢写附件缺失变未决。"
+  },
+  {
+    "id": 17,
+    "key": "recovery",
+    "title": "恢复查询及显式决定解开未知工具/执行",
+    "deps": [
+      "wait",
+      "editjournal",
+      "agentbg",
+      "agentdefs",
+      "fork"
+    ],
+    "cases": [
+      "REC-08",
+      "CMD-recovery"
+    ],
+    "mm": [
+      "MM-598",
+      "MM-602",
+      "MM-668",
+      "MM-327",
+      "MM-329",
+      "MM-351",
+      "MM-352"
+    ],
+    "shared": "存储/调度",
+    "out": "resolve/decide/continue持久化；不同故障点重复恢复不重投、不重启未知副作用，清理受管残留。"
+  },
+  {
+    "id": 18,
+    "key": "terminalearly",
+    "title": "在真实WT边流式边编辑并中断/缩放",
+    "deps": [
+      "scheduler",
+      "D10"
+    ],
+    "cases": [
+      "WT-01",
+      "WT-02",
+      "WT-03",
+      "WT-04",
+      "WT-05",
+      "WT-09"
+    ],
+    "mm": [
+      "MM-747",
+      "MM-751",
+      "MM-753",
+      "MM-794",
+      "MM-800"
+    ],
+    "shared": "终端",
+    "out": "最小产品UI实际Python可见运行；IME/粘贴不自动提交/流式草稿/Esc/CtrlC/resize提前验，未覆盖项不报全通过。"
+  },
+  {
+    "id": 19,
+    "key": "searchfiles",
+    "title": "模型浏览与搜索项目文件",
+    "deps": [
+      "readloop"
+    ],
+    "cases": [
+      "TOOL-ListDir",
+      "TOOL-Glob",
+      "TOOL-Grep",
+      "CMD-files"
+    ],
+    "mm": [
+      "MM-655",
+      "MM-659",
+      "MM-661",
+      "MM-664",
+      "MM-684",
+      "MM-738",
+      "MM-662"
+    ],
+    "shared": "独立",
+    "out": "ListDir/Glob/Grep→模型定位证据；中文路径、正则、分页/上下文/跨行和边界符合oracle。"
+  },
+  {
+    "id": 20,
+    "key": "notebook",
+    "title": "模型修改Notebook单元并保存合法文档",
+    "deps": [
+      "editjournal"
+    ],
+    "cases": [
+      "TOOL-NotebookEdit"
+    ],
+    "mm": [
+      "MM-678"
+    ],
+    "shared": "独立",
+    "out": "单元增改删及错误输入经过权限/journal，输出可重读，原文件不被失败操作破坏。",
+    "scope": "excluded"
+  },
+  {
+    "id": 21,
+    "key": "usertools",
+    "title": "终端/REPL问题与用户消息可往返",
+    "deps": [
+      "scheduler"
+    ],
+    "cases": [
+      "TOOL-AskUserQuestion",
+      "TOOL-SendUserMessage"
+    ],
+    "mm": [
+      "MM-623",
+      "MM-703"
+    ],
+    "shared": "工具",
+    "out": "单选/多选/拒绝/取消→工具结果→模型续轮；用户消息与附件呈现，TUI模态在后续绑定。"
+  },
+  {
+    "id": 22,
+    "key": "webfetch",
+    "title": "模型按权限抓取URL并抽取内容",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "TOOL-WebFetch"
+    ],
+    "mm": [
+      "MM-647",
+      "MM-649",
+      "MM-651",
+      "MM-711"
+    ],
+    "shared": "独立",
+    "out": "SSRF/重定向/缓存/超限及固定辅助模型抽取；成功与拒绝都有可比对结果。"
+  },
+  {
+    "id": 23,
+    "key": "websearch",
+    "title": "模型搜索网页并返回受限结果",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "TOOL-WebSearch"
+    ],
+    "mm": [
+      "MM-740"
+    ],
+    "shared": "独立",
+    "out": "搜索→真实结果格式/上限→模型引用；网络失败和关闭开关可验证。"
+  },
+  {
+    "id": 24,
+    "key": "autoperm",
+    "title": "自动权限分类失败时保守询问并留审计",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "PERM-04",
+      "PERM-05"
+    ],
+    "mm": [
+      "MM-528",
+      "MM-539",
+      "MM-541",
+      "MM-552",
+      "MM-556",
+      "MM-558"
+    ],
+    "shared": "权限",
+    "out": "分类器/熔断/秘密脱敏、自动批准开关和信任实际边界可验证，不默扩权限。"
+  },
+  {
+    "id": 25,
+    "key": "configtool",
+    "title": "通过工具和命令调整配置并影响后续轮",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "TOOL-Config",
+      "CMD-Config"
+    ],
+    "mm": [
+      "MM-624",
+      "MM-560"
+    ],
+    "shared": "配置/工具",
+    "out": "读取/点路径设置/模式及检查点开关持久化；不合法值与重启结果一致。"
+  },
+  {
+    "id": 26,
+    "key": "sessions",
+    "title": "继续/切换/分支/命名和导出聊天",
+    "deps": [
+      "scheduler"
+    ],
+    "cases": [
+      "REC-04",
+      "REC-14",
+      "CMD-session",
+      "CMD-resume",
+      "CMD-branch",
+      "CMD-rename",
+      "CMD-export",
+      "CMD-clear"
+    ],
+    "mm": [
+      "MM-595",
+      "MM-600",
+      "MM-392"
+    ],
+    "shared": "存储",
+    "out": "同cwd最近未完/显式ID筛选；分支不复制后台，清理不删活会话，导出可读。"
+  },
+  {
+    "id": 27,
+    "key": "gitpaths",
+    "title": "在worktree修改文件并用检查点回退",
+    "deps": [
+      "editjournal"
+    ],
+    "cases": [
+      "RUN-08",
+      "REC-13",
+      "TOOL-EnterWorktree",
+      "TOOL-ExitWorktree",
+      "CMD-diff",
+      "CMD-rewind",
+      "CMD-restore"
+    ],
+    "mm": [
+      "MM-432",
+      "MM-588",
+      "MM-635",
+      "MM-645"
+    ],
+    "shared": "存储/平台",
+    "out": "进入/退出/嵌套工作区边界正确；shadow检查点恢复前存快照，未提交/忽略/大文件行为有证据。"
+  },
+  {
+    "id": 28,
+    "key": "cost",
+    "title": "多模型用量与本次运行费用/预算",
+    "deps": [
+      "store",
+      "responses"
+    ],
+    "cases": [
+      "WIRE-06",
+      "WIRE-11",
+      "REC-07",
+      "CMD-cost",
+      "CMD-effort",
+      "CMD-context-window",
+      "CMD-status"
+    ],
+    "mm": [
+      "MM-426",
+      "MM-590",
+      "MM-586",
+      "MM-600"
+    ],
+    "shared": "模型/存储",
+    "out": "来源累计token与消息恢复；本次运行分模型费用/预算及命令生效，重启历史费用标不完整，不承诺历史总额硬限。",
+    "scope": "reduced"
+  },
+  {
+    "id": 29,
+    "key": "compact",
+    "title": "上下文压缩及模型错误后继续任务",
+    "deps": [
+      "readloop",
+      "cost"
+    ],
+    "cases": [
+      "WIRE-09",
+      "MEM-03",
+      "CMD-compact",
+      "CMD-context"
+    ],
+    "mm": [
+      "MM-394",
+      "MM-404",
+      "MM-428",
+      "MM-627"
+    ],
+    "shared": "模型/调度",
+    "out": "85%主动/超限反应式压缩、空响应恢复、工具消息对与等待/目标保留；持续不可用明确停止。"
+  },
+  {
+    "id": 30,
+    "key": "memorycrud",
+    "title": "工具写入/查询/审核删除分域记忆",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "MEM-01",
+      "TOOL-MemoryRead",
+      "TOOL-MemoryWrite",
+      "CMD-memory"
+    ],
+    "mm": [
+      "MM-504",
+      "MM-508",
+      "MM-514",
+      "MM-516",
+      "MM-518",
+      "MM-670",
+      "MM-672"
+    ],
+    "shared": "独立",
+    "out": "五类型/三scope、来源校验/locked/手改与删除真实落盘，错误输入不改原数据。"
+  },
+  {
+    "id": 31,
+    "key": "memoryinject",
+    "title": "恢复/新轮按项目加载并注入记忆",
+    "deps": [
+      "memorycrud",
+      "scheduler"
+    ],
+    "cases": [
+      "MEM-02"
+    ],
+    "mm": [
+      "MM-510",
+      "MM-514",
+      "MM-518"
+    ],
+    "shared": "模型",
+    "out": "全文/索引预算、稳定前缀与安全尾部注入可从真实请求观察，关闭时有明确语义。"
+  },
+  {
+    "id": 32,
+    "key": "memorymaint",
+    "title": "蒸馏合并清理记忆并保留来源和锁定项",
+    "deps": [
+      "memoryinject"
+    ],
+    "cases": [
+      "MEM-02"
+    ],
+    "mm": [
+      "MM-500",
+      "MM-502",
+      "MM-506",
+      "MM-512"
+    ],
+    "shared": "独立",
+    "out": "真实工具轨迹→固定模型fixture蒸馏→合并/衰减；失败不丢原文、locked与source保护有效。"
+  },
+  {
+    "id": 33,
+    "key": "repomap",
+    "title": "模型按预算读取和刷新代码图",
+    "deps": [
+      "searchfiles",
+      "scheduler"
+    ],
+    "cases": [
+      "MEM-04",
+      "TOOL-RepoMap"
+    ],
+    "mm": [
+      "MM-570",
+      "MM-572",
+      "MM-574",
+      "MM-575",
+      "MM-576",
+      "MM-578",
+      "MM-579",
+      "MM-695",
+      "MM-580"
+    ],
+    "shared": "独立",
+    "out": "多语言符号/排名/裁剪、2048预算、4000文件/512KiB与mtime-size缓存可验证。"
+  },
+  {
+    "id": 34,
+    "key": "skillsbase",
+    "title": "加载技能及8个core技能并按需调用",
+    "deps": [
+      "readloop"
+    ],
+    "cases": [
+      "EXT-01",
+      "TOOL-Skill",
+      "CMD-skills",
+      "SKILL-simplify",
+      "SKILL-debug",
+      "SKILL-make-plan",
+      "SKILL-verify",
+      "SKILL-code-review",
+      "SKILL-deep-research",
+      "SKILL-fewer-permission-prompts",
+      "SKILL-run-skill-generator"
+    ],
+    "mm": [
+      "MM-606",
+      "MM-616",
+      "MM-705"
+    ],
+    "shared": "独立",
+    "out": "frontmatter/slug/namespace/覆盖、模型与手动调用及资源根包装，全部core文本golden一致。"
+  },
+  {
+    "id": 35,
+    "key": "skillsdynamic",
+    "title": "文件访问动态激活/禁用条件技能",
+    "deps": [
+      "skillsbase",
+      "searchfiles",
+      "scheduler"
+    ],
+    "cases": [
+      "EXT-02"
+    ],
+    "mm": [
+      "MM-610",
+      "MM-619",
+      "MM-614"
+    ],
+    "shared": "工具/调度",
+    "out": "paths扫描、嵌套发现/realpath去重、禁用/排序和边界注入生效，原隔离疑点不当正确预期。"
+  },
+  {
+    "id": 36,
+    "key": "skillinstall",
+    "title": "安装外部技能后立即调用与适配",
+    "deps": [
+      "skillsbase",
+      "permissions"
+    ],
+    "cases": [
+      "EXT-03",
+      "TOOL-SkillInstall"
+    ],
+    "mm": [
+      "MM-604",
+      "MM-608",
+      "MM-612",
+      "MM-707"
+    ],
+    "shared": "独立",
+    "out": "本地/Git完整资源安装、正文适配缓存/失败原文fallback，源文件不改，安装失败不留半成品。"
+  },
+  {
+    "id": 37,
+    "key": "customcmd",
+    "title": "自定义Markdown命令在TTY展开并续轮",
+    "deps": [
+      "terminalearly"
+    ],
+    "cases": [
+      "EXT-04"
+    ],
+    "mm": [
+      "MM-450",
+      "MM-448"
+    ],
+    "shared": "独立",
+    "out": "plugin/user/project模板与参数替换、同名路由按来源；不误执行Shell表达式。",
+    "scope": "excluded"
+  },
+  {
+    "id": 38,
+    "key": "agentsync",
+    "title": "调用内置子代理并收集同步结果",
+    "deps": [
+      "skillsbase",
+      "permissions"
+    ],
+    "cases": [
+      "TOOL-Agent",
+      "RUN-07"
+    ],
+    "mm": [
+      "MM-388",
+      "MM-420",
+      "MM-621",
+      "MM-378",
+      "MM-372"
+    ],
+    "shared": "调度/工具",
+    "out": "独立子Session→允许工具→父结果/摘要，主/子模型与轮数隔离，失败不污染父历史。"
+  },
+  {
+    "id": 39,
+    "key": "agentdefs",
+    "title": "自定义代理定义约束真实派发",
+    "deps": [
+      "agentsync",
+      "memoryinject"
+    ],
+    "cases": [
+      "EXT-05",
+      "CFG-03"
+    ],
+    "mm": [
+      "MM-366",
+      "MM-376",
+      "MM-380",
+      "MM-374"
+    ],
+    "shared": "工具/权限",
+    "out": "支持字段/白黑名单/inherit/skills/memory/permissionMode实际生效，非法定义与覆盖顺序可演示。"
+  },
+  {
+    "id": 40,
+    "key": "agentbg",
+    "title": "后台代理可查询、停止并从checkpoint继续",
+    "deps": [
+      "agentsync",
+      "wait"
+    ],
+    "cases": [
+      "RUN-09",
+      "TOOL-TaskStop",
+      "TOOL-TaskOutput"
+    ],
+    "mm": [
+      "MM-417",
+      "MM-424",
+      "MM-719",
+      "MM-723"
+    ],
+    "shared": "调度/存储",
+    "out": "后台进度/attention/终态→事件投递；停止先canceling，重启显式继续不重放工具。"
+  },
+  {
+    "id": 41,
+    "key": "fork",
+    "title": "fork/exactTools及可准确恢复的现场边界",
+    "deps": [
+      "agentbg",
+      "agentdefs",
+      "gitpaths"
+    ],
+    "cases": [
+      "RUN-07",
+      "RUN-08",
+      "RUN-09"
+    ],
+    "mm": [
+      "MM-401",
+      "MM-417",
+      "MM-420",
+      "MM-380"
+    ],
+    "shared": "调度/存储",
+    "out": "当前fork/exactTools与普通checkpoint恢复保留；特殊现场不足明确拒绝，不降为普通agent，工作区/权限边界真实。",
+    "scope": "reduced"
+  },
+  {
+    "id": 42,
+    "key": "reflect",
+    "title": "长任务触发反思并在恢复后继续",
+    "deps": [
+      "memorymaint",
+      "compact",
+      "fork"
+    ],
+    "cases": [
+      "MEM-03"
+    ],
+    "mm": [
+      "MM-408",
+      "MM-410",
+      "MM-413",
+      "MM-415",
+      "MM-430"
+    ],
+    "shared": "调度/存储",
+    "out": "间隔/同步/异步fork蒸馏与失败fallback按来源；结果仅安全边界注入且重启不重复。"
+  },
+  {
+    "id": 43,
+    "key": "scatter",
+    "title": "批量派发代理并双向追加消息",
+    "deps": [
+      "agentbg",
+      "agentdefs"
+    ],
+    "cases": [
+      "TOOL-TaskSend",
+      "TOOL-MessageParent",
+      "RUN-07"
+    ],
+    "mm": [
+      "MM-621",
+      "MM-674",
+      "MM-721",
+      "MM-368"
+    ],
+    "shared": "调度",
+    "out": "最多20任务/默认10worker、排队/取消、结束后TaskSend恢复与父子attention消息不串。"
+  },
+  {
+    "id": 44,
+    "key": "builtin",
+    "title": "内置命令与长任务目标驱动后续工具轮",
+    "deps": [
+      "terminalearly",
+      "compact",
+      "fork",
+      "scatter"
+    ],
+    "cases": [
+      "CMD-simplify",
+      "CMD-remember",
+      "CMD-review",
+      "CMD-init",
+      "CMD-batch",
+      "CMD-skillify",
+      "CMD-goal",
+      "CMD-task",
+      "CMD-coordinator",
+      "CMD-btw"
+    ],
+    "mm": [
+      "MM-446",
+      "MM-566",
+      "MM-404"
+    ],
+    "shared": "模型/调度",
+    "out": "6内置prompt与长任务开关/别名/备注产生正确请求并续轮；batch真实派发在代理任务串联验收。"
+  },
+  {
+    "id": 45,
+    "key": "manual",
+    "title": "创建/查询/更新/停止手工任务记录",
+    "deps": [
+      "agentbg"
+    ],
+    "cases": [
+      "TOOL-TaskCreate",
+      "TOOL-TaskList",
+      "TOOL-TaskGet",
+      "TOOL-TaskUpdate",
+      "CMD-tasks"
+    ],
+    "mm": [
+      "MM-713",
+      "MM-715",
+      "MM-717",
+      "MM-725",
+      "MM-424"
+    ],
+    "shared": "调度",
+    "out": "手工状态与agent/Shell执行区分，无转录不伪造；列表/更新/取消跨保存一致。"
+  },
+  {
+    "id": 46,
+    "key": "monitor",
+    "title": "Monitor输出事件可观察并可靠停止",
+    "deps": [
+      "manual"
+    ],
+    "cases": [
+      "TOOL-Monitor",
+      "RUN-09"
+    ],
+    "mm": [
+      "MM-676",
+      "MM-424"
+    ],
+    "shared": "调度/平台",
+    "out": "按行批量通知、超时/persistent/停止和重启真实执行器边界有证据，不伪装agent恢复。"
+  },
+  {
+    "id": 47,
+    "key": "loop",
+    "title": "会话loop按周期排队且退出清理",
+    "deps": [
+      "terminalearly"
+    ],
+    "cases": [
+      "CMD-loop",
+      "RUN-09"
+    ],
+    "mm": [
+      "MM-747",
+      "MM-422"
+    ],
+    "shared": "终端/调度",
+    "out": "s/m/h与off、忙时排队/取消、关闭不再触发；与OS定时清晰区分。"
+  },
+  {
+    "id": 48,
+    "key": "hooks",
+    "title": "Hook拦截/改写一次工具调用并参与journal",
+    "deps": [
+      "editjournal",
+      "autoperm",
+      "shell"
+    ],
+    "cases": [
+      "EXT-06",
+      "RUN-06",
+      "CMD-hooks"
+    ],
+    "mm": [
+      "MM-477",
+      "MM-642"
+    ],
+    "shared": "工具/权限/存储",
+    "out": "5事件、顺序/matcher/if/stdin/out/exit2/timeout；updatedInput最终裁决、prehook只跑一次。"
+  },
+  {
+    "id": 49,
+    "key": "agenthooks",
+    "title": "代理启动/停止及会话Hooks不重复注入",
+    "deps": [
+      "hooks",
+      "agentdefs",
+      "agentbg"
+    ],
+    "cases": [
+      "EXT-07"
+    ],
+    "mm": [
+      "MM-370",
+      "MM-372",
+      "MM-420"
+    ],
+    "shared": "调度",
+    "out": "子代理独立hook注册表/上下文、SessionStart恢复哨兵、SessionEnd正常路径与失败边界可验证。"
+  },
+  {
+    "id": 50,
+    "key": "plugins",
+    "title": "安装一个组合插件后使用并安全卸载",
+    "deps": [
+      "skillinstall",
+      "customcmd",
+      "agentdefs",
+      "hooks"
+    ],
+    "cases": [
+      "EXT-04",
+      "CMD-plugin"
+    ],
+    "mm": [
+      "MM-562"
+    ],
+    "shared": "独立",
+    "out": "两种manifest及skills/commands/agents/hooks联动、命名空间与重启；名称/删除约束插件根。",
+    "scope": "excluded"
+  },
+  {
+    "id": 51,
+    "key": "mcpstdio",
+    "title": "模型调用stdio MCP工具并得到结果",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "EXT-08"
+    ],
+    "mm": [
+      "MM-491",
+      "MM-496"
+    ],
+    "shared": "协议",
+    "out": "兼容配置/cwd/env/.cmd启动、schema透传、工具结果与单server失败隔离。"
+  },
+  {
+    "id": 52,
+    "key": "mcphttp",
+    "title": "同一MCP能力经HTTP/SSE连接并可关闭",
+    "deps": [
+      "mcpstdio"
+    ],
+    "cases": [
+      "EXT-08"
+    ],
+    "mm": [
+      "MM-496"
+    ],
+    "shared": "协议",
+    "out": "StreamableHTTP/SSE、用户→项目覆盖、禁用状态与连接/退出取消有协议证据。"
+  },
+  {
+    "id": 53,
+    "key": "mcpcaps",
+    "title": "搜索激活工具并消费MCP资源/提示更新",
+    "deps": [
+      "mcpstdio",
+      "usertools"
+    ],
+    "cases": [
+      "EXT-09",
+      "TOOL-ToolSearch",
+      "CMD-mcp"
+    ],
+    "mm": [
+      "MM-496",
+      "MM-693",
+      "MM-733"
+    ],
+    "shared": "工具/协议",
+    "out": "前5可见/延迟搜索、resources/prompts、listChanged/elicitation与toggle/reconnect可演示。"
+  },
+  {
+    "id": 54,
+    "key": "mcprecovery",
+    "title": "MCP不确定结果断线后不盲目重做",
+    "deps": [
+      "mcphttp",
+      "mcpcaps",
+      "recovery"
+    ],
+    "cases": [
+      "EXT-10"
+    ],
+    "mm": [
+      "MM-496",
+      "MM-598"
+    ],
+    "shared": "协议/存储",
+    "out": "服务端已执行再断线/普通错误区分，按确认策略重连/未知，保留副作用证据。"
+  },
+  {
+    "id": 55,
+    "key": "lsp",
+    "title": "模型在Windows正确导航代码位置",
+    "deps": [
+      "permissions"
+    ],
+    "cases": [
+      "EXT-11",
+      "TOOL-LSP"
+    ],
+    "mm": [
+      "MM-485",
+      "MM-487",
+      "MM-489",
+      "MM-666",
+      "MM-490"
+    ],
+    "shared": "独立",
+    "out": "9操作、UTF8 Content-Length、UTF16位置/URI，惰性同步、超时/关闭与无配置拒绝。"
+  },
+  {
+    "id": 56,
+    "key": "deck",
+    "title": "外部Deck面板控制同一持久会话",
+    "deps": [
+      "wait"
+    ],
+    "cases": [
+      "EXT-12"
+    ],
+    "mm": [
+      "MM-396",
+      "MM-399"
+    ],
+    "shared": "调度/协议",
+    "out": "loopback/token/Origin、snapshot/messages/command、重复ID与409，面板关闭不结束Agent。"
+  },
+  {
+    "id": 57,
+    "key": "obs",
+    "title": "查看脱敏审计与可选观测轨迹",
+    "deps": [
+      "cost",
+      "batch"
+    ],
+    "cases": [
+      "MEM-05",
+      "CMD-audit"
+    ],
+    "mm": [
+      "MM-498",
+      "MM-520",
+      "MM-522",
+      "MM-523",
+      "MM-525",
+      "MM-527",
+      "MM-584",
+      "MM-731"
+    ],
+    "shared": "独立",
+    "out": "trace/turn/tool/cache/skill/perms关联正确，开关和flush可验证；关闭/后端失败不改业务结果。"
+  },
+  {
+    "id": 58,
+    "key": "credentials",
+    "title": "Windows系统凭据存取及fallback可用于请求",
+    "deps": [
+      "chat",
+      "store"
+    ],
+    "cases": [
+      "WIN-05",
+      "CFG-04"
+    ],
+    "mm": [
+      "MM-458",
+      "MM-455",
+      "NEW-04"
+    ],
+    "shared": "平台/配置",
+    "out": "假秘密写取删/同名大小写、拒绝和超时，准确显示存储后端，验证日志无秘密。"
+  },
+  {
+    "id": 59,
+    "key": "schedule",
+    "title": "系统定时来源路由与Windows不支持边界",
+    "deps": [
+      "shell"
+    ],
+    "cases": [
+      "WIN-06",
+      "TOOL-Schedule",
+      "TOOL-CronCreate",
+      "TOOL-CronDelete",
+      "TOOL-CronList"
+    ],
+    "mm": [
+      "MM-582",
+      "MM-625",
+      "MM-700",
+      "NEW-05"
+    ],
+    "shared": "平台",
+    "out": "来源系统定时平台路由保留；Windows本轮明确不支持，不注册任务，不以会话loop冒充。",
+    "scope": "reduced"
+  },
+  {
+    "id": 60,
+    "key": "sandboxfile",
+    "title": "沙箱按来源路由并准确报告平台能力",
+    "deps": [
+      "shell"
+    ],
+    "cases": [
+      "WIN-09"
+    ],
+    "mm": [
+      "MM-698",
+      "NEW-08"
+    ],
+    "shared": "平台",
+    "out": "迁移DAO可选Seatbelt/bwrap及缺工具错误，Windows明确不支持；普通Shell不冒充隔离。"
+  },
+  {
+    "id": 61,
+    "key": "sandboxnet",
+    "title": "网络隔离开关保持来源语义与平台限制",
+    "deps": [
+      "sandboxfile",
+      "webfetch"
+    ],
+    "cases": [
+      "WIN-09"
+    ],
+    "mm": [
+      "MM-698",
+      "NEW-08"
+    ],
+    "shared": "平台",
+    "out": "迁移DAO默认允许网络及显式禁网开关；Windows沿用不支持边界，支持平台实机结果单列。"
+  },
+  {
+    "id": 62,
+    "key": "power",
+    "title": "电源能力路由与Windows无防休眠保证",
+    "deps": [
+      "runner"
+    ],
+    "cases": [
+      "WIN-07"
+    ],
+    "mm": [
+      "MM-798",
+      "NEW-06"
+    ],
+    "shared": "平台",
+    "out": "Windows无防自动休眠保证，能力报告真实；来源其它平台可选电源路由与未验状态保留。",
+    "scope": "reduced"
+  },
+  {
+    "id": 63,
+    "key": "notify",
+    "title": "终端通知及标题注意状态（无桌面通知）",
+    "deps": [
+      "wait"
+    ],
+    "cases": [
+      "WIN-10",
+      "TOOL-NotifyUser",
+      "WT-07"
+    ],
+    "mm": [
+      "MM-680",
+      "MM-772",
+      "MM-790",
+      "NEW-09"
+    ],
+    "shared": "平台/终端",
+    "out": "Windows只发终端提示/安全标题，不发桌面通知；NotifyUser准确报告渠道，失败不改任务真实状态。",
+    "scope": "reduced"
+  },
+  {
+    "id": 64,
+    "key": "clipboard",
+    "title": "Windows粘贴图片进入视觉模型请求",
+    "deps": [
+      "terminalearly",
+      "responses"
+    ],
+    "cases": [
+      "WIN-08"
+    ],
+    "mm": [
+      "MM-763",
+      "MM-691",
+      "NEW-07"
+    ],
+    "shared": "平台/终端",
+    "out": "clipboard/路径两入口、MIME/magic/5MB/RGBA/不支持模型与失败不吞文本；接收内容可核对。"
+  },
+  {
+    "id": 65,
+    "key": "tuirender",
+    "title": "内联转录、中英文主题及scrollback稳定",
+    "deps": [
+      "terminalearly"
+    ],
+    "cases": [
+      "CMD-lang",
+      "CMD-theme",
+      "WT-03",
+      "WT-05"
+    ],
+    "mm": [
+      "MM-480",
+      "MM-481",
+      "MM-482",
+      "MM-749",
+      "MM-765",
+      "MM-786",
+      "MM-796",
+      "MM-800",
+      "MM-788",
+      "MM-797"
+    ],
+    "shared": "终端",
+    "out": "Markdown/工具输出/宽字符/长历史流式布局与语言主题切换，连续resize不残影/删共享历史。"
+  },
+  {
+    "id": 66,
+    "key": "tuimodals",
+    "title": "在终端审批/回答问题并选择账户或技能",
+    "deps": [
+      "tuirender",
+      "usertools",
+      "autoperm",
+      "skillsdynamic",
+      "credentials"
+    ],
+    "cases": [
+      "WT-06",
+      "CMD-model",
+      "CMD-account",
+      "CMD-accounts"
+    ],
+    "mm": [
+      "MM-747",
+      "MM-776",
+      "MM-453"
+    ],
+    "shared": "终端",
+    "out": "焦点/模态Esc/单多选/永许/拒绝/模型账户选择，生效后实际后续请求与权限正确。"
+  },
+  {
+    "id": 67,
+    "key": "tuitasks",
+    "title": "任务面板/历史展开与Ctrl+B后台操作",
+    "deps": [
+      "tuirender",
+      "manual",
+      "loop"
+    ],
+    "cases": [
+      "WT-04",
+      "WT-06",
+      "CMD-copy"
+    ],
+    "mm": [
+      "MM-745",
+      "MM-747",
+      "MM-762",
+      "MM-755"
+    ],
+    "shared": "终端/调度",
+    "out": "Ctrl+T/G/O、Ctrl+B/ShiftTab状态反馈，前台转后台与后续Esc不误杀；文本copy不丢Unicode。"
+  },
+  {
+    "id": 68,
+    "key": "welcome",
+    "title": "欢迎Sixel/终端回包与文本降级稳定",
+    "deps": [
+      "tuirender",
+      "notify"
+    ],
+    "cases": [
+      "WT-08"
+    ],
+    "mm": [
+      "MM-744",
+      "MM-760",
+      "MM-767",
+      "MM-768",
+      "MM-794",
+      "MM-757",
+      "MM-758",
+      "MM-473",
+      "MM-770",
+      "MM-792"
+    ],
+    "shared": "终端",
+    "out": "单reader/输出owner、DA/CPR分片/迟到/paste/背压/epoch，窗口缩放与模态时图形无残留。"
+  },
+  {
+    "id": 69,
+    "key": "onboarding",
+    "title": "首次终端引导完成账户/语言/信任配置",
+    "deps": [
+      "tuimodals"
+    ],
+    "cases": [
+      "ENT-02"
+    ],
+    "mm": [
+      "MM-774",
+      "MM-777",
+      "MM-779",
+      "MM-780",
+      "MM-781",
+      "MM-783",
+      "MM-468"
+    ],
+    "shared": "终端/配置",
+    "out": "首次引导可完成/取消，重启状态正确，安全校验与真实信任范围可见。"
+  },
+  {
+    "id": 70,
+    "key": "routes",
+    "title": "全部CLI参数/slash按入口正确路由并收尾",
+    "deps": [
+      "builtin",
+      "sessions",
+      "configtool",
+      "mcpcaps",
+      "lsp",
+      "onboarding",
+      "tuitasks",
+      "schedule",
+      "obs",
+      "webfetch",
+      "websearch",
+      "reflect"
+    ],
+    "cases": [
+      "ENT-03",
+      "ENT-04",
+      "ENT-06",
+      "CFG-08",
+      "CFG-10",
+      "CMD-help",
+      "CMD-exit",
+      "CMD-quit",
+      "CMD-doctor",
+      "CMD-agents"
+    ],
+    "mm": [
+      "MM-483",
+      "MM-568",
+      "MM-448",
+      "MM-451",
+      "MM-564",
+      "MM-470",
+      "MM-472"
+    ],
+    "shared": "组合根",
+    "out": "按来源52个固定命令盘点范围。保留的命令和别名逐入口验证，查询不打断，状态操作等待暂停完成，退出时清理资源。/plugin及自定义Markdown命令移出。"
+  },
+  {
+    "id": 71,
+    "key": "isolation",
+    "title": "eval及禁用开关贯穿启动/文件访问/恢复",
+    "deps": [
+      "routes",
+      "mcprecovery"
+    ],
+    "cases": [
+      "ENT-05"
+    ],
+    "mm": [
+      "MM-483",
+      "MM-610",
+      "MM-475"
+    ],
+    "shared": "组合根",
+    "out": "按通道禁用、动态技能泄漏修复决定和旧数据隔离有对照；不将eval声称零副作用沙箱。"
+  },
+  {
+    "id": 72,
+    "key": "evalrunner",
+    "title": "运行一个评估任务并生成可评分轨迹",
+    "deps": [
+      "routes"
+    ],
+    "cases": [
+      "TEST-03"
+    ],
+    "mm": [
+      "MM-228",
+      "MM-229",
+      "MM-113",
+      "MM-227",
+      "MM-302"
+    ],
+    "shared": "证据",
+    "out": "16任务/评分/trace物化HTML与外部Harbor/TB/SWE入口按D/R/S/P接通，材料不足如实分类。"
+  },
+  {
+    "id": 73,
+    "key": "memoryeval",
+    "title": "执行记忆/缓存验收并生成脱敏报告",
+    "deps": [
+      "memorymaint",
+      "evalrunner"
+    ],
+    "cases": [
+      "TEST-03"
+    ],
+    "mm": [
+      "MM-512",
+      "MM-586",
+      "MM-307",
+      "MM-308",
+      "MM-208",
+      "MM-118",
+      "MM-191",
+      "MM-205",
+      "MM-207"
+    ],
+    "shared": "证据",
+    "out": "来源memory/cache脚本及评估指标、fixture/judge/报告可跑；离线与live显式分开。"
+  },
+  {
+    "id": 74,
+    "key": "reflecteval",
+    "title": "执行反思验收并识别正控/失败",
+    "deps": [
+      "reflect",
+      "evalrunner"
+    ],
+    "cases": [
+      "TEST-03"
+    ],
+    "mm": [
+      "MM-430",
+      "MM-413",
+      "MM-353",
+      "MM-225",
+      "MM-224"
+    ],
+    "shared": "证据",
+    "out": "来源reflect评估fixture/grade/正控与报告可跑，模型质量不以字符串golden代替。"
+  },
+  {
+    "id": 75,
+    "key": "livebase",
+    "title": "来源成套真实模型评分（本轮移出）",
+    "deps": [
+      "isolation",
+      "memoryeval",
+      "reflecteval"
+    ],
+    "cases": [
+      "TEST-04"
+    ],
+    "mm": [
+      "MM-228",
+      "MM-105"
+    ],
+    "shared": "HITL/证据",
+    "out": "V1本轮移出16任务默认各3次成套真实模型评分；历史资产与未验结果保留，不计完成。",
+    "scope": "excluded",
+    "scope_reason": "ADR-0010 / V1"
+  },
+  {
+    "id": 76,
+    "key": "liveruntime",
+    "title": "离线运行时/协议验证后台、恢复与扩展",
+    "deps": [
+      "isolation",
+      "memoryeval",
+      "reflecteval",
+      "agenthooks",
+      "monitor"
+    ],
+    "cases": [
+      "TEST-02",
+      "RUN-09"
+    ],
+    "mm": [
+      "MM-383",
+      "MM-417",
+      "MM-496",
+      "MM-326",
+      "MM-328"
+    ],
+    "shared": "HITL/证据",
+    "out": "复用来源离线runtime/protocol资产核对本轮后台/恢复/扩展，不新增组合测试框架或要求成套live成绩。",
+    "scope": "reduced"
+  },
+  {
+    "id": 77,
+    "key": "wtaccept",
+    "title": "最终产品完成Windows Terminal真实操作验收",
+    "deps": [
+      "isolation",
+      "welcome",
+      "clipboard",
+      "power"
+    ],
+    "cases": [
+      "WT-01",
+      "WT-02",
+      "WT-03",
+      "WT-04",
+      "WT-05",
+      "WT-06",
+      "WT-07",
+      "WT-08",
+      "WT-09"
+    ],
+    "mm": [
+      "MM-747",
+      "MM-794",
+      "MM-767"
+    ],
+    "shared": "HITL/终端",
+    "out": "保留WT01–09真实输入/缩放/面板等本轮子项；W5/W6无Windows防休眠/桌面通知，自动与人工分别留证。",
+    "scope": "reduced"
+  },
+  {
+    "id": 78,
+    "key": "wincaps",
+    "title": "本轮Windows能力及不支持边界最终验证",
+    "deps": [
+      "credentials",
+      "schedule",
+      "sandboxnet",
+      "power",
+      "notify",
+      "clipboard",
+      "recovery"
+    ],
+    "cases": [
+      "WIN-01",
+      "WIN-02",
+      "WIN-03",
+      "WIN-04",
+      "WIN-05",
+      "WIN-06",
+      "WIN-07",
+      "WIN-08",
+      "WIN-09",
+      "WIN-10"
+    ],
+    "mm": [
+      "NEW-01",
+      "NEW-02",
+      "NEW-03",
+      "NEW-04",
+      "NEW-05",
+      "NEW-06",
+      "NEW-07",
+      "NEW-08",
+      "NEW-09"
+    ],
+    "shared": "HITL/平台",
+    "out": "Windows保留能力真实验证；WIN-06/07/10核对不支持/无防休眠/终端提示边界，不伪造已取消后端通过。",
+    "scope": "reduced"
+  },
+  {
+    "id": 79,
+    "key": "wheel",
+    "title": "构建并在隔离环境安装完整wheel/sdist",
+    "deps": [
+      "isolation",
+      "repomap",
+      "wincaps",
+      "websearch",
+      "deck",
+      "welcome"
+    ],
+    "dependency_exits": {
+      "wincaps": "automatic"
+    },
+    "cases": [
+      "PKG-01",
+      "PKG-05"
+    ],
+    "mm": [
+      "MM-305",
+      "MM-579",
+      "MM-768",
+      "MM-017"
+    ],
+    "shared": "工程",
+    "out": "本轮标准wheel/sdist从源码包重建并仓库外安装；资源/SQLite及同版本runner/helper可用，按R1/R3恢复边界运行。"
+  },
+  {
+    "id": 80,
+    "key": "standalone",
+    "title": "Windows独立产物（本轮移出）",
+    "deps": [
+      "wheel"
+    ],
+    "cases": [
+      "PKG-02",
+      "PKG-03"
+    ],
+    "mm": [
+      "MM-483",
+      "MM-668",
+      "MM-704",
+      "MM-801"
+    ],
+    "shared": "工程/平台",
+    "out": "D2本轮移出Windows独立程序及专属打包生命周期；仅交需兼容Python的标准包，不计完成。",
+    "scope": "excluded",
+    "scope_reason": "ADR-0010 / D2"
+  },
+  {
+    "id": 81,
+    "key": "upgrade",
+    "title": "Python包手动安装升级及数据保留",
+    "deps": [
+      "wheel"
+    ],
+    "cases": [
+      "PKG-04",
+      "REC-16"
+    ],
+    "mm": [
+      "MM-595",
+      "MM-593",
+      "MM-305"
+    ],
+    "shared": "工程/存储",
+    "out": "Python包干净安装及手动停进程/一致备份/更新可用；无自动跨版本迁移或失败自动回退，未知/坏格式拒绝且保护旧数据。",
+    "scope": "reduced"
+  },
+  {
+    "id": 82,
+    "key": "crossci",
+    "title": "各平台按支持矩阵运行质量/构建门禁",
+    "deps": [
+      "wheel"
+    ],
+    "cases": [
+      "WIN-11",
+      "PKG-06"
+    ],
+    "mm": [
+      "NEW-10",
+      "MM-008",
+      "MM-010"
+    ],
+    "shared": "工程",
+    "out": "Windows本机pytest/Ruff/mypy/安装冒烟CI；Linux/macOS导入/适配/构建与实机pending分开。"
+  },
+  {
+    "id": 83,
+    "key": "docsrelease",
+    "title": "交付可重建产物、使用恢复文档和许可清单",
+    "deps": [
+      "upgrade",
+      "crossci"
+    ],
+    "cases": [
+      "PKG-05",
+      "PKG-06"
+    ],
+    "mm": [
+      "MM-017",
+      "MM-018",
+      "MM-019",
+      "MM-013",
+      "MM-801",
+      "MM-768"
+    ],
+    "shared": "工程/证据",
+    "out": "保留完整文档/许可/版本hash配套，如实说明九项范围缩减及标准Python包安装更新策略。"
+  },
+  {
+    "id": 84,
+    "key": "winintegrate",
+    "title": "Python安装产物跑本轮Windows集成门禁",
+    "deps": [
+      "liveruntime",
+      "wtaccept",
+      "upgrade",
+      "crossci"
+    ],
+    "dependency_exits": {
+      "wtaccept": "automatic"
+    },
+    "cases": [
+      "TEST-01",
+      "TEST-02",
+      "TEST-05",
+      "TEST-06"
+    ],
+    "mm": [
+      "MM-483",
+      "MM-404",
+      "MM-642"
+    ],
+    "shared": "HITL/证据",
+    "out": "标准Python安装产物覆盖保留功能的来源离线/协议门禁；移出项与不支持边界如实报告，不宣称全原版功能/量化性能通过。",
+    "scope": "reduced"
+  },
+  {
+    "id": 85,
+    "key": "delivery",
+    "title": "核验本轮覆盖并完成用户交付验收",
+    "deps": [
+      "winintegrate",
+      "docsrelease",
+      "D14",
+      "wtaccept",
+      "wincaps"
+    ],
+    "cases": [
+      "PKG-07"
+    ],
+    "mm": [
+      "MM-483"
+    ],
+    "shared": "HITL/证据",
+    "out": "逐项核对805成员与案例处置、保留能力实际验收和用户接受。20/37/50/75/80范围移出，量化性能与成套live不作门禁。",
+    "scope": "reduced"
+  }
+]

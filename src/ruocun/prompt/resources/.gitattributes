@@ -1,0 +1,2 @@
+# 产品模板保留既有 CRLF 字节，运行时读取统一换行。
+*.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

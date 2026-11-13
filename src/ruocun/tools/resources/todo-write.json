@@ -1,0 +1,4 @@
+{
+  "description": "用这次提交的完整清单替换当前会话的待办。把未开始、进行中、已完成的事项分别标为 pending、in_progress、completed，同一时间最多保留一项进行中。验证达成后再标记完成。",
+  "descriptionEn": "Replace this session’s todo list with the full list supplied in this call. Use pending, in_progress, and completed for each item and keep at most one item in progress. Mark an item completed after checking its result."
+}

@@ -1,0 +1,1225 @@
+diff --git a/patches/ink+7.0.5.patch b/patches/ink+7.0.5.patch
+index b7c7e3b..0021504 100644
+--- a/patches/ink+7.0.5.patch
++++ b/patches/ink+7.0.5.patch
+@@ -1,16 +1,21 @@
+ diff --git a/node_modules/ink/build/ink.js b/node_modules/ink/build/ink.js
+-index b8fd45c..75d83e9 100644
++index b8fd45c..37e8688 100644
+ --- a/node_modules/ink/build/ink.js
+ +++ b/node_modules/ink/build/ink.js
+-@@ -708,7 +708,10 @@ export default class Ink {
+-             if (sync) {
+-                 this.options.stdout.write(bsu);
+-             }
+--            this.options.stdout.write(ansiEscapes.clearTerminal + this.fullStaticOutput + output);
+-+            // Fix: include staticOutput in the clear-terminal path, otherwise
+-+            // new <Static> items are lost when the previous frame was overflowing
+-+            // (e.g. tall welcome banner on a short terminal).
+-+            this.options.stdout.write(ansiEscapes.clearTerminal + this.fullStaticOutput + staticOutput + output);
+-             this.lastOutput = output;
+-             this.lastOutputToRender = outputToRender;
+-             this.lastOutputHeight = outputHeight;
++@@ -261,9 +261,13 @@ export default class Ink {
++     }
++     resized = () => {
++         const currentWidth = getWindowSize(this.options.stdout).columns;
++-        if (currentWidth < this.lastTerminalWidth) {
++-            // We clear the screen when decreasing terminal width to prevent duplicate overlapping re-renders.
++-            this.log.clear();
+++        if (currentWidth !== this.lastTerminalWidth) {
+++            // The frontend has already reflowed the previous frame at this width.
+++            // Clear its physical rows, not log-update's old logical line count.
+++            const previousFrame = this.lastOutputToRender || (this.lastOutput ? this.lastOutput + '\n' : '');
+++            const reflowed = wrapAnsi(previousFrame, Math.max(1, currentWidth), { hard: true, wordWrap: false, trim: false });
+++            this.options.stdout.write(ansiEscapes.eraseLines(previousFrame ? reflowed.split('\n').length : 0));
+++            this.log.reset();
++             this.lastOutput = '';
++             this.lastOutputToRender = '';
++         }
+diff --git a/src/config/profiles.ts b/src/config/profiles.ts
+index 38da390..ee82e19 100644
+--- a/src/config/profiles.ts
++++ b/src/config/profiles.ts
+@@ -123,6 +123,9 @@ export const VISION_MODEL_IDS: readonly string[] = [
+   ),
+ ];
+ 
++// 保留本地 RuoCun 界面的旧导出接口，模型清单仍由新版属性表维护。
++export const VISION_MODELS: ReadonlySet<string> = new Set(VISION_MODEL_IDS);
++
+ /** 当前 model 是否支持图片输入。不在索引中的模型一律视为不支持。 */
+ export function supportsVision(model: string): boolean {
+   return MODEL_INDEX.get(model.toLowerCase())?.vision === true;
+diff --git a/src/session/process_identity.ts b/src/session/process_identity.ts
+index a114b3c..d0c8f6f 100644
+--- a/src/session/process_identity.ts
++++ b/src/session/process_identity.ts
+@@ -8,6 +8,17 @@ export interface ProcessIdentity {
+     start: string;
+ }
+ let boot: string | undefined;
++function windowsTicks(query: string, allowMissing = false): string | null {
++    const value = execFileSync("powershell.exe", ["-NoLogo", "-NoProfile", "-NonInteractive", "-Command",
++        "$ErrorActionPreference = 'Stop'; " + query +
++        "; if ($null -ne $value) { [Console]::Write($value.ToUniversalTime().Ticks.ToString([Globalization.CultureInfo]::InvariantCulture)) }",
++    ], { encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 16384 }).trim();
++    if (!value && allowMissing)
++        return null;
++    if (!/^\d+$/.test(value))
++        throw new Error("无法核实 Windows 进程或系统启动时间。");
++    return value;
++}
+ function bootIdentity(): string {
+     if (boot)
+         return boot;
+@@ -15,11 +26,16 @@ function bootIdentity(): string {
+         boot = readFileSync("/proc/sys/kernel/random/boot_id", "utf8").trim();
+     else if (process.platform === "darwin")
+         boot = execFileSync("/usr/sbin/sysctl", ["-n", "kern.boottime"], { encoding: "utf8" }).trim();
++    else if (process.platform === "win32")
++        boot = windowsTicks("$value = (Get-CimInstance -ClassName Win32_OperatingSystem -Property LastBootUpTime).LastBootUpTime")!;
+     else
+-        throw new Error("后台恢复只支持已验证的 macOS/Linux 进程身份。");
++        throw new Error("当前平台无法核实系统启动身份。");
+     return boot;
+ }
+ export function processIdentity(pid = process.pid): ProcessIdentity | null {
++    // 除了避免 PowerShell 查询插值注入，也排除 kill(0)/负数的特殊进程组语义。
++    if (!Number.isInteger(pid) || pid <= 0 || pid > 0x7fffffff)
++        throw new RangeError("进程 ID 必须是正的 32 位整数。");
+     try {
+         process.kill(pid, 0);
+     }
+@@ -36,6 +52,13 @@ export function processIdentity(pid = process.pid): ProcessIdentity | null {
+     else if (process.platform === "darwin") {
+         start = execFileSync("/bin/ps", ["-p", String(pid), "-o", "lstart="], { encoding: "utf8" }).trim();
+     }
++    else if (process.platform === "win32") {
++        // 进程可能在 kill(pid, 0) 后退出；CIM 没有匹配项时返回 null，权限/查询错误仍抛出。
++        const ticks = windowsTicks(`$processInfo = Get-CimInstance -ClassName Win32_Process -Filter 'ProcessId=${pid}' -Property CreationDate; if ($null -eq $processInfo) { exit 0 }; if ($null -eq $processInfo.CreationDate) { throw 'Missing process creation time' }; $value = $processInfo.CreationDate`, true);
++        if (ticks === null)
++            return null;
++        start = ticks;
++    }
+     else
+         throw new Error("当前平台无法核实后台进程身份。");
+     if (!start)
+diff --git a/src/tui/Welcome.test.tsx b/src/tui/Welcome.test.tsx
+index 6812d91..448816d 100644
+--- a/src/tui/Welcome.test.tsx
++++ b/src/tui/Welcome.test.tsx
+@@ -1,7 +1,7 @@
+ import React from "react";
+-import { describe, it, expect, beforeAll, afterAll } from "vitest";
++import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
+ import { render } from "ink-testing-library";
+-import { Welcome } from "./Welcome.js";
++import { Welcome, getWelcomeLayout } from "./Welcome.js";
+ import { setLang } from "../i18n/i18n.js";
+ 
+ // 页脚文案走 i18n(t()),默认随系统 locale → en；锁定 zh 以断言「快速开始」稳定。
+@@ -23,6 +23,52 @@ describe("Welcome skipFooter", () => {
+   it("hides the footer when skipFooter", () => {
+     const { lastFrame } = render(<Welcome {...props} skipFooter />);
+     expect(lastFrame()).not.toContain("快速开始");
+-    expect(lastFrame()).toContain("DAO CODE"); // banner 仍在
++    expect(lastFrame()).toContain("若存 Code"); // banner 仍在
++  });
++  it("uses fixed visible branding while keeping the real workspace and version", () => {
++    const cwd = "D:\\java supplement\\Firstcode\\dao-code";
++    const { lastFrame } = render(<Welcome {...props} info={{ ...props.info, cwd }} />);
++    expect(lastFrame()).toContain("若存 Code");
++    expect(lastFrame()).toContain("绵绵若存，用之不勤。");
++    expect(lastFrame()).toContain(cwd);
++    expect(lastFrame()).toContain("main");
++    expect(lastFrame()).toContain("v0.2.0");
++    expect(lastFrame()).not.toContain("DAO CODE");
++    expect(lastFrame()).not.toContain("上善若水");
++  });
++});
++
++describe("welcome image anchor", () => {
++  it("keeps the actual Ink card and reserved image area at the documented coordinates", async () => {
++    const { stdout, lastFrame, unmount } = render(<Welcome {...props} mascot={{ columns: 26, rows: 13 }} />);
++    // ink-testing-library defaults to 100 columns; exercise the same resize event as the real renderer.
++    Object.defineProperty(stdout, "columns", { configurable: true, value: 209 });
++    stdout.emit("resize");
++    await vi.waitFor(() => {
++      const rows = lastFrame()!.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").split("\n");
++      expect(rows).toHaveLength(17);
++      expect(rows[0]!.indexOf("╭")).toBe(31);
++      expect(rows[3]!.indexOf("若存 Code")).toBe(65);
++      expect(rows[5]).toContain("绵绵若存，用之不勤。");
++      expect(rows[8]).toContain("deepseek-v4-pro");
++      expect(rows[9]).toContain("/x/y/z");
++      expect(rows[10]).toContain("main");
++      expect(rows[13]).toContain("快速开始");
++    });
++    unmount();
++  });
++  it("reserves the approved 26x13 grid in a centered 146-column card", () => {
++    expect(getWelcomeLayout(209, { columns: 26, rows: 13 })).toEqual({
++      cardWidth: 146, cardLeft: 31, imageColumns: 26, imageLeft: 34,
++      imageTop: 2, cardHeight: 17, imageRows: 13, sideBySide: true,
++    });
++  });
++  it("uses a taller image grid without moving its top-left anchor", () => {
++    const layout = getWelcomeLayout(120, { columns: 32, rows: 16 });
++    expect(layout).toMatchObject({ cardWidth: 120, cardLeft: 0, imageLeft: 3, imageTop: 2, cardHeight: 20, imageRows: 16, sideBySide: true });
++  });
++  it.each([undefined, { columns: 26, rows: 13 }, { columns: 0, rows: 0 }, { columns: NaN, rows: 13 }])("uses compact text when an image cannot fit: %j", mascot => {
++    expect(getWelcomeLayout(80, mascot).sideBySide).toBe(false);
++    expect(getWelcomeLayout(80, mascot).cardHeight).toBe(0);
+   });
+ });
+diff --git a/src/tui/Welcome.tsx b/src/tui/Welcome.tsx
+index c62f8ad..0ffe843 100644
+--- a/src/tui/Welcome.tsx
++++ b/src/tui/Welcome.tsx
+@@ -1,23 +1,36 @@
+-import React, { useEffect, useRef, useState } from "react";
++import React, { useEffect, useState } from "react";
+ import { Box, Text, useStdout } from "ink";
+ import type { Capabilities } from "./capabilities.js";
+ import type { Background } from "./background.js";
+ import type { WelcomeInfo } from "./banner.js";
+ import type { Maxim } from "./maxim.js";
+-import { WORDMARK } from "./banner.js";
+-import { renderTaiji } from "./taiji.js";
+-import { gradientBlock, semHex } from "./theme.js";
+-import { randomTip } from "./tips.js";
+-import { t } from "../i18n/i18n.js";
++import { DISPLAY_NAME, WELCOME_MOTTO } from "./brand.js";
++import { semHex } from "./theme.js";
++import { getLang, t } from "../i18n/i18n.js";
+ 
+-// 长路径缩短:超过 3 段时取末 3 段并加 …/ 前缀。
+-function shortenPath(p: string): string {
+-  const segs = p.split("/").filter(Boolean);
+-  return segs.length <= 3 ? p : "…/" + segs.slice(-3).join("/");
++export interface WelcomeMascotLayout { columns: number; rows: number }
++
++/**
++ * 所有坐标均为 0-based，原点是 Welcome 第一行的终端最左列。
++ * imageLeft 已包含卡片居中偏移；imageTop 从欢迎卡片第一行计算。
++ * 无图模式高度由文字换行决定，cardHeight=0 表示不可用作图像锚点。
++ */
++export function getWelcomeLayout(columns: number, mascot?: WelcomeMascotLayout) {
++  const terminalColumns = Math.max(1, Math.floor(columns));
++  const cardWidth = Math.min(terminalColumns, 146);
++  const cardLeft = Math.floor((terminalColumns - cardWidth) / 2);
++  const validMascot = mascot && Number.isFinite(mascot.columns) && Number.isFinite(mascot.rows)
++    && mascot.columns > 0 && mascot.rows > 0;
++  const imageColumns = validMascot ? Math.ceil(mascot.columns) : 0;
++  const sideBySide = Boolean(validMascot && cardWidth >= imageColumns + 79);
++  const imageRows = sideBySide ? Math.max(13, Math.ceil(mascot!.rows)) : 0;
++  return {
++    cardWidth, cardLeft, imageColumns: sideBySide ? imageColumns : 0,
++    imageLeft: cardLeft + 3, imageTop: 2,
++    cardHeight: sideBySide ? imageRows + 4 : 0, imageRows, sideBySide,
++  };
+ }
+ 
+-// 订阅终端列宽:resize 时触发重渲染。会话开始前欢迎屏在动态区,跟随窗口重排;
+-// 固化进 <Static> 后(首条消息起)Ink 不再重绘它,订阅自然失效。
+ function useTermWidth(fallback: number): number {
+   const { stdout } = useStdout();
+   const [cols, setCols] = useState(stdout?.columns || fallback);
+@@ -27,119 +40,85 @@ function useTermWidth(fallback: number): number {
+     stdout.on("resize", onResize);
+     return () => { stdout.off("resize", onResize); };
+   }, [stdout, fallback]);
+-  return cols || fallback; // 0/undefined 回退(终端偶尔报 0)
++  return cols || fallback;
+ }
+ 
+-// 响应式欢迎屏(Ink):整宽圆角边框 + 居中 logo + 两栏页脚,随终端 resize 重排。
+-export function Welcome({
+-  info,
+-  caps,
+-  bg,
+-  maxim,
+-  skipFooter,
+-}: {
++// Ink 仅输出稳定卡片与角色留白；图像控制器独立更新留白区域，不反复打印欢迎屏。
++export function Welcome({ info, caps, bg, skipFooter, mascot }: {
+   info: WelcomeInfo;
+   caps: Capabilities;
+   bg: Background;
+-  maxim: Maxim;
++  maxim: Maxim; // 保留调用接口；欢迎页固定短句，不改变其它位置的名句库。
+   skipFooter?: boolean;
++  mascot?: WelcomeMascotLayout;
+ }) {
+-  // 订阅 resize:列宽变化触发重渲染,使整宽边框与两栏随终端重排。
+   const columns = useTermWidth(caps.columns);
+-  const narrow = columns < 72;
+-  // 太极(16)+ 间距(5)+ 词标(60)+ 边框与 padding(6)≈ 87,留点余量。
+-  const sideBySide = columns >= 92;
+-
+-  const taiji = renderTaiji(caps, bg);
+-  const wm = gradientBlock(WORDMARK, "jade", "ink", caps, bg);
++  const layout = getWelcomeLayout(columns, bg === "dark" ? mascot : undefined);
+   const c = (sem: Parameters<typeof semHex>[0]) => semHex(sem, bg);
+-  const tip = useRef(randomTip()).current; // 随机一条引导,本次挂载固定(固化进 Static 后冻结)
+-
+-  // 落款 + 名句合一行(紧凑;「道」已由朱印承担,不再重复)。
+-  const sealLine = (
+-    <Text>
+-      <Text color={c("jade")}>DAO CODE</Text>
+-      <Text color={c("dim")}>{"  ·  "}v{info.version}{"  ·  "}</Text>
+-      <Text color={c("jade")}>「{maxim.text}」</Text>
++  const branchLabel = getLang() === "zh" ? "分支 " : "Branch ";
++  const branchAndVersion = (
++    <Text color={c("dim")} wrap="truncate-end">
++      {info.branch ? `${branchLabel}${info.branch}    ·    ` : ""}v{info.version}
++    </Text>
++  );
++  const model = (
++    <Text wrap="truncate-end">
++      <Text color={c("dim")}>{t("welcome.model")}</Text>
++      <Text color={c("ink")}>{info.model} · {info.thinking} · {t("welcome.ctx")}</Text>
+     </Text>
+   );
++  const directory = (
++    <Text color={c("dim")} wrap="truncate-end">{t("welcome.dir")}{info.cwd}</Text>
++  );
++  const title = <Text bold color={c("jade")}>{DISPLAY_NAME}</Text>;
++  const motto = <Text color={c("jade")} wrap="truncate-end">「{WELCOME_MOTTO}」</Text>;
++  const obs = info.obs ? <Text color={c(info.obs.includes("降级") ? "vermilion" : "dim")} wrap="truncate-end">{info.obs}</Text> : null;
++
++  // 固定行位与已确认的预览一致：标题1、短句3、模型6、目录7、分支8、提示11。
++  const infoRows: React.ReactNode[] = Array.from({ length: layout.imageRows }, () => <Text>{" "}</Text>);
++  if (layout.sideBySide) {
++    infoRows[1] = title;
++    infoRows[3] = motto;
++    if (!skipFooter) {
++      infoRows[6] = model;
++      infoRows[7] = directory;
++      infoRows[8] = branchAndVersion;
++      if (obs) infoRows[9] = obs;
++      infoRows[11] = <Text color={c("dim")} wrap="truncate-end">{t("welcome.quickstart")} · {t("welcome.hint")}</Text>;
++    }
++  }
+ 
+   return (
+-    <Box
+-      borderStyle="round"
+-      borderColor={c("jade")}
+-      width={columns}
+-      flexDirection="column"
+-      paddingX={2}
+-      paddingY={1}
+-    >
+-      {/* logo:宽屏太极居左、词标+落款居右(垂直居中);窄屏退化为上下堆叠 */}
+-      {sideBySide ? (
+-        <Box justifyContent="center" alignItems="center">
+-          <Box flexDirection="column" marginRight={5}>
+-            {taiji.map((line, i) => (
+-              <Text key={`t${i}`}>{line}</Text>
+-            ))}
++    <Box width={columns} flexDirection="column" alignItems="flex-start">
++      <Box borderStyle="round" borderColor={c("jade")} width={layout.cardWidth}
++        marginLeft={layout.cardLeft}
++        height={layout.sideBySide ? layout.cardHeight : undefined}
++        flexDirection="column" paddingX={2} paddingY={1}
++        backgroundColor={layout.sideBySide ? "#0a0f1c" : undefined}>
++        {layout.sideBySide ? (
++          <Box flexDirection="row" height={layout.imageRows}>
++            <Box width={layout.imageColumns} height={layout.imageRows} flexShrink={0} marginRight={5} />
++            <Box width={layout.cardWidth - 6 - layout.imageColumns - 5} flexDirection="column" height={layout.imageRows}>
++              {infoRows.map((row, i) => <Box key={i} height={1} flexShrink={0}>{row}</Box>)}
++            </Box>
+           </Box>
+-          <Box flexDirection="column" alignItems="center">
+-            {wm.map((line, i) => (
+-              <Text key={`w${i}`}>{line}</Text>
+-            ))}
+-            <Box marginTop={1}>{sealLine}</Box>
++        ) : (
++          <Box flexDirection="column">
++            {title}
++            {motto}
++            {!skipFooter && <Box marginTop={1} flexDirection="column">
++              {model}
++              {directory}
++              {branchAndVersion}
++              {obs}
++              <Box marginTop={1} flexDirection="column">
++                <Text color={c("dim")}>{t("welcome.quickstart")}</Text>
++                <Text color={c("dim")}>{t("welcome.hint")}</Text>
++              </Box>
++            </Box>}
+           </Box>
+-        </Box>
+-      ) : (
+-        <Box flexDirection="column" alignItems="center">
+-          {taiji.map((line, i) => (
+-            <Text key={`t${i}`}>{line}</Text>
+-          ))}
+-          {wm.map((line, i) => (
+-            <Text key={`w${i}`}>{line}</Text>
+-          ))}
+-          <Box marginTop={1}>{sealLine}</Box>
+-        </Box>
+-      )}
+-
+-      {/* 页脚两栏:左信息 / 右快速开始(窄屏堆叠) */}
+-      {!skipFooter && (
+-      <Box marginTop={1} flexDirection={narrow ? "column" : "row"}>
+-        <Box flexDirection="column" flexGrow={1}>
+-          <Text>
+-            <Text color={c("dim")}>{t("welcome.model")}</Text>
+-            <Text color={c("ink")}>
+-              {info.model} · {info.thinking} · {t("welcome.ctx")}
+-            </Text>
+-          </Text>
+-          <Text>
+-            <Text color={c("dim")}>{t("welcome.dir")}</Text>
+-            <Text color={c("ink")}>{shortenPath(info.cwd)}</Text>
+-            {info.branch ? <Text color={c("jade")}>{"  ⎇ "}{info.branch}</Text> : null}
+-          </Text>
+-          {info.obs ? (
+-            <Text>
+-              <Text color={c(info.obs.includes("降级") ? "vermilion" : "jade")}>{"◉ "}{info.obs}</Text>
+-            </Text>
+-          ) : null}
+-        </Box>
+-
+-        {!narrow && (
+-          <Box
+-            borderStyle="single"
+-            borderColor={c("dim")}
+-            borderTop={false}
+-            borderBottom={false}
+-            borderRight={false}
+-            marginX={2}
+-          />
+         )}
+-
+-        <Box flexDirection="column" flexGrow={1} marginTop={narrow ? 1 : 0}>
+-          <Text color={c("dim")}>{t("welcome.quickstart")}</Text>
+-          <Text color={c("dim")}>{t("welcome.hint")}</Text>
+-          <Text color={c("jade")}>{t("welcome.try")}{tip}</Text>
+-        </Box>
+       </Box>
+-      )}
+     </Box>
+   );
+ }
+diff --git a/src/tui/app/App.test.tsx b/src/tui/app/App.test.tsx
+index b8cb371..74add7c 100644
+--- a/src/tui/app/App.test.tsx
++++ b/src/tui/app/App.test.tsx
+@@ -1,6 +1,6 @@
+ import React from "react";
+-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+-import { cleanup, render } from "ink-testing-library";
++import { describe, it, expect, beforeEach, vi } from "vitest";
++import { render } from "ink-testing-library";
+ import { mkdtempSync, writeFileSync } from "node:fs";
+ import os from "node:os";
+ import path from "node:path";
+@@ -16,8 +16,6 @@ vi.mock("../../i18n/i18n.js", async (original) => ({
+ }));
+ 
+ const delay = (ms = 30) => new Promise((r) => setTimeout(r, ms));
+-// 每个用例卸载组件,避免状态栏计时器与输入监听跨用例累积。
+-afterEach(cleanup);
+ 
+ function makeDeps(over: Partial<AppDeps> = {}): AppDeps {
+   return {
+@@ -39,6 +37,246 @@ function makeDeps(over: Partial<AppDeps> = {}): AppDeps {
+   };
+ }
+ 
++function makeMotion() {
++  type Motion = NonNullable<AppDeps["welcomeMotion"]>;
++  return {
++    layout: { columns: 26, rows: 13 },
++    pause: vi.fn<Motion["pause"]>(),
++    setFocused: vi.fn<Motion["setFocused"]>(),
++    update: vi.fn<Motion["update"]>(),
++    reset: vi.fn<Motion["reset"]>(async () => ({ columns: 26, rows: 13 })),
++    dispose: vi.fn<Motion["dispose"]>(),
++  } satisfies Motion;
++}
++
++describe("welcome motion integration", () => {
++  beforeEach(() => setLang("zh"));
++  const snapshot = (motion: ReturnType<typeof makeMotion>) => motion.update.mock.calls.at(-1)?.[0];
++
++  it("pauses typed and pasted drafts, preserves focus combinations, and disposes on unmount", async () => {
++    const motion = makeMotion();
++    const submit = vi.fn<AppDeps["submit"]>(async () => {});
++    const ui = render(<App {...makeDeps({ welcomeMotion: motion, submit })} />);
++    try {
++      await vi.waitFor(() => expect(snapshot(motion)).toMatchObject({ home: true, inputEmpty: true, busy: false, enabled: true }));
++      motion.pause.mockClear();
++      ui.stdin.write("draft"); await delay();
++      expect(motion.pause).toHaveBeenCalled();
++      expect(snapshot(motion)).toMatchObject({ home: true, inputEmpty: false });
++      ui.stdin.write("\x1b[O"); await delay();
++      expect(motion.setFocused).toHaveBeenLastCalledWith(false);
++      ui.stdin.write("\x1b[I"); await delay();
++      expect(motion.setFocused).toHaveBeenLastCalledWith(true);
++      expect(snapshot(motion)).toMatchObject({ inputEmpty: false });
++      expect(ui.lastFrame()).toContain("draft");
++      expect(ui.lastFrame()).not.toContain("[I");
++      expect(ui.lastFrame()).not.toContain("[O");
++      ui.stdin.write("\x15"); await delay();
++      expect(snapshot(motion)).toMatchObject({ home: true, inputEmpty: true });
++      motion.pause.mockClear();
++      ui.stdin.write("\x1b[200~pasted draft\x1b[201~"); await delay();
++      expect(motion.pause).toHaveBeenCalled();
++      expect(snapshot(motion)).toMatchObject({ home: true, inputEmpty: false });
++      expect(ui.lastFrame()).toContain("pasted draft");
++      expect(submit).not.toHaveBeenCalled();
++      expect(snapshot(motion)?.dynamicRows).toBeGreaterThan(0);
++    } finally { ui.unmount(); }
++    expect(motion.dispose).toHaveBeenCalledTimes(1);
++  });
++
++  it("pauses the real App submit/tool path and remains paused on completed history", async () => {
++    const motion = makeMotion();
++    let finish!: () => void;
++    let events: Parameters<AppDeps["submit"]>[1]["events"] | undefined;
++    const submit = vi.fn<AppDeps["submit"]>(async (_text, hooks) => {
++      events = hooks.events;
++      expect(motion.pause).toHaveBeenCalled();
++      await new Promise<void>((resolve) => { finish = resolve; });
++    });
++    const ui = render(<App {...makeDeps({ welcomeMotion: motion, submit })} />);
++    try {
++      await delay(); ui.stdin.write("inspect code"); await delay(); ui.stdin.write("\r");
++      await vi.waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
++      await vi.waitFor(() => expect(snapshot(motion)).toMatchObject({ home: false, busy: true, inputEmpty: true }));
++      events!.toolStart({ index: 0, name: "Read" }); await delay();
++      expect(snapshot(motion)).toMatchObject({ home: false, busy: true });
++      events!.toolResult({ id: "read", type: "function", function: { name: "Read", arguments: '{"path":"sample.ts"}' } }, { role: "tool", tool_call_id: "read", content: "local test fixture" });
++      events!.assistantDone({ role: "assistant", content: "inspection done" });
++      finish();
++      await vi.waitFor(() => expect(snapshot(motion)).toMatchObject({ home: false, busy: false }));
++      expect(ui.lastFrame()).toContain("inspection done");
++      ui.stdin.write("\x1b[O"); await delay(); ui.stdin.write("\x1b[I"); await delay();
++      expect(snapshot(motion)).toMatchObject({ home: false, busy: false });
++    } finally { finish?.(); ui.unmount(); }
++  });
++
++  it("clear reanchors and permits only its confirmation notice on the homepage", async () => {
++    const motion = makeMotion();
++    const clearNotice = "清".repeat(51); // 102 columns -> two text rows plus margin in Ink's 100-column test stdout.
++    const ui = render(<App {...makeDeps({ welcomeMotion: motion, runCommand: line => line === "/clear" ? { handled: true, output: clearNotice } : { handled: true, output: "commands" } })} />);
++    const send = async (text: string) => { ui.stdin.write(text); await delay(); ui.stdin.write("\r"); await delay(); };
++    try {
++      await delay(); await send("hello");
++      expect(snapshot(motion)?.home).toBe(false);
++      await send("/clear");
++      await vi.waitFor(() => expect(motion.reset).toHaveBeenCalledTimes(1));
++      expect(snapshot(motion)).toMatchObject({ epoch: 1, home: true, inputEmpty: true, extraStaticRows: 3 });
++      expect(ui.lastFrame()).toContain("清".repeat(20));
++      await send("/help");
++      expect(snapshot(motion)?.home).toBe(false);
++    } finally { ui.unmount(); }
++  });
++
++  it("initial and selected restored sessions never become the idle homepage", async () => {
++    const restoredMotion = makeMotion();
++    const restored = render(<App {...makeDeps({ welcomeMotion: restoredMotion, initialItems: [{ id: 1, kind: "notice", text: "restored notice" }] })} />);
++    try { await delay(); expect(snapshot(restoredMotion)?.home).toBe(false); } finally { restored.unmount(); }
++    const motion = makeMotion();
++    const ui = render(<App {...makeDeps({
++      welcomeMotion: motion,
++      listResume: () => [{ id: "old", label: "previous" }],
++      runCommand: line => line === "/resume old" ? { handled: true, clearTranscript: true, resumeItems: [{ id: 2, kind: "notice", text: "old notice" }] } : { handled: true },
++    })} />);
++    try {
++      await delay(); ui.stdin.write("/resume"); await delay(); ui.stdin.write("\r"); await delay();
++      expect(snapshot(motion)).toMatchObject({ home: false, modalOpen: true });
++      ui.stdin.write("\r");
++      await vi.waitFor(() => expect(motion.reset).toHaveBeenCalledTimes(1));
++      await vi.waitFor(() => expect(snapshot(motion)).toMatchObject({ epoch: 1, home: false, modalOpen: false }));
++      expect(ui.lastFrame()).toContain("old notice");
++    } finally { ui.unmount(); }
++  });
++
++  it("gates background work, modal input, skipBanner and explicit transcript resets", async () => {
++    const motion = makeMotion();
++    let count = 1, notify: (() => void) | undefined;
++    const ui = render(<App {...makeDeps({
++      welcomeMotion: motion, runningTasks: () => count,
++      subscribeTasks: cb => { notify = cb; return () => { notify = undefined; }; },
++      listAccounts: () => [{ name: "default", active: true, detail: "local" }],
++      runCommand: () => ({ handled: true, clearTranscript: true, output: "reset done" }),
++    })} />);
++    try {
++      await vi.waitFor(() => expect(snapshot(motion)).toMatchObject({ home: true, backgroundRunning: true }));
++      count = 0; notify?.();
++      await vi.waitFor(() => expect(snapshot(motion)?.backgroundRunning).toBe(false));
++      ui.stdin.write("/account"); await delay(); ui.stdin.write("\r"); await delay();
++      expect(snapshot(motion)?.modalOpen).toBe(true);
++      ui.stdin.write("\x1b"); await delay();
++      expect(snapshot(motion)?.modalOpen).toBe(false);
++      ui.stdin.write("/rewind"); await delay(); ui.stdin.write("\r");
++      await vi.waitFor(() => expect(motion.reset).toHaveBeenCalledTimes(1));
++      expect(snapshot(motion)).toMatchObject({ epoch: 1, home: false });
++    } finally { ui.unmount(); }
++    expect(notify).toBeUndefined();
++    const skippedMotion = makeMotion();
++    const skipped = render(<App {...makeDeps({ welcomeMotion: skippedMotion, skipBanner: true })} />);
++    try { await delay(); expect(snapshot(skippedMotion)?.enabled).toBe(false); } finally { skipped.unmount(); }
++  });
++});
++
++describe("owned viewport rebuild", () => {
++  beforeEach(() => setLang("zh"));
++  const snapshot = (motion: ReturnType<typeof makeMotion>) => motion.update.mock.calls.at(-1)?.[0];
++
++  it("coalesces resize and preserves an idle draft and its cursor", async () => {
++    const motion = makeMotion();
++    const submit = vi.fn<AppDeps["submit"]>(async () => {});
++    const ui = render(<App {...makeDeps({ welcomeMotion: motion, ownedViewport: true, submit })} />);
++    try {
++      await delay(); ui.stdin.write("abcd"); await delay(); ui.stdin.write("\x1b[D"); await delay();
++      Object.defineProperty(ui.stdout, "columns", { value: 132, writable: true, configurable: true });
++      ui.stdout.emit("resize"); await delay(40);
++      ui.stdout.emit("resize"); await delay(40);
++      ui.stdout.emit("resize");
++      await vi.waitFor(() => expect(snapshot(motion)?.epoch).toBe(1));
++      expect(motion.reset).toHaveBeenCalledTimes(1);
++      expect(snapshot(motion)).toMatchObject({ home: true, inputEmpty: false, busy: false });
++      expect(ui.stdout.frames.some(frame => frame.includes("\x1b[2J\x1b[3J\x1b[H"))).toBe(true);
++      expect(submit).not.toHaveBeenCalled();
++      ui.stdin.write("X"); await delay(); ui.stdin.write("\r");
++      await vi.waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
++      expect(submit.mock.calls[0]?.[0]).toBe("abcXd");
++    } finally { ui.unmount(); }
++  });
++
++  it("replays history and live output without restarting or aborting the active task", async () => {
++    const motion = makeMotion();
++    let finish!: () => void;
++    let signal: AbortSignal | undefined;
++    let events: Parameters<AppDeps["submit"]>[1]["events"] | undefined;
++    const submit = vi.fn<AppDeps["submit"]>(async (text, hooks) => {
++      if (text === "first") { hooks.events.assistantDone({ role: "assistant", content: "completed history" }); return; }
++      signal = hooks.signal; events = hooks.events;
++      await new Promise<void>(resolve => { finish = resolve; });
++    });
++    const ui = render(<App {...makeDeps({ welcomeMotion: motion, ownedViewport: true, submit })} />);
++    try {
++      await delay(); ui.stdin.write("first"); await delay(); ui.stdin.write("\r");
++      await vi.waitFor(() => expect(ui.lastFrame()).toContain("completed history"));
++      ui.stdin.write("second"); await delay(); ui.stdin.write("\r");
++      await vi.waitFor(() => expect(submit).toHaveBeenCalledTimes(2));
++      events!.content("in-flight response");
++      ui.stdin.write("queued draft"); await delay();
++      Object.defineProperty(ui.stdout, "columns", { value: 132, writable: true, configurable: true });
++      ui.stdout.emit("resize");
++      await vi.waitFor(() => expect(snapshot(motion)?.epoch).toBe(1));
++      // Two user rows and the completed assistant row each occupy one text line
++      // plus margin. Live response/draft stay in the separately measured root.
++      expect(snapshot(motion)).toMatchObject({ home: false, busy: true, inputEmpty: false, extraStaticRows: 6 });
++      expect(submit).toHaveBeenCalledTimes(2);
++      expect(signal?.aborted).toBe(false);
++      expect(ui.lastFrame()).toContain("completed history");
++      expect(ui.lastFrame()).toContain("in-flight response");
++      expect(ui.lastFrame()).toContain("queued draft");
++    } finally { finish?.(); ui.unmount(); }
++  });
++
++  it("discards a late resize measurement after clear has rebuilt a newer view", async () => {
++    const motion = makeMotion();
++    let resolveOld!: (layout: { columns: number; rows: number }) => void;
++    motion.reset.mockReturnValueOnce(new Promise(resolve => { resolveOld = resolve; }))
++      .mockResolvedValueOnce({ columns: 32, rows: 16 });
++    const ui = render(<App {...makeDeps({
++      welcomeMotion: motion, ownedViewport: true,
++      runCommand: () => ({ handled: true, output: "clear complete" }),
++    })} />);
++    try {
++      await delay(); ui.stdout.emit("resize");
++      await vi.waitFor(() => expect(motion.reset).toHaveBeenCalledTimes(1));
++      ui.stdin.write("/clear"); await delay(); ui.stdin.write("\r");
++      await vi.waitFor(() => expect(motion.reset).toHaveBeenCalledTimes(2));
++      await vi.waitFor(() => expect(snapshot(motion)).toMatchObject({ epoch: 1, home: true }));
++      resolveOld({ columns: 10, rows: 10 }); await delay(250);
++      expect(snapshot(motion)).toMatchObject({ epoch: 1, home: true });
++      expect(ui.lastFrame()).toContain("clear complete");
++    } finally { resolveOld?.({ columns: 10, rows: 10 }); ui.unmount(); }
++  });
++
++  it("cancels an in-flight rebuild on unmount and does not clear shared-shell scrollback", async () => {
++    const motion = makeMotion();
++    let resolveReset!: (layout: { columns: number; rows: number }) => void;
++    motion.reset.mockReturnValueOnce(new Promise(resolve => { resolveReset = resolve; }));
++    const ui = render(<App {...makeDeps({ welcomeMotion: motion, ownedViewport: true })} />);
++    await delay(); ui.stdout.emit("resize");
++    await vi.waitFor(() => expect(motion.reset).toHaveBeenCalledTimes(1));
++    ui.unmount(); await delay();
++    const writesAtUnmount = ui.stdout.frames.length;
++    resolveReset({ columns: 26, rows: 13 }); await delay(250);
++    expect(ui.stdout.frames).toHaveLength(writesAtUnmount);
++
++    const sharedMotion = makeMotion();
++    const shared = render(<App {...makeDeps({ welcomeMotion: sharedMotion, ownedViewport: false })} />);
++    try {
++      await delay(); shared.stdout.emit("resize"); await delay(300);
++      expect(sharedMotion.pause).toHaveBeenCalled();
++      expect(sharedMotion.reset).not.toHaveBeenCalled();
++      expect(snapshot(sharedMotion)?.epoch).toBe(0);
++      expect(shared.stdout.frames.some(frame => frame.includes("\x1b[3J"))).toBe(false);
++    } finally { shared.unmount(); }
++  });
++});
++
+ describe("App", () => {
+   it("标签同步首条任务、手动命名、清空和恢复,后续消息不改任务名", async () => {
+     let manual: string | undefined;
+@@ -63,14 +301,14 @@ describe("App", () => {
+     };
+     try {
+       await delay();
+-      expect(tabAttention.setTitle).toHaveBeenLastCalledWith("z");
+-      await send("修复登录超时", "修复登录超时 · z");
+-      await send("再补一个测试", "修复登录超时 · z");
+-      await send("/clear", "z");
+-      await send("整理索引", "整理索引 · z");
+-      await send("/rename 数据库优化", "数据库优化 · z");
+-      await send("/clear", "数据库优化 · z");
+-      await send("/resume previous", "恢复的会话名 · z");
++      expect(tabAttention.setTitle).toHaveBeenLastCalledWith("若存 Code");
++      await send("修复登录超时", "修复登录超时 · 若存 Code");
++      await send("再补一个测试", "修复登录超时 · 若存 Code");
++      await send("/clear", "若存 Code");
++      await send("整理索引", "整理索引 · 若存 Code");
++      await send("/rename 数据库优化", "数据库优化 · 若存 Code");
++      await send("/clear", "数据库优化 · 若存 Code");
++      await send("/resume previous", "恢复的会话名 · 若存 Code");
+     } finally { ui.unmount(); }
+   });
+ 
+@@ -79,7 +317,7 @@ describe("App", () => {
+     const ui = render(<App {...makeDeps({ tabAttention, getTabName: () => "上次的任务" })} />);
+     try {
+       await delay();
+-      expect(tabAttention.setTitle).toHaveBeenLastCalledWith("上次的任务 · z");
++      expect(tabAttention.setTitle).toHaveBeenLastCalledWith("上次的任务 · 若存 Code");
+       expect(tabAttention.mark).not.toHaveBeenCalled();
+     } finally { ui.unmount(); }
+   });
+@@ -183,7 +421,7 @@ describe("App", () => {
+     setLang("zh");
+     const { lastFrame } = render(<App {...makeDeps()} />);
+     const f = lastFrame()!;
+-    expect(f).toContain("DAO CODE");
++    expect(f).toContain("若存 Code");
+     expect(f).toContain("deepseek-v4-pro");
+     expect(f).toContain("缓存命中 50%");
+   });
+@@ -207,7 +445,7 @@ describe("App", () => {
+ 
+   it("skips the welcome banner when skipBanner is set", () => {
+     const { lastFrame } = render(<App {...makeDeps({ skipBanner: true })} />);
+-    expect(lastFrame()).not.toContain("DAO CODE");
++    expect(lastFrame()).not.toContain("若存 Code");
+   });
+ 
+   it("输入消息回车 → 用户条目 + 助手回复进 transcript", async () => {
+@@ -1364,11 +1602,10 @@ describe("App", () => {
+     for (const ch of "/theme") stdin.write(ch);
+     await delay();
+     stdin.write("\r");
+-    await vi.waitFor(() => {
+-      const f = lastFrame()!;
+-      expect(f).toContain("Theme switched");
+-      expect(f).not.toContain("已切换主题");
+-    });
++    await delay();
++    const f = lastFrame()!;
++    expect(f).toContain("Theme switched");
++    expect(f).not.toContain("已切换主题");
+   });
+ 
+   it("i18n:权限模式提示 + 模式标签跟随 locale(Shift+Tab)", async () => {
+@@ -1430,7 +1667,7 @@ describe("App", () => {
+     const { lastFrame, stdin } = render(
+       <App {...makeDeps({
+         submit: async (t, { events }) => { submitted = t; events.assistantDone({ role: "assistant", content: "ok" }); },
+-        getStatus: () => ({ model: "glm-5.3-flash", mode: "normal", promptTokens: 12, completionTokens: 3, cacheHitRatio: 0.5, yolo: false, branch: "main", contextPct: 0.3, contextWindow: 1_000_000, contextUsed: 3000 }), // 支持图片输入的模型
++        getStatus: () => ({ model: "kimi-k2.6", mode: "normal", promptTokens: 12, completionTokens: 3, cacheHitRatio: 0.5, yolo: false, branch: "main", contextPct: 0.3, contextWindow: 1_000_000, contextUsed: 3000 }), // 支持图片输入的模型
+       })} />,
+     );
+     stdin.write(`\x1b[200~${imgPath}\x1b[201~`);
+diff --git a/src/tui/app/App.tsx b/src/tui/app/App.tsx
+index 8a012ec..1a15ca5 100644
+--- a/src/tui/app/App.tsx
++++ b/src/tui/app/App.tsx
+@@ -1,7 +1,7 @@
+-import React, { useEffect, useRef, useState } from "react";
++import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+ import { AgentTasksPanel } from "./AgentTasksPanel.js";
+ import { commandNeedsPause } from "../../commands/scheduling.js";
+-import { Box, Text, Static, useApp, useInput, usePaste, useStdout } from "ink";
++import { Box, Text, Static, useApp, useInput, usePaste, useStdout, measureElement, type DOMElement } from "ink";
+ import { highlight } from "cli-highlight";
+ import { promises as fs } from "node:fs";
+ import path from "node:path";
+@@ -17,7 +17,7 @@ import type { ApprovalDecision, ApprovalPrompt, ApprovalRequest } from "../../ap
+ import type { AppDeps, LiveState, StatusInfo, TranscriptItem } from "./types.js";
+ import type { Provider } from "../../config/profiles.js";
+ import type { ContentPart } from "../../client/types.js";
+-import { supportsVision, VISION_MODEL_IDS } from "../../config/profiles.js";
++import { supportsVision, VISION_MODELS } from "../../config/profiles.js";
+ import { getImageFromClipboard } from "../imagePaste.js";
+ import { classifyPath, isImagePath, detectImageFormat } from "../../tools/paths.js";
+ import { formatTabTitle } from "../tab_attention.js";
+@@ -167,8 +167,19 @@ function resultDetail(name: string, ok: boolean, content: string): string {
+ }
+ 
+ export function App(deps: AppDeps) {
+-  const { exit } = useApp();
++  const { exit, waitUntilRenderFlush } = useApp();
+   const { stdout } = useStdout();
++  const rootRef = useRef<DOMElement>(null);
++  const staticRowHeights = useRef(new Map<number, { epoch: number; columns: number; height: number }>());
++  const motion = deps.welcomeMotion;
++  const [mascotLayout, setMascotLayout] = useState(motion?.layout);
++  const viewportGeneration = useRef(0);
++  const viewportTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
++  const invalidateViewportRebuild = useCallback(() => {
++    viewportGeneration.current++;
++    if (viewportTimer.current) clearTimeout(viewportTimer.current);
++    viewportTimer.current = undefined;
++  }, []);
+   // 输入、命令、恢复会话与流式事件都会刷新界面;标题未变时 setTitle 不写终端。
+   useEffect(() => {
+     deps.tabAttention?.setTitle?.(formatTabTitle(deps.welcome.info.cwd, deps.getTabName?.()));
+@@ -184,16 +195,22 @@ export function App(deps: AppDeps) {
+   const [staticKey, setStaticKey] = useState(0);
+ 
+   const initial = deps.initialItems ?? [];
++  // 只有真正的空首页可以播放；恢复会话和普通命令结果都不冒充首页。
++  const [home, setHome] = useState(initial.length === 0);
+   const idRef = useRef(initial.reduce((m, it) => Math.max(m, it.id), 0) + 1);
+   const nextId = () => idRef.current++;
+   // token 数格式化:<1k 显示原数,1k+ 显示 k 单位(与 StatusBar 的 fmt 风格一致)。
+   const fmtTok = (n: number) => (n < 1000 ? String(n) : (n / 1000).toFixed(n < 10000 ? 1 : 0) + "k");
+-  // 欢迎屏延迟固化:会话开始前留在动态区(随终端 resize 重排),
+-  // 首个 transcript 项产生时才作为 items[0] 进 <Static>(恢复会话则直接固化)。
++  // Windows 的 inline 重绘会经过 ConPTY 再由终端前端解释；反复重发整幅欢迎屏
++  // 会留下已无法从后台 console 缓冲发现的残影。Windows 从首帧就固化欢迎屏，
++  // 后续输入/状态刷新只重绘小的动态区，仍保留终端原生滚动历史。
++  // 其它平台继续在首条消息前保留响应式动态欢迎屏。
++  const staticWelcome = !!motion || (deps.staticWelcome ?? process.platform === "win32");
++  const initialWelcomeCommitted = staticWelcome || initial.length > 0;
+   const [items, setItems] = useState<({ id: number; kind: "welcome" } | TranscriptItem)[]>(
+-    initial.length ? [{ id: 0, kind: "welcome" }, ...initial] : [],
++    initialWelcomeCommitted ? [{ id: 0, kind: "welcome" }, ...initial] : [],
+   );
+-  const welcomeCommitted = useRef(initial.length > 0);
++  const welcomeCommitted = useRef(initialWelcomeCommitted);
+   const [live, setLive] = useState<LiveState | null>(null);
+   // 输入框:text + 光标位置合成一个 state,用函数式更新(避免同步连打/批处理下读到旧闭包值而丢字符)。
+   const [field, setField] = useState<{ text: string; cursor: number }>({ text: "", cursor: 0 });
+@@ -330,7 +347,8 @@ export function App(deps: AppDeps) {
+   // 第二次才追加 user(index 1→2),每次只新增一个 item,<Static> 的增量渲染不会命中
+   // shouldClearTerminal,消除竞态。
+   const welcomeSplitDone = useRef(welcomeCommitted.current);
+-  const pushItem = (it: TranscriptItem) => {
++  const pushItem = (it: TranscriptItem, keepHome = false) => {
++    if (!keepHome) { motion?.pause(); setHome(false); }
+     if (welcomeCommitted.current || welcomeSplitDone.current) {
+       setItems((p) => [...p, it]);
+       return;
+@@ -465,6 +483,7 @@ export function App(deps: AppDeps) {
+   async function onSubmit(raw: string) {
+     const text = raw.trim(); // 展示用(可能含 [粘贴#N] 占位)
+     const full = expandPastes(text); // 喂模型/命令用(占位展开:文本 → string,图片 → ContentPart[])
++    if (text) { motion?.pause(); setHome(false); }
+     setField({ text: "", cursor: 0 });
+     if (!text) return;
+     lastSubmitRef.current = text; // 记下本次提交,供 ESC 中断后回填(只记用户提交,不含后台通知)
+@@ -477,12 +496,13 @@ export function App(deps: AppDeps) {
+     // 内容直接落到下面当普通文本发送,让模型看到原文自己判断,而不是被命令分发拦在半路报错。
+     const looksLikeSlashCommand = /^\/[^\s/]+(\s|$)/.test(text);
+     if (typeof full === "string" && looksLikeSlashCommand) {
++      const name = text.slice(1).split(/\s+/)[0];
++      if (name === "clear" || name === "resume" || name === "rewind") invalidateViewportRebuild();
+       // Only commands that may mutate execution/history need to stop the turn.
+       if (commandNeedsPause(full)) {
+         deps.scheduler?.pause();
+         await deps.scheduler?.settled();
+       }
+-      const name = text.slice(1).split(/\s+/)[0];
+       if (name === "theme") {
+         const next = bg === "dark" ? "light" : "dark";
+         setBg(next);
+@@ -577,11 +597,15 @@ export function App(deps: AppDeps) {
+         // /clear /rewind /resume:重置可视 transcript。
+         // 递增 staticKey 强制 <Static> 重挂载(清 fullStaticOutput + 重置内部 index),
+         // 并写清屏转义序列擦掉终端上已输出的物理字符,否则旧内容残留在屏幕上。
++        invalidateViewportRebuild();
++        motion?.pause();
++        if (motion) setMascotLayout(await motion.reset());
+         setItems(welcomeCommitted.current ? [{ id: 0, kind: "welcome" }] : []);
+         setStaticKey((k) => k + 1);
++        setHome(name === "clear");
+         stdout?.write("\x1b[2J\x1b[3J\x1b[H");
+       }
+-      if (res.output) pushItem({ id: nextId(), kind: "notice", text: res.output });
++      if (res.output) pushItem({ id: nextId(), kind: "notice", text: res.output }, name === "clear");
+       // 自定义命令:展开成 prompt → 当作一个回合跑。
+       if (res.prompt) {
+         pushItem({ id: nextId(), kind: "user", text: pastePreview(text) });
+@@ -598,7 +622,7 @@ export function App(deps: AppDeps) {
+       if (imagePaths.length > 0) {
+         const currentModel = deps.getStatus().model;
+         if (!supportsVision(currentModel)) {
+-          pushItem({ id: nextId(), kind: "notice", text: `⚠ 当前模型 ${currentModel} 不支持图片输入,图片已忽略。可用: ${VISION_MODEL_IDS.join(", ")}` });
++          pushItem({ id: nextId(), kind: "notice", text: `⚠ 当前模型 ${currentModel} 不支持图片输入,图片已忽略。可用: ${[...VISION_MODELS].join(", ")}` });
+           await runAgentTurn(full);
+           return;
+         }
+@@ -625,7 +649,7 @@ export function App(deps: AppDeps) {
+       const currentModel = deps.getStatus().model;
+       if (!supportsVision(currentModel)) {
+         const textOnly = full.filter(p => p.type === "text").map(p => (p as { text: string }).text).join(" ").trim();
+-        pushItem({ id: nextId(), kind: "notice", text: `⚠ 当前模型 ${currentModel} 不支持图片输入,图片已忽略。可用支持图片的模型: ${VISION_MODEL_IDS.join(", ")}` });
++        pushItem({ id: nextId(), kind: "notice", text: `⚠ 当前模型 ${currentModel} 不支持图片输入,图片已忽略。可用支持图片的模型: ${[...VISION_MODELS].join(", ")}` });
+         await runAgentTurn(textOnly || "[图片已忽略]");
+         return;
+       }
+@@ -635,6 +659,7 @@ export function App(deps: AppDeps) {
+ 
+   // 跑一个回合(用户输入 / 后台任务通知共用):管理 busy/live/中断/出错。
+   async function runAgentTurn(text: string | ContentPart[]) {
++    motion?.pause(); setHome(false);
+     deps.tabAttention?.clear();
+     if (deps.scheduler) { deps.scheduler.submit(text); await deps.scheduler.settled(); return; }
+     setBusy(true);
+@@ -737,10 +762,14 @@ export function App(deps: AppDeps) {
+ 
+   // 选中会话 → 委派 /resume <id>(载入逻辑在 index),并应用其结果(重置 transcript + 提示)。
+   const loadResume = async (id: string) => {
++    invalidateViewportRebuild();
++    motion?.pause(); setHome(false);
+     try {
+     deps.scheduler?.pause(); await deps.scheduler?.settled();
+     const res = await deps.runCommand("/resume " + id);
+     if (res.clearTranscript) {
++      invalidateViewportRebuild();
++      if (motion) setMascotLayout(await motion.reset());
+       setItems(welcomeCommitted.current ? [{ id: 0, kind: "welcome" }] : []);
+       setStaticKey((k) => k + 1);
+       stdout?.write("\x1b[2J\x1b[3J\x1b[H");
+@@ -839,8 +868,9 @@ export function App(deps: AppDeps) {
+ 
+   useInput((ch, key) => {
+     // Ink 会去掉焦点序列的 ESC 前缀。先消费,防止 [I/[O 混进输入或触发模态操作。
+-    if (ch === "[I") { deps.tabAttention?.clear(); return; }
+-    if (ch === "[O") return;
++    if (ch === "[I") { motion?.setFocused(true); deps.tabAttention?.clear(); return; }
++    if (ch === "[O") { motion?.setFocused(false); return; }
++    motion?.pause();
+     deps.tabAttention?.clear(); // 不支持焦点事件的终端,首次按键也能清除。
+     if (accountPick) {
+       const accts = accountPick.items, nA = accts.length;
+@@ -1264,6 +1294,7 @@ export function App(deps: AppDeps) {
+ 
+   // 粘贴:bracketed paste 下整段作一个字符串进来(不经 useInput),原样追加进输入框、不自动提交。
+   usePaste((text) => {
++    motion?.pause();
+     deps.tabAttention?.clear();
+     if (approval) return;
+     if (choice) { if (choiceIdx === choice.options.length + (choice.multi ? 1 : 0)) setAskInput((s) => s + text); return; } // 焦点在"自己输入"行才接受粘贴
+@@ -1346,18 +1377,85 @@ export function App(deps: AppDeps) {
+       process.stderr.write(`[tui] Static render: items.length=${items.length} kinds=[${kinds}] busy=${busy} live=${!!live}\n`);
+     }
+   }
++  useEffect(() => {
++    let disposed = false;
++    const onResize = () => {
++      motion?.pause();
++      if (!deps.ownedViewport || !stdout) return;
++      invalidateViewportRebuild();
++      const ticket = viewportGeneration.current;
++      viewportTimer.current = setTimeout(() => {
++        viewportTimer.current = undefined;
++        void (async () => {
++          try {
++            const layout = await motion?.reset();
++            if (disposed || ticket !== viewportGeneration.current) return;
++            await waitUntilRenderFlush();
++            if (disposed || ticket !== viewportGeneration.current) return;
++            // Only the launcher's dedicated viewport is ours to clear. Logical
++            // transcript, draft/cursor, live events and tasks remain untouched.
++            // Replay Static once at the new width instead of reusing old wraps.
++            stdout.write("\x1b[0m\x1b[2J\x1b[3J\x1b[H");
++            if (motion) setMascotLayout(layout);
++            setStaticKey((key) => key + 1);
++          } catch {
++            // A display probe must never abort work or append a transcript item.
++            motion?.pause();
++          }
++        })();
++      }, 200);
++    };
++    stdout?.on("resize", onResize);
++    return () => {
++      disposed = true;
++      invalidateViewportRebuild();
++      stdout?.off("resize", onResize);
++    };
++  }, [deps.ownedViewport, motion, stdout, waitUntilRenderFlush, invalidateViewportRebuild]);
++  useEffect(() => () => motion?.dispose(), [motion]);
++  // Static 是绝对定位，根盒高度只包含 Ink 的动态区。每次 commit 后重新测量，
++  // 不通过 setState 刷新，以免动画计时器触发整个欢迎屏重画。
++  useEffect(() => {
++    if (!motion) return;
++    const columns = Math.max(1, stdout?.columns ?? deps.welcome.caps.columns);
++    const ids = new Set(items.map(item => item.id));
++    for (const id of staticRowHeights.current.keys()) if (!ids.has(id)) staticRowHeights.current.delete(id);
++    let extraStaticRows = 0, measuredAll = true;
++    for (const item of items) {
++      if (item.kind === "welcome") continue;
++      const measured = staticRowHeights.current.get(item.id);
++      if (!measured || measured.epoch !== staticKey || measured.columns !== columns || measured.height < 1) {
++        measuredAll = false;
++        break;
++      }
++      extraStaticRows += measured.height;
++    }
++    // Unknown geometry must suppress a guessed image anchor. Remounting Static
++    // at the new viewport epoch measures every replayed row before this effect.
++    if (!measuredAll) extraStaticRows = Math.max(1, stdout?.rows ?? 24);
++    motion.update({
++      epoch: staticKey, home, inputEmpty: input.length === 0, busy,
++      modalOpen: !!(approval || ask || choice || resumePick || accountPick || skillPick || modelPick || jumpPick || reviewMode || providerPick || gwModelPick || agentTasksOpen || exitArmed),
++      backgroundRunning: bgRunning > 0 || bgShells > 0 || (schedulerStatus?.runningTasks ?? 0) > 0 || schedulerStatus?.state === "waiting" || queued.length > 0,
++      enabled: !deps.skipBanner && bg === "dark" && !!mascotLayout,
++      dynamicRows: rootRef.current ? measureElement(rootRef.current).height : 0,
++      extraStaticRows,
++    });
++  });
+   return (
+-    <Box flexDirection="column">
+-      {/* 会话开始前:欢迎屏在动态区,随终端 resize 实时重排(useTermWidth 订阅)。 */}
++    <Box ref={rootRef} flexDirection="column">
++      {/* 非静态欢迎模式下,首条消息前随终端 resize 实时重排。 */}
+       {items.length === 0 && !deps.skipBanner && !agentTasksOpen ? (
+-        <Welcome info={deps.welcome.info} caps={deps.welcome.caps} bg={bg} maxim={deps.welcome.maxim} />
++        <Welcome info={deps.welcome.info} caps={deps.welcome.caps} bg={bg} maxim={deps.welcome.maxim} mascot={mascotLayout} />
+       ) : null}
+       <Static key={staticKey} items={items}>
+         {(item, index) =>
+           item.kind === "welcome" ? (
+-            deps.skipBanner ? null : <Welcome key={item.id} info={deps.welcome.info} caps={deps.welcome.caps} bg={bg} maxim={deps.welcome.maxim} />
++            deps.skipBanner ? null : <Welcome key={item.id} info={deps.welcome.info} caps={deps.welcome.caps} bg={bg} maxim={deps.welcome.maxim} mascot={mascotLayout} />
+           ) : (
+-            <Row key={item.id} item={item} c={c} expanded={expanded} />
++            <MeasuredStaticRow key={item.id} item={item} c={c} expanded={expanded}
++              epoch={staticKey} columns={Math.max(1, stdout?.columns ?? deps.welcome.caps.columns)}
++              record={(id, measurement) => staticRowHeights.current.set(id, measurement)} />
+           )
+         }
+       </Static>
+@@ -1703,6 +1801,23 @@ export function App(deps: AppDeps) {
+ }
+ 
+ // ctrl+o 开启时,取最近一条"可展开项"的完整内容(已打印的无法原地改,故追加显示)。
++function MeasuredStaticRow({ item, c, expanded, epoch, columns, record }: {
++  item: TranscriptItem;
++  c: (s: Parameters<typeof semHex>[0]) => string;
++  expanded: boolean;
++  epoch: number;
++  columns: number;
++  record: (id: number, measurement: { epoch: number; columns: number; height: number }) => void;
++}) {
++  const ref = useRef<DOMElement>(null);
++  // Child layout effects run while the freshly printed Static row still owns
++  // its Yoga box. The parent Static effect then advances its incremental index.
++  useLayoutEffect(() => {
++    if (ref.current) record(item.id, { epoch, columns, height: measureElement(ref.current).height });
++  });
++  return <Box ref={ref} flexDirection="column" width="100%"><Row item={item} c={c} expanded={expanded} /></Box>;
++}
++
+ function lastExpandableFull(items: ({ id: number; kind: "welcome" } | TranscriptItem)[]): string | null {
+   for (let i = items.length - 1; i >= 0; i--) {
+     const it = items[i]!;
+diff --git a/src/tui/app/run.tsx b/src/tui/app/run.tsx
+index 2d0c7f6..a86221c 100644
+--- a/src/tui/app/run.tsx
++++ b/src/tui/app/run.tsx
+@@ -3,6 +3,9 @@ import { render } from "ink";
+ import { App } from "./App.js";
+ import type { AppDeps } from "./types.js";
+ import { createTabAttention, formatTabTitle } from "../tab_attention.js";
++import { createTerminalReports } from "../terminal_reports.js";
++import { createWelcomeMotion, type WelcomeMotion } from "../mascot.js";
++import { writeFileSync } from "node:fs";
+ 
+ // 启动 Ink 交互应用,等待退出(q / Ctrl-C)。inline 模式(保留终端原生滚动/选择)。
+ // 强制 interactive=true:已确认是 TTY,绕过 Ink 对 CI 的误判(否则不挂键盘→无 keep-alive→闪退)。
+@@ -10,14 +13,48 @@ import { createTabAttention, formatTabTitle } from "../tab_attention.js";
+ // process.exit,跟 App.tsx 里"连按两次才退出"的自定义逻辑是两套独立机制——不关掉的话,
+ // Ink 内置那套会在第一次按下时就抢先退出,自定义的二次确认形同虚设(真实撞见过)。
+ export async function runInkApp(deps: AppDeps): Promise<void> {
++  // Opt-in local display diagnostics; only booleans/counts/geometry, never input,
++  // messages, credentials or provider request contents.
++  const diagnosticPath = process.env.DAO_MASCOT_DIAGNOSTICS;
++  const diagnostic = (value: unknown) => {
++    if (diagnosticPath) { try { writeFileSync(diagnosticPath, JSON.stringify(value, null, 2)); } catch {} }
++  };
+   const attention = createTabAttention(formatTabTitle(deps.welcome.info.cwd, deps.getTabName?.()));
+-  const cleanup = () => attention.dispose();
++  let motion: WelcomeMotion | undefined;
++  let focused = true;
++  const graphics = deps.welcome.bg === "dark" && deps.welcome.caps.tier === "truecolor"
++    && process.stdin.isTTY && process.stdout.isTTY && !deps.skipBanner
++    && process.env.INK_SCREEN_READER !== "true";
++  diagnostic({ stage: "graphics-check", graphics, dark: deps.welcome.bg === "dark",
++    tier: deps.welcome.caps.tier, skipBanner: !!deps.skipBanner });
++  const reports = graphics ? createTerminalReports(process.stdin, process.stdout, {
++    onUserInput: () => motion?.pause(),
++    onFocus: value => { focused = value; motion?.setFocused(value); },
++  }) : undefined;
++  let app: ReturnType<typeof render> | undefined;
++  const cleanup = () => { motion?.dispose(); attention.dispose(); reports?.dispose(); };
+   process.once("exit", cleanup); // 外部 SIGTERM/异常退出也恢复终端模式。
+   try {
+-    const app = render(<App {...deps} tabAttention={attention} />, { interactive: true, exitOnCtrlC: false } as unknown as Parameters<typeof render>[1]);
++    if (reports) {
++      const cell = await reports.probe();
++      diagnostic({ stage: "probe", cell: cell ?? null });
++      motion = createWelcomeMotion({ reports, stdout: process.stdout, cell,
++        waitUntilRenderFlush: async () => { await app?.waitUntilRenderFlush(); },
++        observe: snapshot => diagnostic({ stage: "motion", ...snapshot }),
++      });
++      motion.setFocused(focused);
++    }
++    app = render(<App {...deps} ownedViewport={deps.ownedViewport ?? (process.env.DAO_OWNED_TERMINAL === "1")}
++      welcomeMotion={motion ?? deps.welcomeMotion} tabAttention={attention} />,
++      { interactive: true, exitOnCtrlC: false, ...(reports ? { stdin: reports.input } : {}) } as unknown as Parameters<typeof render>[1]);
+     await app.waitUntilExit();
+   } finally {
+     process.removeListener("exit", cleanup);
+-    attention.dispose();
++    cleanup();
++    // Flush a possible final in-flight image/cursor-restore before returning to
++    // the caller, which may immediately terminate the process.
++    if (!process.stdout.destroyed && !process.stdout.writableEnded) {
++      await new Promise<void>(resolve => process.stdout.write("", () => resolve()));
++    }
+   }
+ }
+diff --git a/src/tui/app/types.ts b/src/tui/app/types.ts
+index 6384355..7105211 100644
+--- a/src/tui/app/types.ts
++++ b/src/tui/app/types.ts
+@@ -7,6 +7,7 @@ import type { ApprovalPrompt } from "../../approval/types.js";
+ import type { Provider } from "../../config/profiles.js";
+ import type { ContentPart } from "../../client/types.js";
+ import type { TabAttention } from "../tab_attention.js";
++import type { WelcomeMotion } from "../mascot.js";
+ 
+ // transcript 里一条已完成的条目(进 <Static>,终端原生滚动)。
+ export type TranscriptItem =
+@@ -54,6 +55,14 @@ export interface AppDeps {
+   welcome: { info: WelcomeInfo; caps: Capabilities; bg: Background; maxim: Maxim };
+   // 首启 onboarding 已自行展示过 banner;真→App 不再渲染 <Welcome>(避免重复)。
+   skipBanner?: boolean;
++  // 欢迎横幅从首帧进入 Static，避免 Windows ConPTY 反复重绘大横幅留下残影。
++  // 默认 Windows 开启；其它平台保留首条消息前随窗口重排的动态欢迎屏。
++  staticWelcome?: boolean;
++  // 欢迎角色的展示控制器；不接触模型、工具、会话或输入缓冲。
++  welcomeMotion?: WelcomeMotion;
++  // 启动器创建的专用窗口：尺寸变化可清显示缓存并重放当前视图。
++  // 共享 shell 默认关闭，避免清除应用外的终端历史。
++  ownedViewport?: boolean;
+   // 跑一个用户回合:由 index 绑定真实 session/registry/gate;App 提供 events(喂 state)与 signal(ESC 取消)。
+   submit: (text: string | ContentPart[], hooks: { events: TurnEvents; signal: AbortSignal }) => Promise<void>;
+   // 斜杠命令(/model /plan /clear /compact /help /exit;以及自定义命令展开成 prompt)。
+diff --git a/src/tui/onboarding/Onboarding.test.tsx b/src/tui/onboarding/Onboarding.test.tsx
+index e9ef98e..f784a02 100644
+--- a/src/tui/onboarding/Onboarding.test.tsx
++++ b/src/tui/onboarding/Onboarding.test.tsx
+@@ -31,7 +31,7 @@ describe("Onboarding state machine", () => {
+   it("runs lang→provider→key→trust and finishes with the result", async () => {
+     const onFinish = vi.fn(); const d = deps();
+     const { stdin, lastFrame } = render(<Onboarding {...d} onFinish={onFinish} />);
+-    expect(lastFrame()).toContain("DAO CODE");         // banner 在
++    expect(lastFrame()).toContain("若存 Code");        // banner 在
+     expect(lastFrame()).not.toContain("快速开始");      // 页脚不显
+     stdin.write(ENTER); await delay();                  // 语言=English(默认)
+     stdin.write(ENTER); await delay();                  // provider=deepseek(默认)
+diff --git a/src/tui/tab_attention.test.ts b/src/tui/tab_attention.test.ts
+index ab5c19b..34889bf 100644
+--- a/src/tui/tab_attention.test.ts
++++ b/src/tui/tab_attention.test.ts
+@@ -53,12 +53,13 @@ describe("标签页提示", () => {
+     expect(write).not.toHaveBeenCalled();
+   });
+ 
+-  it("任务在前目录在后,空标题回退目录,超长标题按完整字符截断且压成一行", () => {
+-    expect(formatTabTitle("/a/dao-code")).toBe("dao-code");
+-    expect(formatTabTitle("/a/dao-code", "修复登录超时")).toBe("修复登录超时 · dao-code");
+-    expect(formatTabTitle("/a/dao-code", " \n ")).toBe("dao-code");
+-    expect(formatTabTitle("/a/dao-code", "dao-code")).toBe("dao-code");
+-    expect(formatTabTitle("/a/dao-code", "修复\n\t登录\x1b\x07")).toBe("修复 登录 · dao-code");
+-    expect(formatTabTitle("/a/dao-code", "🟢".repeat(25))).toBe("🟢".repeat(24) + "… · dao-code");
++  it("任务在前品牌在后,空标题回退品牌,超长标题按完整字符截断且压成一行", () => {
++    expect(formatTabTitle("/a/dao-code")).toBe("若存 Code");
++    expect(formatTabTitle("/a/dao-code", "修复登录超时")).toBe("修复登录超时 · 若存 Code");
++    expect(formatTabTitle("/a/dao-code", " \n ")).toBe("若存 Code");
++    expect(formatTabTitle("/a/dao-code", "若存 Code")).toBe("若存 Code");
++    expect(formatTabTitle("/a/dao-code", "dao-code")).toBe("dao-code · 若存 Code");
++    expect(formatTabTitle("/a/dao-code", "修复\n\t登录\x1b\x07")).toBe("修复 登录 · 若存 Code");
++    expect(formatTabTitle("/a/dao-code", "🟢".repeat(25))).toBe("🟢".repeat(24) + "… · 若存 Code");
+   });
+ });
+diff --git a/src/tui/tab_attention.ts b/src/tui/tab_attention.ts
+index e4e98bc..f137b0f 100644
+--- a/src/tui/tab_attention.ts
++++ b/src/tui/tab_attention.ts
+@@ -1,4 +1,4 @@
+-import path from "node:path";
++import { DISPLAY_NAME } from "./brand.js";
+ 
+ export type TabAttentionKind = "attention" | "completed";
+ 
+@@ -15,11 +15,10 @@ const shorten = (title: string) => {
+   return chars.length > 24 ? chars.slice(0, 24).join("") + "…" : chars.join("");
+ };
+ 
+-// 任务名在前,目录在后;标题栏很窄时也能先看到任务。命名来源由会话层决定。
+-export function formatTabTitle(cwd: string, name?: string): string {
+-  const project = shorten(path.basename(cwd)) || "dao";
++// 任务名在前、展示品牌在后；真实目录继续在欢迎页显示。
++export function formatTabTitle(_cwd: string, name?: string): string {
+   const task = shorten(name ?? "");
+-  return task && task !== project ? `${task} · ${project}` : project;
++  return task && task !== DISPLAY_NAME ? `${task} · ${DISPLAY_NAME}` : DISPLAY_NAME;
+ }
+ 
+ // 只改标题,不发响铃或桌面通知。OSC 的结束符也用 ST,避免混入 BEL。
+@@ -31,7 +30,7 @@ export function createTabAttention(
+ ): TabAttention {
+   const enabled = stdout.isTTY === true && env.TERM !== "dumb";
+   // 工作目录可以含控制字符,不能让目录名注入额外的终端指令。
+-  let base = cleanTitle(title) || "dao";
++  let base = cleanTitle(title) || DISPLAY_NAME;
+   let marked: TabAttentionKind | undefined;
+   let disposed = false;
+   const write = (value: string) => { if (enabled) stdout.write(value); };
+@@ -53,7 +52,7 @@ export function createTabAttention(
+       renderTitle();
+     },
+     setTitle(title) {
+-      const next = cleanTitle(title) || "dao";
++      const next = cleanTitle(title) || DISPLAY_NAME;
+       if (disposed || next === base) return;
+       base = next;
+       renderTitle();

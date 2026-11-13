@@ -1,0 +1,14 @@
+{
+  "description": "维护供后续会话使用的记忆。用 text 保存有长期价值的事实，可选 title、分类、重要性、置信度、来源与范围。用相同名称更新记录。delete=true 会查找并删除匹配的可写记忆；被锁定或只读的记录会保留。勿保存密钥等凭据。",
+  "descriptionEn": "Maintain facts for later conversations. Supply text, with optional title, type, importance, confidence, source, or scope. Reuse a record name to update it. With delete=true, matching writable entries can be removed across scopes. Locked and read-only entries are retained. Keep credentials out of memory.",
+  "parameters": {
+    "text": "一条能被后续会话理解的事实；反馈可附适用场景和缘由。删除时可省。",
+    "title": "单行名称，用于定位同一条记忆。可从 text 自动生成。",
+    "type": "记忆的分类，默认 semantic；user 记用户事实，feedback 记工作反馈。",
+    "importance": "重要程度，1 至 10；默认 5。",
+    "confidence": "记录的可信度，取 0 至 1。",
+    "source": "可核对的文件路径，也可在后面加 #符号。",
+    "scope": "省略时按类型决定：procedural 用 knowledge，user 和 feedback 用 user，其他用 project。",
+    "delete": "设为 true 按 title 或 text 查找并删除匹配的可写记录。"
+  }
+}

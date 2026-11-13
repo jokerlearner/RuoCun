@@ -1,0 +1,11 @@
+{
+  "kind": "implementation-records-only",
+  "result": "pass",
+  "task_files": 85,
+  "new_implementation_tasks": 84,
+  "links_checked": 1207,
+  "case_families": 215,
+  "non_test_source_members_referenced": 234,
+  "missing_links": [],
+  "product_tests_executed": false
+}

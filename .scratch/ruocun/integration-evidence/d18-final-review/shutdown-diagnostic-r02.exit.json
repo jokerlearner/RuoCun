@@ -1,0 +1,32 @@
+{
+  "command": [
+    "D:\\r18f-162726\\v\\Scripts\\python.exe",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18f\\.scratch\\ruocun\\integration-evidence\\d18-final-review\\shutdown_probe.py",
+    "shutdown",
+    "shutdown-diagnostic-r02"
+  ],
+  "returncode": 0,
+  "started_utc": "2026-11-05T08:32:38.164429+00:00",
+  "environment_keys": [
+    "APPDATA",
+    "COMSPEC",
+    "LOCALAPPDATA",
+    "PATH",
+    "PATHEXT",
+    "PROGRAMDATA",
+    "PROGRAMFILES",
+    "PROGRAMFILES(X86)",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONUTF8",
+    "SYSTEMDRIVE",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR"
+  ],
+  "sensitive_scan": {
+    "known_environment_credential_present": false,
+    "token_shape_present": false
+  }
+}

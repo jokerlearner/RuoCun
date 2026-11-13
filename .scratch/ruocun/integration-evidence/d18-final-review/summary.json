@@ -1,0 +1,150 @@
+{
+  "merge": "069def00672567e1ad7e0c6fdbd6ba3adbb13911",
+  "candidate": "73e63d387654316ee2a415d7e47547725caf40d9",
+  "pytest": "16 passed in 9.11s",
+  "archive_files": 226,
+  "new_workers_with_bound_exit_receipts": 25,
+  "original_files": 874,
+  "original_rounds": 19,
+  "first_review_files": 134,
+  "first_review_workers": 11,
+  "pending_archive_workers": 108,
+  "unconfirmed_cases": {
+    "cancel-fail": {
+      "injections": [
+        {
+          "api": "CancelIoEx",
+          "return": false,
+          "winerror": 5,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "cancel-budget": {
+      "injections": [
+        {
+          "api": "CancelIoEx",
+          "return": false,
+          "winerror": 1168,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "wait-fail": {
+      "injections": [
+        {
+          "api": "WaitForSingleObject",
+          "return": 4294967295,
+          "winerror": 6,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "wait-raise": {
+      "injections": [
+        {
+          "api": "WaitForSingleObject",
+          "return": 4294967295,
+          "winerror": 6,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "result-incomplete": {
+      "injections": [
+        {
+          "api": "WaitForSingleObject",
+          "return": 0,
+          "winerror": 6,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "result-error": {
+      "injections": [
+        {
+          "api": "WaitForSingleObject",
+          "return": 0,
+          "winerror": 6,
+          "native_called": false,
+          "boundary_injection": true
+        },
+        {
+          "api": "GetOverlappedResult",
+          "return": false,
+          "winerror": 6,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "read-cancel-fail": {
+      "injections": [
+        {
+          "api": "CancelIoEx",
+          "return": false,
+          "winerror": 5,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    },
+    "write-cancel-fail": {
+      "injections": [
+        {
+          "api": "CancelIoEx",
+          "return": false,
+          "winerror": 5,
+          "native_called": false,
+          "boundary_injection": true
+        }
+      ],
+      "native_still_pending": true,
+      "application_owner_retained": true,
+      "native_exit": 96,
+      "pipe_absent": true
+    }
+  },
+  "real_os_completions": [
+    995,
+    109
+  ],
+  "diagnostic_exception_reaches_python_shutdown_with_pending_io": true,
+  "diagnostic_injection_kept_safe_by_review_atexit_native_termination": true,
+  "submission_exception_attempts_early_event_close_and_has_no_application_owner": true,
+  "sensitive_value_or_shape_present": false,
+  "acceptance": "not-accepted; submission ownership gap and harness worker lacks final fail-stop"
+}

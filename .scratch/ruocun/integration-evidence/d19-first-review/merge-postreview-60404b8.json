@@ -1,0 +1,101 @@
+{
+  "merge_sha": "60404b808ecbec4d90ee7f7964732cceb0f58f0b",
+  "pytest_result": "2 passed in 11.38s",
+  "summary": {
+    "cases": 12,
+    "passed": 12,
+    "cleanup_passed": true,
+    "supervisor_job_active_processes": 0,
+    "owned_processes": 34,
+    "cold_recovery_processes": 21,
+    "runtime_manifests_verified": 35,
+    "frozen_harness_unchanged": true
+  },
+  "all_35_runtime_identities_no_longer_alive": true,
+  "recovery_identity_receipts_verified": 21,
+  "original_hashes_after": {
+    "probe.py": "4e8685adfba0a5eff99eced8e776d0e9da1bfe44a674142e0484db9b81b1b3df",
+    "run_probe.py": "b1a4fae90d6fbebcf965aa71d3a9e801a323ab498e36922110caa6ac65650cda"
+  },
+  "original_1029_raw_files_still_match": true,
+  "fresh_default_runtime": "3.45.1",
+  "working_tree_clean": true,
+  "kill_handle_vs_runtime_identity": [
+    {
+      "case": "sqlite-before_intent_commit",
+      "owned_handle_pid": 38584,
+      "runtime_worker_identity": {
+        "pid": 41380,
+        "start": "134383336904987350"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-after_intent_commit",
+      "owned_handle_pid": 9852,
+      "runtime_worker_identity": {
+        "pid": 33588,
+        "start": "134383336917305445"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-after_effect",
+      "owned_handle_pid": 36856,
+      "runtime_worker_identity": {
+        "pid": 39516,
+        "start": "134383336929209556"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-before_result_commit",
+      "owned_handle_pid": 23532,
+      "runtime_worker_identity": {
+        "pid": 30200,
+        "start": "134383336940365429"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-after_result_commit",
+      "owned_handle_pid": 21576,
+      "runtime_worker_identity": {
+        "pid": 39692,
+        "start": "134383336951598964"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-checkpoint_before_commit",
+      "owned_handle_pid": 43472,
+      "runtime_worker_identity": {
+        "pid": 18032,
+        "start": "134383336963002600"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-checkpoint_after_commit",
+      "owned_handle_pid": 42900,
+      "runtime_worker_identity": {
+        "pid": 11068,
+        "start": "134383336974800198"
+      },
+      "pid_equal": false
+    },
+    {
+      "case": "sqlite-event_before_commit",
+      "owned_handle_pid": 34044,
+      "runtime_worker_identity": {
+        "pid": 21428,
+        "start": "134383336986964518"
+      },
+      "pid_equal": false
+    }
+  ],
+  "extra_direct_pid_equality_audit_failed": true,
+  "interpretation": "Windows venv redirector owns a separate actual Python process; CPython v3.11.9 launcher.c:741-778 creates KILL_ON_JOB_CLOSE Job. PID inequality alone does not prove ineffective kill. Original evidence does not directly record launcher-to-worker parent/Job binding or worker exit immediately after kill; report this limitation, do not change original evidence.",
+  "upstream_launcher_source": "https://raw.githubusercontent.com/python/cpython/v3.11.9/PC/launcher.c",
+  "not_product_or_packaging_or_terminal_acceptance": true
+}

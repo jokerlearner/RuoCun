@@ -1,0 +1,31 @@
+name: Windows standard package candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+          architecture: x64
+      - name: Build from sdist and check a clean wheel install
+        run: python -I -X utf8 .github/ci/windows_gate.py --stage package --state .cache/package-candidate
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: ruocun-win-amd64-cp311-candidate
+          path: |
+            .cache/package-candidate/dist/
+            .cache/package-candidate/SHA256SUMS
+            .cache/package-candidate/raw/
+          include-hidden-files: true

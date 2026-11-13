@@ -1,0 +1,162 @@
+[
+  {
+    "path": ".gitattributes",
+    "bytes": 47,
+    "sha256": "9fc18c45b028bb058f6b1809086f59daf0860f04e5268bdeb9a586af98855830"
+  },
+  {
+    "path": ".gitignore",
+    "bytes": 25,
+    "sha256": "c6f2e85c638fe51c4bdbf89070bd9ea594c06a0d1ee2a6e4abed49fbf785ff1d"
+  },
+  {
+    "path": "collection-failure-excerpt.md",
+    "bytes": 1131,
+    "sha256": "d75679c22cfd0a4b17ac4ee18f097085cb8effbecce5a0895c3122e19bece4d5"
+  },
+  {
+    "path": "r1/after.json",
+    "bytes": 6844,
+    "sha256": "9f709f48ebe91b48aa6e44b23e46f746ac2fa90ae0705c031b98dd986f63f280"
+  },
+  {
+    "path": "r1/archive-manifest.json",
+    "bytes": 40388,
+    "sha256": "c76ee8bb01259e20b6e25082f3ae844a471c889d767075c4d72d80c227295578"
+  },
+  {
+    "path": "r1/before.json",
+    "bytes": 6976,
+    "sha256": "9169bfbd74a57f192bde7d6a491264fd0b7fb9b4fb88f62b51d422b970bafe0b"
+  },
+  {
+    "path": "r1/bytes.zip",
+    "bytes": 508182,
+    "sha256": "6647184698b96d71f6c62bdc9b233c31a4b160a1ee2f1b0ff273afbc7e6b4492"
+  },
+  {
+    "path": "r1/command.json",
+    "bytes": 3318,
+    "sha256": "7eacdf3314e315702233041f661f1d3c4207952870ecb44f9d485272289f1013"
+  },
+  {
+    "path": "r1/observations.json",
+    "bytes": 25696,
+    "sha256": "b4b99e6cbcfb2b82cf0b96e8ea2650658f35e1bf02d0d5724b56278f66e13186"
+  },
+  {
+    "path": "r1/post-audit.json",
+    "bytes": 6013,
+    "sha256": "85333dfbe058c4ba87cd56707861d7913534373f4edd91493aa0c0a22d0fe8f5"
+  },
+  {
+    "path": "r1/pytest.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "r1/pytest.stdout",
+    "bytes": 1828,
+    "sha256": "2109b9e3c7d5622902b34882a09ec1e7fe4e198c7ec78f8ca0c49e91d2dece2d"
+  },
+  {
+    "path": "r1/run.json",
+    "bytes": 3553,
+    "sha256": "afda2d831596e51f06bda455a461d2b6edc9daa4588d2c298594a7e0a907055e"
+  },
+  {
+    "path": "r1/summary.json",
+    "bytes": 431,
+    "sha256": "a82a64b1a85e545747606d34b49c3387c6181e6970329e534cbf5c93314fe0fb"
+  },
+  {
+    "path": "README.md",
+    "bytes": 8235,
+    "sha256": "7c324bfd73569844cdc68edef37a515d28a29cbb826eb2753c003b4814859669"
+  },
+  {
+    "path": "review.py",
+    "bytes": 10620,
+    "sha256": "7d72b098b8aaf2213860ce59f3bcf60ce13b294820b127a9e813f616891ccaf8"
+  },
+  {
+    "path": "safe-launch.ps1",
+    "bytes": 2562,
+    "sha256": "545e10b54fb4116f1811cf79e4782834aacf317b0d5453e8b998e7938f3e0310"
+  },
+  {
+    "path": "scan.json",
+    "bytes": 94,
+    "sha256": "d900625d22c33a0e5f21cc93e07d7c00abbb5c309d893e7077fba55067190bfd"
+  },
+  {
+    "path": "scan.ps1",
+    "bytes": 1905,
+    "sha256": "4b95c1089bac1e586090c8aa36690104337bf1b66f5603658fb8618e9df27c5c"
+  },
+  {
+    "path": "setup/pip.exit.json",
+    "bytes": 1075,
+    "sha256": "7cf826fe2b5761235737efd7415b419e7d984f1d40ff4093fe9f915ffa7208b9"
+  },
+  {
+    "path": "setup/pip.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "setup/pip.stdout",
+    "bytes": 1801,
+    "sha256": "542ad89efd2e177f2ff4253919e70ad99de764815a31570a291df05780b38196"
+  },
+  {
+    "path": "setup/review.exit.json",
+    "bytes": 869,
+    "sha256": "998da2f3b8d79bb6aa62b9c3522caab3d3acd21dad0f6c8925850285aa2c6f92"
+  },
+  {
+    "path": "setup/review.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "setup/review.stdout",
+    "bytes": 406,
+    "sha256": "59951209fdf179f18db61f6c2835c0bd093ff700ee8bc9786cdebc07182ee9fe"
+  },
+  {
+    "path": "setup/summary.exit.json",
+    "bytes": 883,
+    "sha256": "2a7de1618fe662a7f1a0f4eb6339dc0fbad6502b54a39e7d82657b2a1c83c207"
+  },
+  {
+    "path": "setup/summary.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "setup/summary.stdout",
+    "bytes": 98,
+    "sha256": "38e8e1d2acebc0a952fed129eb3d40390e3351cacbfd780628f6f70f75ff6c49"
+  },
+  {
+    "path": "setup/venv.exit.json",
+    "bytes": 831,
+    "sha256": "6b4ee7a507e0760b84ae4a1db5cf327a07505e6ba8d96d215de149f26f372dd6"
+  },
+  {
+    "path": "setup/venv.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "setup/venv.stdout",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "summarize.py",
+    "bytes": 3308,
+    "sha256": "456c776ae46e1d47837e38118db58248f06d263ce861c4c9a29d7d847c9d08fa"
+  }
+]

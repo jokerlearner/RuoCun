@@ -1,0 +1,37 @@
+{
+  "files": {
+    "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe": {
+      "bytes": 103192,
+      "sha256": "5f7b89a612c9b8af1d6456cdfcd1dbe5ca630849e79aebced9bee9a6694952ec"
+    },
+    "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python311.dll": {
+      "bytes": 5800216,
+      "sha256": "0817a2a657a24c0d5fbb60df56960f42fc66b3039d522ec952dab83e2d869364"
+    },
+    "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\DLLs\\sqlite3.dll": {
+      "bytes": 1540888,
+      "sha256": "314bba62f4a1628b986afc94c09dc29cdaf08210eae469440fbf46bcdb86d3fd"
+    },
+    "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\DLLs\\_sqlite3.pyd": {
+      "bytes": 120600,
+      "sha256": "ff6a2a2f38b21b7784f97d604c99961d8c07ef455f7908110a4e893835d42b76"
+    },
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\runtime\\probe.py": {
+      "bytes": 23476,
+      "sha256": "4e8685adfba0a5eff99eced8e776d0e9da1bfe44a674142e0484db9b81b1b3df"
+    },
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\runtime\\run_probe.py": {
+      "bytes": 32810,
+      "sha256": "b1a4fae90d6fbebcf965aa71d3a9e801a323ab498e36922110caa6ac65650cda"
+    },
+    "D:\\java supplement\\Firstcode\\RuoCun\\.scratch\\ruocun-discovery\\experiments\\runtime\\probe.py": {
+      "bytes": 23476,
+      "sha256": "4e8685adfba0a5eff99eced8e776d0e9da1bfe44a674142e0484db9b81b1b3df"
+    },
+    "D:\\java supplement\\Firstcode\\RuoCun\\.scratch\\ruocun-discovery\\experiments\\runtime\\run_probe.py": {
+      "bytes": 32810,
+      "sha256": "b1a4fae90d6fbebcf965aa71d3a9e801a323ab498e36922110caa6ac65650cda"
+    }
+  },
+  "fresh_default_runtime": "3.45.1"
+}

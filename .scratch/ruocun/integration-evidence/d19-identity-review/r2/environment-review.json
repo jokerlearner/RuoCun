@@ -1,0 +1,17 @@
+{
+  "prepare_command": "dedicated .venv/Scripts/python.exe prepare.py",
+  "official_zip_sha3_256": "c2d09c8babb9399277055c057c97a53f1ffd7c5f11d0c1f2118ffdfa39f2daa4",
+  "official_zip_sha256": "f436f53ad8f965af43f3817b42c99c0689e6787f6b7ace208fe38dab7ffc4971",
+  "dll_sha256": "4b59d3cded9dc1608544160f3b4b10ac974c6ac0d6ffc23064e5f4c8dbd05aea",
+  "actual_venv_configuration": "home = C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\ninclude-system-site-packages = false\nversion = 3.11.9\nexecutable = C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\ncommand = C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -m venv D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\merger-d19-identity-validation\\.scratch\\ruocun-discovery\\experiments\\sqlite-runtime\\.venv\n",
+  "dedicated_pip_freeze": [
+    "colorama==0.4.6",
+    "iniconfig==2.3.1",
+    "packaging==26.3",
+    "pluggy==1.7.0",
+    "Pygments==2.21.0",
+    "pytest==9.0.2"
+  ],
+  "merge_changed_paths": 746,
+  "all_merge_changes_within_D19_experiment": true
+}

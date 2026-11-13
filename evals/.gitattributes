@@ -1,0 +1,8 @@
+/tasks/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/docker/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/trace-viewer-template.html -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/*.py text eol=lf
+/swebench/container_helper.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/terminal-bench/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/memory/fixtures/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/reflect/fixtures/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -1,0 +1,40 @@
+{
+  "command": [
+    "D:\\r18f-162726\\v\\Scripts\\python.exe",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--target",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\.t",
+    "-r",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m18f\\.scratch\\ruocun-discovery\\experiments\\durable-io\\requirements.txt",
+    "--cache-dir",
+    "D:\\r18f-162726\\c",
+    "--disable-pip-version-check"
+  ],
+  "returncode": 0,
+  "started_utc": "2026-11-05T08:27:30.974161+00:00",
+  "environment_keys": [
+    "APPDATA",
+    "COMSPEC",
+    "LOCALAPPDATA",
+    "PATH",
+    "PATHEXT",
+    "PROGRAMDATA",
+    "PROGRAMFILES",
+    "PROGRAMFILES(X86)",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONUTF8",
+    "SYSTEMDRIVE",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR"
+  ],
+  "sensitive_scan": {
+    "known_environment_credential_present": false,
+    "token_shape_present": false
+  }
+}

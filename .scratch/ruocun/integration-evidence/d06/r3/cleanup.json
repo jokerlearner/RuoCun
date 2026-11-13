@@ -1,0 +1,59 @@
+{
+  "harness_shutdowns": [
+    {
+      "path": "t/test_actual_pipe_filters_repor0/events.jsonl",
+      "seq": 25,
+      "resources": []
+    },
+    {
+      "path": "t/test_actual_prompt_input_chain0/events.jsonl",
+      "seq": 71,
+      "resources": []
+    },
+    {
+      "path": "t/test_focus_reporting_protocol_0/crash/events.jsonl",
+      "seq": 20,
+      "resources": []
+    },
+    {
+      "path": "t/test_focus_reporting_protocol_0/exit/events.jsonl",
+      "seq": 18,
+      "resources": []
+    },
+    {
+      "path": "t/test_submission_trims_small_dr0/events.jsonl",
+      "seq": 38,
+      "resources": []
+    }
+  ],
+  "worker": {
+    "owner": "987e3dccd6c940d5b87600f08bda109f",
+    "task": "worker-1",
+    "launcher": {
+      "pid": 43052,
+      "creation_filetime": "134383378501737207",
+      "image": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m06\\.venv\\Scripts\\python.exe",
+      "initial_handle_wait": 258,
+      "after_close_handle_wait": 0
+    },
+    "actual_worker": {
+      "pid": 24140,
+      "creation_filetime": "134383378501952375",
+      "image": "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "initial_handle_wait": 258,
+      "parent_pid": 43052,
+      "after_close_handle_wait": 0
+    },
+    "receipt": {
+      "task": "worker-1",
+      "pid": 43052,
+      "role": "background",
+      "status": "canceled",
+      "returncode": 1
+    },
+    "late_event_count": 0,
+    "process_pump_done": true
+  },
+  "i06_accessed_or_controlled": false,
+  "scope": "m06 本次拥有的单级子进程和 harness"
+}

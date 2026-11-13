@@ -1,0 +1,87 @@
+[
+  {
+    "path": "COMMIT.txt",
+    "sha256": "cca6ef1451dcf0a3f194ae8cdfef0218497e7effb245a94b8ee8e746c1fb85b7",
+    "bytes": 40
+  },
+  {
+    "path": "LICENSE",
+    "sha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be",
+    "bytes": 1065
+  },
+  {
+    "path": "packages/compaction/compaction/src/checkpoint.ts",
+    "sha256": "194c6f7bf0b0a403837cff2815c37f657b35a7713b5a354cb40f64dfb42a44e3",
+    "bytes": 2003
+  },
+  {
+    "path": "packages/compaction/compaction/src/tool-pairing.ts",
+    "sha256": "30916d32b421553a7753aa56f5e5890bdfa2bf41b0ce3c8f42bd529fd2da4b9a",
+    "bytes": 5194
+  },
+  {
+    "path": "packages/compaction/compaction-basic/src/config.ts",
+    "sha256": "4972edc6447dcff87eab54c3a9c5984171238aa06aa0eb34ffde4bfac4ce1275",
+    "bytes": 14220
+  },
+  {
+    "path": "packages/compaction/compaction-basic/src/index.ts",
+    "sha256": "1d2ecc563147967f86842b37289682a4dd7feabccc9d9d8d55cfb01810166f54",
+    "bytes": 19522
+  },
+  {
+    "path": "packages/compaction/compaction-basic/src/region.ts",
+    "sha256": "295b53cc9e924f7cb2e843e0d0d296e89ead73da2aab9790282db30736e2e063",
+    "bytes": 23571
+  },
+  {
+    "path": "packages/compaction/compaction-basic/src/summarizer.ts",
+    "sha256": "4f16b70148ffc9042e51bba2b0a8f3b35da55fcaba28d0c8cbf36102c9eecc99",
+    "bytes": 9205
+  },
+  {
+    "path": "packages/compaction/compaction-basic/tests/compaction-basic.spec.ts",
+    "sha256": "48c4ddaf4405c825762b5115e70ab64486a6fe8812bde1a5adce9ea4b0aac117",
+    "bytes": 102457
+  },
+  {
+    "path": "packages/compaction/compaction-basic/tests/compaction-loop-repro.spec.ts",
+    "sha256": "acdd65ae57c712c4b7aeff044b9d243794c4133d84b270de657278aa007ec30a",
+    "bytes": 21107
+  },
+  {
+    "path": "packages/compaction/compaction-tool-result-pruner/src/config.ts",
+    "sha256": "8538c8b2b3bd7b2b085a86119b694f7934e308a5c4b7f4406e963b190b6eaa98",
+    "bytes": 2559
+  },
+  {
+    "path": "packages/compaction/compaction-tool-result-pruner/src/index.ts",
+    "sha256": "2890f336ca42f9d8259794eebbc4a9423f69a7394c41796b9981216ed29ed536",
+    "bytes": 7301
+  },
+  {
+    "path": "packages/compaction/compaction-tool-result-pruner/tests/tool-result-pruner.spec.ts",
+    "sha256": "f2877b6da6f810253cfa3a342da36109ba218489dfe3347f533c95b0d40e64a7",
+    "bytes": 10888
+  },
+  {
+    "path": "packages/core/session/src/index.ts",
+    "sha256": "8941b4c7a45debf2443b0f937830f806130167e3ef53426833f7225dd5a8bb8f",
+    "bytes": 70902
+  },
+  {
+    "path": "packages/core/session/src/surface.ts",
+    "sha256": "b549e49ed9c0df3607b7e61391cc2d8eaba59ba2410930c83527b9091a8495e5",
+    "bytes": 32085
+  },
+  {
+    "path": "packages/llm/token-meter/src/estimate.ts",
+    "sha256": "30ecc576a77aa3a65fb8173c551e13d7651ddba2d7bbd907845a003f17ee189d",
+    "bytes": 4216
+  },
+  {
+    "path": "packages/llm/token-meter/src/index.ts",
+    "sha256": "9c9fd53d119cd80b6c03a0db1a7ac45197d2c384df3cf39ce9584584302b49bc",
+    "bytes": 13226
+  }
+]

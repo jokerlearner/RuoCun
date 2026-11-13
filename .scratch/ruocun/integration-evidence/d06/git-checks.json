@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "3512549",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "3512549",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": ""
+    },
+    {
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "ad48d6c",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": ""
+    }
+  ],
+  "r3_manifest_intact": true,
+  "merged_change_scope": "terminal prototype only",
+  "review_change_scope": "d06 integration evidence only",
+  "final_clean_check": "performed after evidence commit; reported in handoff"
+}

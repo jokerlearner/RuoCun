@@ -1,0 +1,151 @@
+{
+  "derivation": "exact executable + case args and lifecycle.py owner invocation; child argv from runtime receipt",
+  "commands": [
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--version"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--invalid"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "returncode": 2
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--echo"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--selfcheck",
+        "--home",
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe\\数据"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--selfcheck",
+        "--home",
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe\\blocking-10-standalone-probe"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "returncode": 70
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--owner",
+        "--out",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\integration-evidence\\d07\\raw\\10-standalone-probe\\receipts\\p0",
+        "--child-role",
+        "worker"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "child_argv_recorded_by_owner": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--internal-role",
+        "worker",
+        "--out",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\integration-evidence\\d07\\raw\\10-standalone-probe\\receipts\\p0"
+      ],
+      "runtime_cleanup": [
+        {
+          "identity": {
+            "pid": 30840,
+            "start": "134383422265110117"
+          },
+          "exit": 0
+        },
+        {
+          "identity": {
+            "pid": 5048,
+            "start": "134383422268187760"
+          },
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--owner",
+        "--out",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\integration-evidence\\d07\\raw\\10-standalone-probe\\receipts\\p1",
+        "--child-role",
+        "restart"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "child_argv_recorded_by_owner": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--internal-role",
+        "restart",
+        "--out",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\integration-evidence\\d07\\raw\\10-standalone-probe\\receipts\\p1"
+      ],
+      "runtime_cleanup": [
+        {
+          "identity": {
+            "pid": 35916,
+            "start": "134383422272430385"
+          },
+          "exit": 0
+        },
+        {
+          "identity": {
+            "pid": 23660,
+            "start": "134383422275411070"
+          },
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "argv": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--owner",
+        "--out",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\integration-evidence\\d07\\raw\\10-standalone-probe\\receipts\\p2",
+        "--child-role",
+        "worker"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RuoCun-m07-D07-中文 空格-20261105\\合成TEMP\\RuoCun-D07-独立 工作-10-standalone-probe",
+      "child_argv_recorded_by_owner": [
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\f3\\中文 目录\\onedir\\dist\\ruocun\\ruocun.exe",
+        "--internal-role",
+        "worker",
+        "--out",
+        "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\integration-evidence\\d07\\raw\\10-standalone-probe\\receipts\\p2"
+      ],
+      "runtime_cleanup": [
+        {
+          "identity": {
+            "pid": 39616,
+            "start": "134383422279590221"
+          },
+          "exit": 0
+        },
+        {
+          "identity": {
+            "pid": 37252,
+            "start": "134383422282590707"
+          },
+          "exit": 0
+        }
+      ]
+    }
+  ]
+}

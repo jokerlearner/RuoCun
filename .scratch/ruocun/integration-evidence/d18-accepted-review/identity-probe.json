@@ -1,0 +1,10 @@
+{
+  "command": [
+    "git",
+    "var",
+    "GIT_AUTHOR_IDENT"
+  ],
+  "returncode": 128,
+  "synthetic_home_used": true,
+  "known_identity_missing_message": true
+}

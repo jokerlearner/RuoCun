@@ -1,0 +1,26 @@
+{
+  "archives": [
+    {
+      "archive": "h.zip",
+      "members": 1033,
+      "sha256": "9a3af573b2da32aadd4a0b907a0da70c501b3620e3ad45f2d17649c8b5843b20",
+      "all_member_size_sha_verified": true,
+      "git_original_bytes_verified": true,
+      "original_audit_files_verified": 1029,
+      "failure_assets_preserved": true
+    },
+    {
+      "archive": "r.zip",
+      "members": 174,
+      "sha256": "7d2de9628e20fb425277cc0d19f8ade7dd81bea9655ffdaab524c4ec65b9f489",
+      "all_member_size_sha_verified": true,
+      "git_original_bytes_verified": false,
+      "original_audit_files_verified": null,
+      "failure_assets_preserved": true
+    }
+  ],
+  "candidate_files_git_bytes_or_declared_text_normalization_verified": 746,
+  "max_checkout_repo_relative_path": 146,
+  "longest_path": ".scratch/ruocun-discovery/experiments/sqlite-runtime/evidence/z/c/sqlite-checkpoint_before_commit/runtime-db-checkpoint_before_commit/runtime.json",
+  "fresh_long_worktree_checkout_succeeded": true
+}

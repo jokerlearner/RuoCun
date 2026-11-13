@@ -1,0 +1,20 @@
+{
+  "wheel": {
+    "path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\a3\\ruocun_distribution_probe-0.0.1-py3-none-win_amd64.whl",
+    "sha256": "53cebe83e58b3ad8ab9fe41f2d1c19e939f5b363a2c6274f2e72ac7145baf790",
+    "size": 1498531,
+    "metadata": "Wheel-Version: 1.0\nGenerator: hatchling 1.33.0\nRoot-Is-Purelib: false\nTag: py3-none-win_amd64\n"
+  },
+  "sdist": {
+    "path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\a3\\ruocun_distribution_probe-0.0.1.tar.gz",
+    "sha256": "e1b5c083fb59a1a511a183ad15e330afc70e99f8bc2a20e44e8abd49b84c4e33",
+    "size": 1473755
+  },
+  "direct_wheel_equal": true,
+  "upgrade_wheel": [
+    {
+      "path": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m07\\.scratch\\ruocun-discovery\\experiments\\distribution\\.cache\\u2\\ruocun_distribution_probe-0.0.2-py3-none-win_amd64.whl",
+      "sha256": "3b9ff0f7cd2c948324e795abd67547f7194efc6e1ca60e71296b9d782a54e2a9"
+    }
+  ]
+}

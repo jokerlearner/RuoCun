@@ -1,0 +1,26 @@
+{
+  "archive": "artifacts.zip",
+  "sha256": "caefcab4f1d3b56ebce41933f02c2805fc92d555e3b23136073950e81963b106",
+  "members": [
+    {
+      "path": "product/ruocun-0.1.0.dev0-py3-none-any.whl",
+      "size": 6413,
+      "sha256": "feeb2e2d77d3aaeede79681536f90a8955faef8fbc68d054928626ab84e99a8c"
+    },
+    {
+      "path": "product/ruocun-0.1.0.dev0.tar.gz",
+      "size": 4878,
+      "sha256": "5b191e6d5194826e61713b4bba263c28c0e1aeb684e70f0fa61d4766b3190c75"
+    },
+    {
+      "path": "support/ruocun_dev_support-0.1.0-py3-none-any.whl",
+      "size": 17799,
+      "sha256": "58cf0ef5decc4f9df4ee57a562e0ec2e84ea57ff91382e172bf748b69ed11e21"
+    },
+    {
+      "path": "support/ruocun_dev_support-0.1.0.tar.gz",
+      "size": 14858,
+      "sha256": "b491970aadd4c729bbb02e4ea4665dbcaf130c49aa10e01cc100d921a903f00c"
+    }
+  ]
+}

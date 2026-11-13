@@ -1,0 +1,119 @@
+若存 Code — 终端编码助手
+
+用法：ruocun [选项] [提示词]
+
+纯Python文字入口（Windows x64，CPython 3.11）：
+  --version, -v  显示 RuoCun 版本并退出
+  --help, -h     显示本帮助并退出
+
+  --config 文件  显式选择账户配置；默认 ~/.ruocun/config.json
+  --cwd 目录     工作目录；默认当前目录
+  --model ID     覆盖所选账户模型
+  --api-key 密钥  本次临时凭据，不写入持久账户；一次性提示词可配合 --provider 使用
+  --provider <deepseek|volcengine|qianfan|zhipu|anthropic|openai> 临时服务商
+  --verbose, --debug  展开终端工具结果与思考细节
+  --permission-mode <auto|default|plan|bypassPermissions> 设置权限模式
+  --allow 规则 / --ask 规则 / --deny 规则  追加本次权限规则
+  --add-dir 目录  允许访问的额外工作目录
+  --yolo        免审批模式；deny 规则与危险调用边界仍有效
+  --goal、--task、--coordinator  启用同一长任务模式，保留权限边界
+  --continue, -c [会话ID]  恢复本目录会话，省略ID选最近未完成会话
+  --reflect-memory  开启回合间统一反思与记忆维护；默认关闭，会增加模型调用
+  --reflect-challenger  开启轮内卡住检测后的挑战者/纠偏反思；默认关闭
+  --obs         可选观测；需 observation 依赖，默认本地HTTP :8000/v1/traces
+  --no-progress-advice  关闭无人值守入口默认的本地进度提醒
+  --progress-advice  来源兼容参数；提醒仍按入口类型决定，TTY不因此单独启用
+  --eval        本次隔离磁盘技能/自定义代理、记忆注入、MCP、项目指令和联网工具
+                内置Skills及Hooks仍按来源保留；不是OS沙箱，独立关闭需使用下方开关
+  --no-memory    本次关闭启动记忆注入和模型整理；本地清理、记忆工具与命令仍可用
+  --no-skills    本次禁用磁盘与内置Skills；内置命令仍可用
+  --no-hooks    本次禁用用户、项目及子代理 Hooks
+  --no-mcp      本次关闭 MCP 外部工具连接
+  --no-web      本次不注册 WebFetch/WebSearch，不抓网页或调用网页抽取模型
+  --no-project-instructions  本次不注入原生/显式兼容产品指令
+
+不带提示词进入文字交互；TTY忙时可排队输入，安全工具边界按序消费；pipe保持逐轮顺序。
+/exit 退出；TTY空草稿Ctrl+D退出，Esc先清等待队列、随后暂停当前轮；两秒内双Ctrl+C退出。
+/quit 为退出别名；/quit --keep-background 仅保留已持久确认的受支持后台Shell。
+审批中Esc/Ctrl+C取消当前问题并暂停，草稿与确认输入由同一终端读取。
+暂停会持久丢弃尚未消费的排队输入；修改模式、上下文设置/压缩及技能选择/开关前先暂停并等待当前轮停止。
+用量、状态、文件、权限规则等只读查询不暂停。/usage、/cost 查看累计token及本次进程费用。
+/help 查看本帮助；/doctor 汇总账户、依赖、配置与平台能力；/agents 查看实际可用代理定义。
+命令区分大小写，/Config保留大写；/tmp/a.py 等路径按普通输入处理，合法未知命令会提示错误。
+保留的固定命令与来源别名（不包含范围外插件）：
+  /model /plan /clear /compact /cost /lang /help /exit /quit /skills /context /context-window
+  /tasks /mcp /diff /doctor /memory /permissions /session /audit /resume /branch /rename
+  /rewind /export /Config /effort /status /hooks /agents /files /copy /btw /account /accounts
+  /bypass /yolo /mode /goal /task /coordinator /restore /recovery /simplify /remember /review
+  /init /batch /skillify /theme /loop /archive
+/files 查看本进程已读文件（含成功Write建立的基线），最多显示50条；重开不恢复读取记录。
+/memory 查看与审核记忆，不暂停；/memory delete <名> [名…] 先暂停当前轮再删除原生记忆。
+/skills 在TTY选择技能，pipe列出；/skills on|off <名> 或 /skills bundled|installed|all on|off，重启生效。
+/account（别名/accounts）在TTY打开账户面板；带账户名切换，rm <名>删除，add <key> [provider] [name]添加。
+缺少可用账户时，真实交互终端显示语言、服务商、密钥和信任引导。管道和一次性提示需要先配置账户。
+账户写入确认后生效；删除当前账户沿用原连接，需手动切换或重启采用新配置。
+/model在TTY选择模型，带模型ID切换；官方端点按provider目录，自定义网关可选返回的模型。
+/lang [zh|en]切换并保存语言；/theme切换本次会话主题。
+Shift+Tab 在空闲时切换「智能批准」和「全权放行」，运行中会提示等本轮结束后再按。
+/Config查看当前配置状态，不调用模型；Config工具读取项目/用户设置、写入原生用户设置。
+权限模式和检查点按启动时机读取；Config保存不代表即时重载，theme仍由/theme临时切换。
+Alt+V显式读取Windows剪贴板附图，或输入工作区@图片路径；图片仍受所选模型能力限制。
+/recovery查询未决；resolve <scope> <toolCallId> <说明>或decide <taskId> <completed|failed|canceled> <证据>保存人工决定。
+恢复决定不会重放旧操作；continue可继续有完整检查点的后台子代理。
+/<技能slug>按正文启动一轮；模型用Skill按需加载正文。
+/simplify、/remember、/review、/init、/batch、/skillify 展开内置提示词。
+/goal [目标] 或 /task [目标] 切换长任务模式或提交目标；/coordinator 开启同一模式。
+/btw <随手备注> 保存上下文备注；/hooks 查看已加载的 Hook 配置。
+/session 查看当前身份；/resume [ID] 列出或切换会话；/branch [名称] 创建聊天分支。
+/rename <名称> 保存标题；/export 导出完整已保存原文；/clear 清空当前上下文并保留归档。
+/export --context 仅导出模型当前可见内容；加 --format json 保留协议字段、图片及来源映射。
+/archive list [--scope 范围] [--offset N --limit N] 列出当前会话归档。
+/archive read <ID> [--scope 范围] [--offset N --limit N] 分页读原文，最多16000字符。
+压缩采用近期原文保留、工具正文裁剪与旧摘要重整；摘要/裁剪标记可用只读ArchiveRead回查。
+ruocun --cwd <原工作区> --upgrade-session <ID>：先停止使用旧会话的进程，再显式备份并离线升级。
+/mcp 列出服务；reconnect <名>、toggle <名> [on|off]、add <名> <命令> [参数…] 管理连接。
+/mode 查询；/mode <auto|default|全权放行> 切换，yolo/bypass/bypassPermissions为全权放行别名。
+/plan 切换只读规划（不经 /mode plan）；/permissions [list] 查看规则。
+/permissions add|remove <allow|ask|deny> <规则> 管理规则；托管及显式兼容来源只读。
+ruocun trust [--cwd 目录] 明确信任项目配置，不连接模型；显式兼容来源保持只读。
+ruocun Skill add <本地路径|Git地址> [--user|--project] 安装完整Skills资源，不连接模型。
+操作员入口 Skill 保留大写，默认用户级，--project选择当前项目；没有参数会显示用法。
+ruocun Schedule add "<cron>" "<提示词>" | list | remove <序号> 管理支持平台的系统定时。
+Windows明确不支持系统crontab；/loop只是当前会话内周期任务，退出即停止。
+/context 查看粗估分类及上次API用量；/context-window [128k|1m] 查询/手动覆盖窗口。
+/status 查看模型/窗口/用量；/effort [low|medium|high|max] 查询/调整推理力度。
+/compact 压缩对话；85%主动及上下文错误有界压缩，失败保留原上下文停止本轮。
+工具：Read、Write、Edit、ListDir、Glob、Grep、Bash（Windows默认cmd）、TodoWrite、Skill、ToolSearch、MemoryRead、MemoryWrite、AskUserQuestion、SendUserMessage。
+AskUserQuestion支持自由回答、多选与先讨论；SendUserMessage在终端显示正文及附件。
+NotifyUser按需给终端内best-effort提示，不发送系统桌面通知；TaskWait等待已确认的后台Shell事件。
+Bash的background=true保留同一受管执行；BashOutput读取新增日志，KillShell请求停止并核实真实终态。
+显式保留后台Shell后，重开会话接管同一run；普通子代理不保证退出进程后继续运行。
+完整Shell日志位于回执中的私有运行目录，停止未确认时保留现场并报告，不自动重放。
+EnterPlanMode/ExitPlanMode按需加载；plan限制普通文件写入与命令执行，记忆工具按权限运行。
+Read支持png/jpg/gif/webp，图片需所选模型支持视觉；图片结果随会话保存。
+一次性提示词模式首批工具需包含TodoWrite；恢复既有会话沿已保存状态继续。
+权限按分层deny/ask/allow及有效模式裁决；auto分类器两阶段判断，失败或熔断后转真实TTY人工确认。
+Windows账户解析支持系统凭据keyRef，失败状态在同次查询后准确显示。
+安全工具批最多8路并行，写入和命令执行独占，工具结果按模型调用原序返回。
+headless和pipe不把输入的y当真人批准；规则未放行且需要审批的调用会拒绝。
+项目指令从原生RUOCUN.md/local及显式只读兼容源读取；AGENTS/CLAUDE不自动注入。
+成功的文件访问可发现嵌套Skills、激活匹配paths的条件Skills；目录在完整工具结果保存后更新。
+SkillInstall可经ToolSearch发现，按权限安装本地/Git完整资源；工具结果保存后在当前会话加载。
+Skill按需适配外来正文，保留原技能文件；转换失败使用原文。
+记忆本地清理在启动时执行；文字交互仅在达到条数与间隔条件时以配置模型整理，前缀保持不变。
+Agent 支持批量派发；TaskSend 向子代理追加指令，MessageParent 由子代理向父级汇报。
+Monitor 按行推送命令输出，TaskStop 等实际进程停止；owner丢失后保留历史，不重新启动脚本。
+MCP支持stdio、HTTP/SSE、资源与提示；未知请求保留未决，显式恢复决定后再继续。
+RepoMap提供预算内的多语言代码地图；启动异步生成，也可经ToolSearch激活后刷新。
+WebFetch抓取静态网页并可按prompt抽取，抽取失败回退原文；WebSearch搜索DuckDuckGo网页结果。
+LSP从用户/项目lsp.json配置servers(command/args/extensions)，按需启动外部语言服务器；无配置不注册。
+支持定义/引用/悬停/符号及调用层级9操作，取消/退出回收所拥有的服务进程。
+--reflect-memory与--reflect-challenger互相独立，模型分析失败不伪造写入成功，写入结果不明时停止自动重放。
+/audit [memory|reflect|tools|perms|cache|skills] 查看脱敏本地审计；可选远端trace与本地日志分开记录。
+观测失败不改变业务结果，关闭时不导入可选SDK；LMNR_BASE_URL/HTTP_PORT/PROJECT_API_KEY配置HTTP出口。
+Deck 外部面板通过本机回环协议查看并控制同一会话。
+OS 沙箱默认关闭，支持 Linux bubblewrap 和 macOS Seatbelt。Windows 显式启用时拒绝执行。评估模式和权限审批各自独立。
+完整真实终端的最终体验验收仍单独记录。
+环境开关使用 RUOCUN_ 前缀。MAX_BUDGET默认提醒，MAX_BUDGET_HARD=1才硬停；
+MAX_TURNS可设回合工具轮数上限；默认不限制。失败后已确认工具不会自动重放。
+会话在 ~/.ruocun/sessions 下按工作目录隔离保存；历史分模型费用不保证完整。

@@ -1,0 +1,13 @@
+{
+  "environments_retained": true,
+  "commands_joined": true,
+  "checked_at": "2026-11-10T19:59:49.5433139+08:00",
+  "worktrees": [
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\session-cost-review",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\e01-context",
+    "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\b01-tools"
+  ],
+  "supersedes": "Initial Where-Object -Args invocation was invalid; this successful foreach query is the resource result.",
+  "owned_processes_found": 0,
+  "processes": []
+}

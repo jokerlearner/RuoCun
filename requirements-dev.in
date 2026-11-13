@@ -1,0 +1,7 @@
+# First development tools: CPython 3.11.9 / Windows x64 (D21).
+-r requirements-runtime.in
+hatchling==1.33.0
+build==1.6.1
+pytest==8.4.2
+ruff==0.17.3
+mypy==2.4.1

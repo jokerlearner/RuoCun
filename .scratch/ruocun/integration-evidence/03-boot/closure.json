@@ -1,0 +1,180 @@
+{
+  "packages": {
+    "ast-serialize": {
+      "version": "0.13.1",
+      "wheel": "ast_serialize-0.13.1-cp39-abi3-win_amd64.whl",
+      "sha256": "ddf7cbc9c8abf70102c4a088efe154bb86bfb825b0a10e556d2b15972cf99bd7",
+      "official_metadata": "https://pypi.org/pypi/ast-serialize/0.13.1/json",
+      "official_response_sha256": "9b0729d3fb981e4e2b4bb8c95faddafb64aac14fa31568f1b7c373c9a681cc34",
+      "active_requires_dist": []
+    },
+    "build": {
+      "version": "1.6.1",
+      "wheel": "build-1.6.1-py3-none-any.whl",
+      "sha256": "ecd351a4be9d35a9eaaba244a7687143c9c7d4aea6ac964e7e7ddab20cbcf4e7",
+      "official_metadata": "https://pypi.org/pypi/build/1.6.1/json",
+      "official_response_sha256": "064e9dcb80e948b5de7a841c3fd9b5644a980eb27bb644fb7f562b7d773b157b",
+      "active_requires_dist": [
+        "packaging >= 24.0",
+        "pyproject_hooks",
+        "colorama; os_name == \"nt\""
+      ]
+    },
+    "colorama": {
+      "version": "0.4.6",
+      "wheel": "colorama-0.4.6-py2.py3-none-any.whl",
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+      "official_metadata": "https://pypi.org/pypi/colorama/0.4.6/json",
+      "official_response_sha256": "43fb351344384a44c2b7d7fff1c63496b89ac830aea714301525c1f3718addd1",
+      "active_requires_dist": []
+    },
+    "hatchling": {
+      "version": "1.33.0",
+      "wheel": "hatchling-1.33.0-py3-none-any.whl",
+      "sha256": "415290b84f464d2884303fca8974d38e7b85579069fab02a15db0828fbb1446d",
+      "official_metadata": "https://pypi.org/pypi/hatchling/1.33.0/json",
+      "official_response_sha256": "aba0f7c78f0d63e00c028731c72c2316e9a2b9a9705f6a103d8520d5fc32c473",
+      "active_requires_dist": [
+        "packaging>=24.2",
+        "pathspec>=0.10.1",
+        "pluggy>=1.0.0",
+        "tomlkit>=0.11.1",
+        "trove-classifiers"
+      ]
+    },
+    "iniconfig": {
+      "version": "2.3.1",
+      "wheel": "iniconfig-2.3.1-py3-none-any.whl",
+      "sha256": "9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7",
+      "official_metadata": "https://pypi.org/pypi/iniconfig/2.3.1/json",
+      "official_response_sha256": "ab4d5df71d2a4f01a0eb418d7809bb22dca3293991a369309f068c07c1471557",
+      "active_requires_dist": []
+    },
+    "librt": {
+      "version": "0.16.0",
+      "wheel": "librt-0.16.0-cp311-cp311-win_amd64.whl",
+      "sha256": "5f49cff01bd608ef7d97104cb035c75455e79c2d70bf4a506cf773338ac1860d",
+      "official_metadata": "https://pypi.org/pypi/librt/0.16.0/json",
+      "official_response_sha256": "15903fc6fea8431c709b032d2dc99d27da1ab61f2f06998a6bb73b07d9e71ef0",
+      "active_requires_dist": []
+    },
+    "mypy": {
+      "version": "2.4.1",
+      "wheel": "mypy-2.4.1-cp311-cp311-win_amd64.whl",
+      "sha256": "6f7225951a277dd0d6add900731d487174b7d24ac133c09d670ed63b4d8cb90d",
+      "official_metadata": "https://pypi.org/pypi/mypy/2.4.1/json",
+      "official_response_sha256": "7a117664785380511fe56aa00829f566616544933e5ab9ea34b4d4a7ffd5da41",
+      "active_requires_dist": [
+        "typing_extensions>=4.6.0; python_version < \"3.15\"",
+        "mypy_extensions>=1.0.0",
+        "pathspec>=1.0.0",
+        "librt>=0.16.0; platform_python_implementation != \"PyPy\"",
+        "ast-serialize<1.0.0,>=0.12.1"
+      ]
+    },
+    "mypy-extensions": {
+      "version": "1.2.0",
+      "wheel": "mypy_extensions-1.2.0-py3-none-any.whl",
+      "sha256": "993e7a20aa5671eb41a7132cf555af30062da99729601601b9a8382b11cae768",
+      "official_metadata": "https://pypi.org/pypi/mypy-extensions/1.2.0/json",
+      "official_response_sha256": "3707b05b06d0b9379d3adf6aea8fa169bdf64a445a3188daaa53c279f0b65451",
+      "active_requires_dist": []
+    },
+    "packaging": {
+      "version": "26.3",
+      "wheel": "packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "official_metadata": "https://pypi.org/pypi/packaging/26.3/json",
+      "official_response_sha256": "4f190d2f0b312b3086058cee64ab4333bf3ce67fb78b4c2bdb43899049b29f4d",
+      "active_requires_dist": []
+    },
+    "pathspec": {
+      "version": "1.1.1",
+      "wheel": "pathspec-1.1.1-py3-none-any.whl",
+      "sha256": "a00ce642f577bf7f473932318056212bc4f8bfdf53128c78bbd5af0b9b20b189",
+      "official_metadata": "https://pypi.org/pypi/pathspec/1.1.1/json",
+      "official_response_sha256": "24f66829a7f40485bdccfcf32294218b0f4260b289ee4806ab644feb6c194766",
+      "active_requires_dist": []
+    },
+    "pluggy": {
+      "version": "1.7.0",
+      "wheel": "pluggy-1.7.0-py3-none-any.whl",
+      "sha256": "7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec",
+      "official_metadata": "https://pypi.org/pypi/pluggy/1.7.0/json",
+      "official_response_sha256": "9e8f441bba8382eabf6febf386a5b9610cfe0c16b60b96e7b4b1831bd6d96361",
+      "active_requires_dist": []
+    },
+    "pygments": {
+      "version": "2.21.0",
+      "wheel": "pygments-2.21.0-py3-none-any.whl",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+      "official_metadata": "https://pypi.org/pypi/pygments/2.21.0/json",
+      "official_response_sha256": "330104a10adc8a587e3f98f4e207557125ca0c1d489e129334da5acb2b813a03",
+      "active_requires_dist": []
+    },
+    "pyproject-hooks": {
+      "version": "1.3.3",
+      "wheel": "pyproject_hooks-1.3.3-py3-none-any.whl",
+      "sha256": "5fc53fdac9f7bd63fbcdc868fb5f90b4784d78a53a3d3388cd738b807441a20b",
+      "official_metadata": "https://pypi.org/pypi/pyproject-hooks/1.3.3/json",
+      "official_response_sha256": "ef47170935f8a098c070a3cd65d637d5bbf646158d9559eebac9c465b83d0401",
+      "active_requires_dist": []
+    },
+    "pytest": {
+      "version": "8.4.2",
+      "wheel": "pytest-8.4.2-py3-none-any.whl",
+      "sha256": "872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79",
+      "official_metadata": "https://pypi.org/pypi/pytest/8.4.2/json",
+      "official_response_sha256": "4160e7ff2349347b2cd538efdc3a66e25e5d6a02cd9b3b6fbf2312a4e3d23e94",
+      "active_requires_dist": [
+        "colorama>=0.4; sys_platform == \"win32\"",
+        "iniconfig>=1",
+        "packaging>=20",
+        "pluggy<2,>=1.5",
+        "pygments>=2.7.2"
+      ]
+    },
+    "ruff": {
+      "version": "0.17.3",
+      "wheel": "ruff-0.17.3-py3-none-win_amd64.whl",
+      "sha256": "56b8ffb3f3b3cbccb8b76b71b38261b7ed982ef5d20f5b447b1b61a7f4949b24",
+      "official_metadata": "https://pypi.org/pypi/ruff/0.17.3/json",
+      "official_response_sha256": "8c7c0d9a4defa3f62bdfeb308d25335720eed0c0960bdc9c64c2b9247b9a7a81",
+      "active_requires_dist": []
+    },
+    "tomlkit": {
+      "version": "0.15.2",
+      "wheel": "tomlkit-0.15.2-py3-none-any.whl",
+      "sha256": "05562412163a3037b94497385fb7f9204c637bc605af7a48199e41cf2272f437",
+      "official_metadata": "https://pypi.org/pypi/tomlkit/0.15.2/json",
+      "official_response_sha256": "805c82d5063081892eba677328a263b9d6bad525ce704fae69cd3aaa8ddc7655",
+      "active_requires_dist": []
+    },
+    "trove-classifiers": {
+      "version": "2026.9.21.13",
+      "wheel": "trove_classifiers-2026.9.21.13-py3-none-any.whl",
+      "sha256": "8b1ff4f9c191b1040b71c37f1e445ab99732911e3cd91de52838453a854d7a17",
+      "official_metadata": "https://pypi.org/pypi/trove-classifiers/2026.9.21.13/json",
+      "official_response_sha256": "6f743386053525d93ce712c8f909a5a5a257fe5a71a588c1d4a676b1b70cc45e",
+      "active_requires_dist": []
+    },
+    "typing-extensions": {
+      "version": "4.16.0",
+      "wheel": "typing_extensions-4.16.0-py3-none-any.whl",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+      "official_metadata": "https://pypi.org/pypi/typing-extensions/4.16.0/json",
+      "official_response_sha256": "2140da00d62dde967f52d0be0ae28444f1d6a3fe603f52c83c23988c32122d5a",
+      "active_requires_dist": []
+    }
+  },
+  "closure_complete": true,
+  "count": 18,
+  "tools": {
+    "hatchling": "1.33.0",
+    "build": "1.6.1",
+    "pytest": "8.4.2",
+    "ruff": "0.17.3",
+    "mypy": "2.4.1"
+  },
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]"
+}

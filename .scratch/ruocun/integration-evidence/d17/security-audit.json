@@ -1,0 +1,8 @@
+{
+  "values_and_names_saved": false,
+  "candidate_files_scanned": 105,
+  "preparation_correction": "Earlier scan attempt joined an absolute review path twice and stopped before saving; rooted-path handling corrected before the successful scans.",
+  "review_files_scanned": 19,
+  "decompressed_zip_entries_scanned": 306,
+  "current_sensitive_environment_value_present": false
+}

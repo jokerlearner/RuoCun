@@ -1,0 +1,37 @@
+{
+  "environment_keys": [
+    "APPDATA",
+    "COMSPEC",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_NOSYSTEM",
+    "HOME",
+    "LOCALAPPDATA",
+    "NUMBER_OF_PROCESSORS",
+    "PATH",
+    "PATHEXT",
+    "PROGRAMDATA",
+    "PROGRAMFILES",
+    "PROGRAMFILES(X86)",
+    "PROGRAMW6432",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONIOENCODING",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME"
+  ],
+  "cwd": "D:\\java supplement\\Firstcode\\RuoCun\\.worktrees\\m20",
+  "arguments": [
+    "-I",
+    "-m",
+    "venv",
+    ".scratch/ruocun/integration-evidence/d20/.v"
+  ],
+  "executable": "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "exitcode": 0
+}

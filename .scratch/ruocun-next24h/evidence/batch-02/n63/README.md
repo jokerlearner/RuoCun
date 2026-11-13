@@ -1,0 +1,13 @@
+# 63 终端提示与标题源码候选
+
+63已满足16前置并claimed，本候选不自行resolved。MM-680/772/790按冻结来源迁移，NEW-09与notifier原mac/Linux/Windows桌面通知分支按ADR-0010/W6明确排除，不冒称完整通知已迁移。source.json保存7个源文件/测试哈希；产品notify-user.json保存完整原中英描述、参数原文、MIT与适配记录，模型可见描述明确当前终端渠道。
+
+NotifyUser保留plan/auto/shouldDefer与message min1，通知只经ctx.notifyUser交终端owner。响应明确终端请求及未发桌面通知，不把best-effort当作已看到；缺channel、关闭或失败诚实返回。RUOCUN_NO_NOTIFY存在优先DAO_NO_NOTIFY，仍按源精确“1”关闭。notifier不调用系统通知命令，也不启动隐藏PowerShell窗口，所有载荷先作为文本清洗。
+
+tab_attention保留标题栈push/pop、OSC-ST结束无BEL、focus报告启停、黄待处理/绿完成、重复抑制、改名保持颜色、控制字符清洗及24码点任务名截断。展示品牌沿冻结brand.ts“若存 Code”，与包/CLI名RuoCun独立。InputBroker新增set_tab_name/mark_attention/clear_attention/post_notification，全部复用已有同owner渲染队列与run_in_terminal，不加reader。焦点进入或真实按键清标记；模态打开标黄。完成/失败标记由实际runtime结果显式接入，不根据idle猜完成。普通非TTY/TERM=dumb不发标题控制；提示/标题写失败不设置业务render_error、不丢后续业务输出。
+
+notify-title-red为缺3模块的真实6项红，notify-title-green为6项绿；owner-red为set_tab_name缺方法真实红。owner-green共7项绿：沿原标题/NotifyUser/no-notify语义，并补必要同reader焦点/键入清理、主草稿保持和secondary sink失败不杀业务接缝。owner-regression复用既有3项输入owner回归，均通过。5源mypy通过；Ruff首次只报新增长import格式，最小整理后5源通过，原失败保留。未执行产品build/full、真实模型、桌面通知、用户剪贴板或真实WT操作。
+
+raw目录保存tools/run明确白名单、合成HOME/config/temp的真实command/stdout/stderr。所有回执秘密扫描false，不包含用户真实内容。本候选只证明源码与受控输入产品seam；实际WT标题恢复/焦点/终端提示和普通入口新工具注册待主协调集成集中取证，用户体验不在此代填。
+
+另按本票控制字符边界核发现既有App.clean_text只过滤ESC序列和C0，保留C1。沿现有notifier用例追加合成C1载荷真实red，提示专用cleanNotificationText补DEL/C1移除后两项受影响用例green、两源Ruff通过；普通转录未扩大改动。直接post_notification与工具notifier共用同一清洗，保留原红回执，不重跑已绿全组。

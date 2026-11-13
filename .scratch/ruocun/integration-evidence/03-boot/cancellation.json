@@ -1,0 +1,97 @@
+{
+  "keyboard_interrupt": {
+    "delivery": "controlled Python exception; real child kill/join",
+    "driver_exit": 1,
+    "report": {
+      "schema_version": 1,
+      "suite": "offline",
+      "scope": "task03 implemented subset",
+      "cases": [
+        {
+          "id": "CONTROLLED.slow",
+          "argv": [
+            "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+            "-I",
+            "-X",
+            "utf8",
+            "-c",
+            "import time; time.sleep(30)"
+          ],
+          "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\faults\\cancel\\CONTROLLED.slow",
+          "expected": {
+            "exit": 0,
+            "contains": "",
+            "stderr": false
+          },
+          "expected_source": "independent Task03 cancellation/cleanup requirement; synthetic owned process",
+          "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+          "exit": null,
+          "status": "cancelled",
+          "reason": "interrupted",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "cleanup": {
+            "command_joined": true,
+            "workspace_retained": true
+          }
+        },
+        {
+          "id": "CONTROLLED.after",
+          "status": "not-run",
+          "reason": "cancelled"
+        }
+      ],
+      "status": "not-passed",
+      "cleanup": {
+        "commands_joined": true,
+        "workspace_retained": true
+      }
+    },
+    "observed_child_exit": 1,
+    "no_live_child": true
+  },
+  "pipe_oserror": {
+    "delivery": "controlled OSError from communicate after real spawn",
+    "report": {
+      "id": "CONTROLLED.slow",
+      "argv": [
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Scripts\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-c",
+        "import time; time.sleep(30)"
+      ],
+      "cwd": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\faults\\CONTROLLED.slow",
+      "expected": {
+        "exit": 0,
+        "contains": "",
+        "stderr": false
+      },
+      "expected_source": "independent Task03 cancellation/cleanup requirement; synthetic owned process",
+      "environment": "explicit allowlist; synthetic home/config/temp; no PYTHONPATH",
+      "exit": null,
+      "status": "failed",
+      "reason": "OSError",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "cleanup": {
+        "command_joined": true,
+        "workspace_retained": true
+      }
+    },
+    "child_still_running_when_execute_returned": true,
+    "candidate_claimed_command_joined": true
+  },
+  "reviewer_cleanup": {
+    "owned_children_exited": true,
+    "actual_exit_codes": [
+      1,
+      1
+    ]
+  },
+  "installed_driver": {
+    "path": "C:\\Users\\PC\\AppData\\Local\\Temp\\RCm03 1105 中文 空格\\support\\Lib\\site-packages\\ruocun_acceptance\\driver.py",
+    "sha256": "1b723947371720db4178e9a91c10a1b5ef52ae20f3e74df62655ed3ca909f4d8"
+  }
+}

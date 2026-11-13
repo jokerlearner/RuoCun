@@ -1,0 +1,137 @@
+[
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/01-paste-green.txt",
+    "sha256": "20ee3f7b7e36d0f92a6c8c7a068f6ae5d7546cd4a3fd061d2250832019002977",
+    "bytes": 100,
+    "summary": [
+      "1 passed in 0.03s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/01-paste-red.txt",
+    "sha256": "3c5b8ca24faa7254e322b75ec37f205d073df8a7219bc6624940f52ef88c4ce1",
+    "bytes": 1050,
+    "summary": [
+      "1 error during collection !!!!!!!!!!!!!!!!!!!!",
+      "1 error in 0.20s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/02-state-green.txt",
+    "sha256": "18733c6117d6aa7220f7ea4380b3c5572239664c79b32655e5bff1cd992f93d6",
+    "bytes": 100,
+    "summary": [
+      "3 passed in 0.03s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/02-state-red.txt",
+    "sha256": "1fe1f62fa3ab52b589b4f151b05ce7e9d975c85bc0f61f14cd1346b1680f8774",
+    "bytes": 1456,
+    "summary": [
+      "2 failed, 1 passed in 0.13s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/03-protocol-green.txt",
+    "sha256": "86a571f4a2acfabd986d10c6800052647a53dea2d8ecc8641eecc2c37173cd9e",
+    "bytes": 100,
+    "summary": [
+      "6 passed in 0.03s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/03-protocol-red.txt",
+    "sha256": "06a758ef0fc645071bf3bb17615b1916caac1cbafc9bd445c22688f6525b7999",
+    "bytes": 1750,
+    "summary": [
+      "3 failed, 3 passed in 0.14s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/04-worker-green.txt",
+    "sha256": "329ed2185adaf9c8b092dca263076f89d828287b0e5bc184384ff91deef7423a",
+    "bytes": 100,
+    "summary": [
+      "7 passed in 0.24s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/04-worker-red.txt",
+    "sha256": "6f1000f51bc2fa9f25502eed9966022d33dbe7aa3c504c6813ed1512915a103b",
+    "bytes": 917,
+    "summary": [
+      "1 failed, 6 passed in 0.20s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/05-inline-green-attempt.txt",
+    "sha256": "d377223f0e89124918d60b8e8e23a06cb8e85dc68a8abc6ca70a5b3448f065bf",
+    "bytes": 100,
+    "summary": [
+      "8 passed in 0.46s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/05-inline-red.txt",
+    "sha256": "099de8766075d9a70b6bd30d5ac1dcb32cd9372342229dfacc7303bfca4f320d",
+    "bytes": 1047,
+    "summary": [
+      "1 failed, 7 passed in 0.56s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/06-source-trim-green.txt",
+    "sha256": "9a9ddfa88f5bcc5379515ff04c257c1af986350802f22d769e0b7534c146d227",
+    "bytes": 100,
+    "summary": [
+      "9 passed in 0.51s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/06-source-trim-red.txt",
+    "sha256": "6b78a5506df683ec436f1bd2b2ba60861b31e06033da85c2026095fae9ee82ed",
+    "bytes": 4756,
+    "summary": [
+      "1 failed, 8 passed in 0.73s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/07-extended-checks-green.txt",
+    "sha256": "a0b1a877291e4cc37388c668ed29c389256a9be5707490de50cf11b55534ffd7",
+    "bytes": 101,
+    "summary": [
+      "13 passed in 1.09s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/07-extended-checks.txt",
+    "sha256": "3779de1e3141bc99eff3a148ed58290c574a1df5d64306f607e766e386de295a",
+    "bytes": 4043,
+    "summary": [
+      "1 failed, 12 passed in 1.05s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/08-focus-green.txt",
+    "sha256": "43f109b0f7b50447b32dc265698a115af2c875832e364fd2d316ce216aba6368",
+    "bytes": 101,
+    "summary": [
+      "14 passed in 1.10s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/08-focus-red.txt",
+    "sha256": "0d4bd2af70cc6661aea97f15cca1ba3a2a588840a87e31428662fc041e92380a",
+    "bytes": 4219,
+    "summary": [
+      "1 failed, 13 passed in 1.37s"
+    ]
+  },
+  {
+    "path": ".scratch/ruocun-discovery/experiments/terminal/evidence/automated/locked-install.txt",
+    "sha256": "38332454616422720e6abb80bad6c3cf4b3508a1e00100f769151bbc97cac1fe",
+    "bytes": 2604,
+    "summary": []
+  }
+]

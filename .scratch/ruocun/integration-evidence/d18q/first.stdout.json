@@ -1,0 +1,8 @@
+{
+  "archive_files": 134,
+  "original_files": 874,
+  "original_rounds": 19,
+  "workers": 11,
+  "pytest_passed": 6,
+  "blocking_finding": "pending I/O may be freed on abnormal cancellation; static review only"
+}

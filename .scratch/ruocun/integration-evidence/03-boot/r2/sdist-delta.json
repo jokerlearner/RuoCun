@@ -1,0 +1,26 @@
+[
+  {
+    "package": "product",
+    "old_sha256": "5b191e6d5194826e61713b4bba263c28c0e1aeb684e70f0fa61d4766b3190c75",
+    "new_sha256": "5b191e6d5194826e61713b4bba263c28c0e1aeb684e70f0fa61d4766b3190c75",
+    "old_gzip_header": "1f8b08000011365e02ff",
+    "new_gzip_header": "1f8b08000011365e02ff",
+    "member_changes": []
+  },
+  {
+    "package": "support",
+    "old_sha256": "87eb8de492ea440be838300b158871e65e4879fa0409e8441a57710510d44f5b",
+    "new_sha256": "b491970aadd4c729bbb02e4ea4665dbcaf130c49aa10e01cc100d921a903f00c",
+    "old_gzip_header": "1f8b08000011365e02ff",
+    "new_gzip_header": "1f8b08000011365e02ff",
+    "member_changes": [
+      {
+        "path": "ruocun_dev_support-0.1.0/ruocun_acceptance/driver.py",
+        "old_sha256": "1b723947371720db4178e9a91c10a1b5ef52ae20f3e74df62655ed3ca909f4d8",
+        "new_sha256": "784d4e707c1ce17eab1437e791d1d2a5591986c53241d241576cdb938e26f5ed",
+        "data_equal": false,
+        "header_equal": false
+      }
+    ]
+  }
+]
