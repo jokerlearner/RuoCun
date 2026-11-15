@@ -1,4 +1,4 @@
-"""Frozen unified_reflect.ts model-only request and filtered result (MIT)."""
+"""组装轮末反思所需的模型输入，并过滤返回内容。写入记忆与展示提醒由外层运行时负责。"""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from collections.abc import Mapping, Sequence
 from ..client.types import ChatMessage, StreamChatOptions
 from ..memory.distill import ModelCall, isCatalogNoise
 from ..memory.secrets import findSecrets
+from .experience_memory import EXPERIENCE_TAIL
 from .reflect_result import ReflectResult, parseReflectResult
 from .reflect_tail import REFLECT_TAIL
 
@@ -38,12 +39,13 @@ async def reflect(
     messages: Sequence[ChatMessage], *, options: StreamChatOptions, call: ModelCall,
     existing: Sequence[Mapping[str, str]] = (), fork: bool = False, reasoningEffort: str = "max",
     signal: threading.Event | None = None,
+    taskAware: bool = False,
 ) -> ReflectResult:
     if signal is not None and signal.is_set():
         raise InterruptedError("反思已取消。")
     request = options.copy()
     request.pop("parallelToolCalls", None)
-    tail = buildTail(existing)
+    tail = buildTail(existing) + (EXPERIENCE_TAIL if taskAware else "")
     if fork:
         request["messages"] = [*copy.deepcopy(messages), {"role": "user", "content": tail}]
         request["extra"] = {"reasoning_effort": reasoningEffort}
@@ -55,7 +57,7 @@ async def reflect(
         request.pop("tools", None)
         request["messages"] = [{"role": "system", "content": tail}, {"role": "user", "content": _transcript(messages)}]
         request["extra"] = {"thinking": {"type": "disabled"}, "temperature": 0}
-    parsed = parseReflectResult(await call(request) or "")
+    parsed = parseReflectResult(await call(request) or "", taskAware=taskAware)
     if signal is not None and signal.is_set():
         raise InterruptedError("反思已取消，结果未应用。")
     parsed["memories"] = [memory for memory in parsed["memories"]

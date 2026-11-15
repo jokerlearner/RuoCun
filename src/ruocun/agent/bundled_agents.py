@@ -1,4 +1,4 @@
-"""Build the standard RuoCun agents from packaged instructions."""
+"""从随包指令资源构建若存内置代理定义，供代理发现和任务派发使用。"""
 from __future__ import annotations
 
 import json

@@ -1,7 +1,6 @@
-"""人民币费用估算：冻结 ``src/session/cost.ts`` 的 Python 迁移（MIT）。
+"""根据模型和实际 token 用量估算人民币费用。
 
-价格为冻结来源数据，不代表当前厂商报价。已知模型优先于环境覆盖；只有
-未知模型使用 pro/flash 启发式及相应环境值。环境别名遵守 D09。
+已知模型使用内置价格表。未知模型按名称选择对应档位，再读取环境覆盖。这些价格用于本地估算。
 """
 
 from __future__ import annotations
@@ -49,7 +48,7 @@ KNOWN_PRICES: dict[str, Prices] = {
 
 
 def _num(value: str | None, default: float) -> float:
-    """来源 Number(undefined) 为 NaN；空字符串为 0；非法/负数退回缺省。"""
+    """延续既有数值转换口径，空字符串为零，非法或负数回到缺省值。"""
     if value is None:
         return default
     text = value.strip()
@@ -102,6 +101,6 @@ def estimateCostByModel(
 
 def formatCNY(yuan: float) -> str:
     digits = 4 if yuan < .01 else 3 if yuan < 1 else 2
-    # JS toFixed 在恰好居中时向较大绝对值舍入，Python format 默认采用偶数舍入。
+    # 正好处于中点时按 JavaScript toFixed 向绝对值更大的一侧舍入。
     amount = Decimal.from_float(float(yuan)).quantize(Decimal(1).scaleb(-digits), rounding=ROUND_HALF_UP)
     return f"￥{amount:.{digits}f}"

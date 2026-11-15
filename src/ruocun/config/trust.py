@@ -1,7 +1,6 @@
-"""Reference config/trust.ts (MIT), native-only trust receipt per D09.
+"""保存用户已信任的项目目录，并供项目设置和 Hooks 在加载前核对。
 
-Only project settings/hooks use this gate. Compatibility source selection is
-the caller's responsibility, and no legacy trust receipt is read or written.
+信任凭据来自若存原生用户目录，调用方负责选择可读取的项目配置来源。
 """
 from __future__ import annotations
 
@@ -40,7 +39,7 @@ async def addTrusted(root: str | Path, *, userRoot: Path | None = None) -> None:
         values = json.loads(file.read_text(encoding="utf-8"), parse_constant=_rejectConstant)
     except FileNotFoundError:
         values = []
-    # ADR-0013: never overwrite damaged trust receipts with an empty list.
+    # 损坏的信任记录需要人工核实，保留文件以免丢失原有授权信息。
     if not isinstance(values, list):
         raise ValueError(f"{file}: 信任记录不是数组，保留原文件")
     if str(root) in values:

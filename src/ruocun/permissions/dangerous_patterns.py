@@ -1,4 +1,4 @@
-"""Reference dangerous_patterns.ts (MIT): auto-mode broad execution permissions."""
+"""识别覆盖任意命令或整类解释器的宽泛 Bash 允许规则，供自动模式判断。"""
 
 _PATTERNS = (
     "python", "python3", "python2", "node", "deno", "tsx", "ruby", "perl", "php", "lua",

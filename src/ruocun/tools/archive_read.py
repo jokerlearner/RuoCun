@@ -1,4 +1,4 @@
-"""Read archived originals through the authority bound to this execution scope."""
+"""由当前执行范围绑定的读取入口返回归档原文。工具仅传递归档标识和页码，归档可见性由绑定的入口判断。"""
 
 from __future__ import annotations
 

@@ -173,6 +173,8 @@ def test_effective_definition_controls_actual_child_tools_model_skill_and_memory
 
 
 _EXTERNAL = _CODE[:_CODE.index("async def scenario():")] + r'''
+from ruocun.agent.runtime_context import buildRuntimeContext,isRuntimeContext
+
 async def scenario():
     home=root/'home';workspace=root/'workspace';working=root/'worktree'
     workspace.mkdir();working.mkdir()
@@ -224,7 +226,8 @@ async def scenario():
         assert all('未获授权访问' in tool_text[call_id] for call_id in ['read','blocked','again'])
         assert len(approvals)==4 and sum(s.endswith(str(once)) for s in approvals)==2
         system=last[0]['content']
-        assert str(working) in system and str(workspace/'.ruocun'/'agents'/'memory'/'role'/'memory.md') in system
+        assert next(m for m in reversed(last) if isRuntimeContext(m))==buildRuntimeContext(ctx)
+        assert str(working) not in system and str(workspace/'.ruocun'/'agents'/'memory'/'role'/'memory.md') in system
         assert str(working/'.ruocun'/'agents'/'memory') not in system
         assert permissions.getMode()=='default'
     finally:await conversation.close()

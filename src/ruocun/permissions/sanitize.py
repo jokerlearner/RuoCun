@@ -1,4 +1,4 @@
-"""Frozen permissions/sanitize.ts (MIT), detection preserves command semantics."""
+"""识别隐藏控制字符和 Unicode 规范化差异，为权限检查提供可疑标记与清理后的文本。"""
 from __future__ import annotations
 
 import unicodedata

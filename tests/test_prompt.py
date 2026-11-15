@@ -13,6 +13,8 @@ import re
 from importlib.resources import files
 from pathlib import Path
 
+import pytest
+
 from ruocun import env_snapshot
 from ruocun.prompt import system_prompt
 
@@ -33,6 +35,14 @@ def test_zh_identity_line_and_tool_summaries():
     assert "交互式智能助手" in p
     assert "- Read:读文件" in p
     assert "- Write:写文件" in p
+
+
+@pytest.mark.parametrize("lang", ["zh", "en"])
+def test_fixed_system_is_identical_across_working_directories(lang):
+    first = _prompt(lang=lang, cwd=r"D:\synthetic\first")
+    second = _prompt(lang=lang, cwd=r"D:\synthetic\second")
+    assert first == second
+    assert r"D:\synthetic" not in first and "<ruocun-runtime-context>" in first
 
 
 def test_zh_model_self_identification_and_vision():

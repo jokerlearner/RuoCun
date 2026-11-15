@@ -1,4 +1,7 @@
-"""Frozen permissions/classifier_model.ts (MIT), session-local fallback cache."""
+"""选择智能审批使用的模型，并在当前会话记住可用的回退路径。
+
+首选模型遇到非限流、非上下文超限的错误时尝试主模型。主模型调用成功后才记住本次回退。
+"""
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable

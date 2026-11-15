@@ -1,4 +1,4 @@
-"""Agent dispatch from frozen tools/agent.ts (MIT)."""
+"""把 Agent 工具参数转换成子代理请求，通过当前会话提供的运行入口派发。前台调用汇总结果，后台调用交回任务标识。"""
 from __future__ import annotations
 
 import asyncio
@@ -24,7 +24,7 @@ class AgentRequest:
 
 
 class AgentFailure(ValueError):
-    """A known failure or cancellation may safely settle the parent tool result."""
+    """表示可以确定失败或取消的子代理运行，父回合可以据此完成工具结果。"""
 
 
 def normalizeModel(model: str | None) -> str | None:
@@ -45,6 +45,7 @@ async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
         isolation = "remote"
     elif requested_isolation == "worktree" or args.get("isolate") is True:
         isolation = "worktree"
+    # 分叉沿用父会话的运行边界，拒绝同时覆盖模型、权限模式或隔离方式。
     if fork and (args.get("model") or args.get("mode")):
         return "fork 与 model/mode 覆盖互斥。请保留继承设置，或关闭 fork 后按指定设置派发。"
     if fork and isolation is not None:

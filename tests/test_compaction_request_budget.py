@@ -5,6 +5,7 @@ import asyncio
 import pytest
 
 from ruocun.agent.context_runtime import ContextManager
+from ruocun.agent.runtime_context import buildRuntimeContext
 from ruocun.client.client import buildRequestBody
 from ruocun.session.session import Session
 from ruocun.tools.types import ToolContext
@@ -51,10 +52,19 @@ def test_first_request_stops_without_sending_an_indivisible_oversized_input():
         original = list(session.messages)
         options = {"model": session.model, "provider": "zhipu", "messages": session.messages}
         ctx = ToolContext("synthetic-workspace")
-        manager = ContextManager(session, object(), ctx, options,
-                                 {"RUOCUN_CONTEXT_WINDOW": "1000"}, lambda _text: None)
+        class Journal:
+            async def replace_context(self, current, messages, *, reset_prompt=True):
+                current.messages = messages
+
+            async def save(self, current):
+                pass
+
+        manager = ContextManager(session, Journal(), ctx, options,
+                                 {"RUOCUN_CONTEXT_WINDOW": "1000", "RUOCUN_COMPACT_RETAIN_TOKENS": "20"}, lambda _text: None)
+        sent = []
 
         def request(_options, _context):
+            sent.append(_options)
             raise AssertionError("oversized first request must not reach the provider")
 
         async def approve(_name, _args):
@@ -63,7 +73,8 @@ def test_first_request_stops_without_sending_an_indivisible_oversized_input():
         result = await run_turn(session, options, ToolRegistry(), ctx, approve=approve, request=request,
                                 request_preflight=manager.before_request)
         assert result.status == "compaction_failed"
-        assert session.messages == original
+        assert session.messages == [*original, buildRuntimeContext(ctx)]
+        assert not sent
     asyncio.run(scenario())
 
 

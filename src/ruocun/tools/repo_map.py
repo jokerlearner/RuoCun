@@ -1,4 +1,4 @@
-"""Frozen tools/repo_map.ts read-only deferred tool (MIT)."""
+"""从当前工作目录构造仓库索引，并按令牌预算限制交给模型的内容。"""
 
 from typing import Any
 

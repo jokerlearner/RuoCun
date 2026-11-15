@@ -1,4 +1,4 @@
-"""冻结 skills/usage.ts（MIT）的计数和日期衰减，仅使用原生数据根。"""
+"""读写技能使用记录，并按调用频次和时间衰减计算排序分数。"""
 
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ def _save(file: Path, usage: UsageMap) -> UsageSaveResult:
     except FileNotFoundError:
         pass
     except (OSError, ValueError):
-        return "failed"  # 空读视图不能授权覆盖损坏或无法读取的原文件。
+        return "failed"  # 先从原文件读取已有记录，读取失败时保留该文件供核实。
     try:
         data = json.dumps(usage, ensure_ascii=False, indent=2).encode("utf-8", errors="backslashreplace")
         atomic_publish(file, data)
@@ -73,5 +73,5 @@ def _save(file: Path, usage: UsageMap) -> UsageSaveResult:
 
 
 async def saveUsage(userRoot: Path, usage: UsageMap) -> UsageSaveResult:
-    """一次发布。失败或未确认由调用方停止本次记账，工具结果仍有效。"""
+    """尝试保存一次使用记录，返回调用方可据以决定是否继续计数的结果。"""
     return await asyncio.to_thread(_save, userRoot / "skill-usage.json", usage)

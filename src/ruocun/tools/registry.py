@@ -1,4 +1,7 @@
-"""冻结 registry.ts 的普通内置工具注册、schema 与派发子集（MIT）。"""
+"""保存工具定义，生成模型可见的工具参数，并把已校验的调用交给对应处理器。
+
+分叉时为本次已公布的工具及其派发定义建立快照。
+"""
 
 from __future__ import annotations
 
@@ -43,7 +46,7 @@ class ToolRegistry:
             self._activated_mcp.add(tool.name)
 
     def filtered(self, predicate: Callable[[Tool], bool]) -> ToolRegistry:
-        """An independent dispatch pool with the same retained tool definitions."""
+        """按条件保留部分工具，构建可独立派发的注册表。"""
         child = ToolRegistry()
         for tool in self._tools.values():
             if predicate(tool):
@@ -51,7 +54,7 @@ class ToolRegistry:
         return child
 
     def forkSnapshot(self, api_tools: Sequence[ApiTool]) -> ToolSnapshot | None:
-        """Freeze the tools sent in this request and their matching dispatch definitions."""
+        """冻结本次发送给模型的工具清单，并把其中每个工具与派发定义对应起来。"""
         definitions: dict[str, Tool] = {}
         for entry in api_tools:
             name = entry.get("function", {}).get("name")
@@ -119,7 +122,7 @@ class ToolRegistry:
         return result
 
     def restoreDeferredVisibility(self, names: Sequence[str]) -> None:
-        """Activate exact names from a verified continuation candidate's former API roster."""
+        """按已验证的续接记录恢复延迟工具的可见性，只启用记录中的确切名称。"""
         self._activated_deferred.update(name for name in names
                                         if (tool := self.get(name)) is not None and tool.shouldDefer)
 
@@ -143,7 +146,7 @@ class ToolRegistry:
         return "\n\n".join(hits) + f"\n\n(以上 {len(hits)} 个工具已激活,从下一次工具调用起可直接调用它们。)"
 
     def validate(self, name: str, rawArgs: str) -> dict[str, Any]:
-        """无副作用；执行器可在审批和写入工具意图前调用。"""
+        """解析和校验工具参数，可在审批以及记录执行意图之前调用。"""
         tool = self.get(name)
         if tool is None:
             raise ValueError(f"unknown tool: {name}")

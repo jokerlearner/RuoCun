@@ -1,4 +1,4 @@
-"""Frozen src/tools/fetch_extract.ts (MIT), endpoint-aware extraction model."""
+"""根据账户的端点选择网页提取模型，让辅助提取兼容当前的服务商。"""
 
 from ..config.model_selection import defaultAuxiliaryModel, getAgentModel
 from ..config.profiles import Provider

@@ -1,4 +1,4 @@
-"""冻结 file_search.ts 的 Glob 工具（MIT）。"""
+"""将 Glob 请求定位到已批准访问的目录，匹配相对路径并整理搜索结果。"""
 
 from __future__ import annotations
 
@@ -51,5 +51,5 @@ globFilesTool = Tool(
     }, ["glob"]), capability="read", approval="auto", handler=_glob,
 )
 
-# 来源实际变量名；组合根使用统一的 globFilesTool。
+# 为调用方保留文件搜索工具的原有名称。
 fileSearchTool = globFilesTool

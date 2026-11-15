@@ -1,13 +1,6 @@
-"""SQLite 连接与显式事务（MM-601 / REC-03）。
+"""为已核验的 SQLite 运行库提供连接配置与事务助手。
 
-冻结来源：``src/session/sqlite.ts``（BEGIN IMMEDIATE / COMMIT / ROLLBACK，
-ROLLBACK 失败保留原错）与 ``src/session/durable_store.ts:56-79``
-（busy_timeout=3000 / journal_mode=WAL / synchronous=FULL / foreign_keys=ON，
-并读回核验）。09 报告 ``# SQLite及文件路线`` 进一步要求：保留默认线程检查、
-DB 专属单线程创建/使用/关闭、SQL 异常 / rollback 异常 / "提交结果未确认"
-分开保留、失败保留原错不伪造成功。
-
-连接只在受控运行库门禁通过之后由调用方创建；本模块不做静默 DLL 回退。
+同一存储线程打开、使用并关闭连接。写事务显式开始并提交，将事务体失败、回滚失败和提交未确认分别传给调用方。
 """
 
 from __future__ import annotations
@@ -24,18 +17,17 @@ _T = TypeVar("_T")
 
 
 class RollbackError(StoreError):
-    """事务体已失败且 ROLLBACK 也失败；原错保留在 __cause__。"""
+    """事务体和回滚先后失败，原始异常保留在 __cause__ 中。"""
 
 
 class CommitUnconfirmedError(StoreError):
-    """COMMIT 回执未确认：不得因取消/异常推断已 rollback 或已提交。"""
+    """提交调用报错，数据库是否已提交仍待确认。"""
 
 
 def connect_database(path: Any, readonly: bool = False) -> "sqlite3.Connection":
-    """在本进程已核验的 sqlite3 上打开连接。
+    """在调用方已核验的 SQLite 运行库上打开连接。
 
-    isolation_level=None 表示显式事务；timeout=3s；check_same_thread 保持默认，
-    连接只能由创建它的 DB 专属线程使用。
+    禁用隐式事务，忙等待三秒。保留 sqlite3 默认的线程检查，由创建连接的存储线程继续使用它。
     """
     import sqlite3
 
@@ -51,7 +43,7 @@ def connect_database(path: Any, readonly: bool = False) -> "sqlite3.Connection":
 
 
 def configure_connection(con: "sqlite3.Connection") -> dict[str, Any]:
-    """设置并读回 WAL / FULL / busy_timeout=3000 / foreign_keys=ON。"""
+    """配置并读回 WAL、FULL 同步、三秒忙等待和外键检查。"""
     con.execute("PRAGMA busy_timeout=3000")
     con.execute("PRAGMA foreign_keys=ON")
     con.execute("PRAGMA journal_mode=WAL")
@@ -74,12 +66,9 @@ def configure_connection(con: "sqlite3.Connection") -> dict[str, Any]:
 def transaction(
     con: "sqlite3.Connection", body: Callable[[], _T], *, readonly: bool = False,
 ) -> _T:
-    """显式 BEGIN IMMEDIATE / COMMIT / ROLLBACK；三类失败分开保留。
+    """显式开启、提交或回滚写事务，并区分各阶段的失败。
 
-    - 事务体异常：ROLLBACK 成功则原样重抛原错；ROLLBACK 也失败则抛
-      RollbackError 并把原错作为 __cause__ 保留。
-    - COMMIT 异常：抛 CommitUnconfirmedError（提交结果未确认），原错保留在
-      __cause__；不得据此推断 rollback 或已提交，也不得重发事务。
+    事务体抛出异常时先回滚，回滚失败则附带原错抛出 RollbackError。提交阶段报错时抛出 CommitUnconfirmedError，由调用方核查原事务状态。
     """
     con.execute("BEGIN" if readonly else "BEGIN IMMEDIATE")
     try:

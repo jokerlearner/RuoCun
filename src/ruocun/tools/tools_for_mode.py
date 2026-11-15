@@ -1,4 +1,4 @@
-"""Reference tools_for_mode.ts (MIT); production catalog omits inactive deferred tools."""
+"""按权限模式生成模型可见的工具清单，仅暴露当前可用的 MCP 工具和已启用的延迟工具。"""
 from typing import Literal
 
 from ..client.types import ApiTool

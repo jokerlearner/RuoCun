@@ -1,4 +1,4 @@
-"""Frozen tools/exit_worktree.ts (MIT)."""
+"""退出当前工作树，按用户选择保留或移除工作树，并恢复会话的工作目录。"""
 
 from __future__ import annotations
 

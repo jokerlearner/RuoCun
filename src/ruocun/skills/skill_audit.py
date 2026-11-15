@@ -1,4 +1,4 @@
-"""冻结 skills/skill_audit.ts（MIT）的已加载事件及统计。"""
+"""写入技能调用的 JSONL 记录，并按技能汇总调用情况。"""
 
 from __future__ import annotations
 
@@ -84,7 +84,7 @@ def readAllSkillTraces(sessionsRoot: str | Path) -> list[SkillTraceEvent]:
     for session in sessions:
         try:
             raw = (session / "skill-trace.jsonl").read_bytes().decode("utf-8", errors="replace")
-            lines = raw.split("\n")  # JSONL只在LF分行，保留字符串中的Unicode行分隔符。
+            lines = raw.split("\n")  # JSONL 记录以 LF 切分，字段里的 Unicode 分隔符仍属于内容。
         except OSError:
             continue
         for line in lines:

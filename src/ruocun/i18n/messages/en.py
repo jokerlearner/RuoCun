@@ -1,4 +1,4 @@
-"""English terminal labels, notices, and tips."""
+"""英文终端标签、通知和快捷用法。"""
 
 en: dict[str, str] = {'onboard.welcome': 'Welcome to RuoCun Code. Set up your model and workspace to begin.',
  'onboard.step1': '[1/2] DeepSeek API key',

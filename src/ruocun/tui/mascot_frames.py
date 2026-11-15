@@ -1,4 +1,4 @@
-"""Load RuoCun's approved mascot animation and terminal still."""
+"""读取吉祥物的动画资源和静态图，将静态图转换为终端字符网格。"""
 
 import json
 from functools import cache
@@ -57,7 +57,7 @@ def _distance(first: bytes, second: bytes) -> int:
 
 
 def _quadrants(samples: tuple[bytes, bytes, bytes, bytes]) -> tuple[int, bytes, bytes]:
-    """Map four sample quadrants to the two colors a terminal cell can show."""
+    """把一个终端字符覆盖的四个采样点归入两种显示色。"""
     first, second = max(combinations(samples, 2), key=lambda pair: _distance(*pair))
     if first == second:
         return 0, first, second

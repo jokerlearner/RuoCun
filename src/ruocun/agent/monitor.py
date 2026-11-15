@@ -1,4 +1,4 @@
-"""Monitor line batching on the existing managed process tree."""
+"""在现有受管进程树上按批交付 Monitor 的输出行，沿用受管执行的控制和回收路径。"""
 
 from __future__ import annotations
 
@@ -9,11 +9,13 @@ from time import monotonic
 from typing import Literal
 
 from ..platform.process_tree import run_foreground_plan
+from ..platform.sandbox import sandboxExecutionPlan
 from ..platform.shell_plan import ShellExecutionPlan
 
 
 async def runMonitor(plan: ShellExecutionPlan, description: str, signal: threading.Event, *,
                      timeout_ms: int | None, emit: Callable[[str], Awaitable[None]]) -> str:
+    plan = sandboxExecutionPlan(plan)
     loop = asyncio.get_running_loop()
     queue: asyncio.Queue[str] = asyncio.Queue()
 

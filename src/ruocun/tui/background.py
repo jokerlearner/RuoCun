@@ -1,4 +1,4 @@
-"""冻结tui/background.ts（MIT）：环境→同reader OSC→AppleTerminal→dark。"""
+"""为界面确定亮色或暗色背景。优先采用显式环境信息，再使用同一终端输入链路取得的查询结果。其后尝试 Apple Terminal，最后回退到暗色。"""
 
 from __future__ import annotations
 

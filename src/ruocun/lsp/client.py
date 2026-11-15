@@ -1,4 +1,7 @@
-"""Frozen lsp/client.ts operations; D09 bounded JSON-RPC and shutdown (MIT)."""
+"""管理单个语言服务器的进程和 JSON-RPC 会话。
+
+启动时完成 LSP 初始化，按请求编号匹配返回结果，发送位置查询前同步对应文档。释放会话时回收服务器进程树和管道。
+"""
 
 from __future__ import annotations
 
@@ -128,7 +131,7 @@ class LspClient:
             if not future.done():
                 future.cancel()
             elif not future.cancelled():
-                future.exception()  # Consume a racing reader failure even if sending was canceled.
+                future.exception()  # 发送被取消时，读取任务也可能同时失败，取出结果以完成清理。
 
     async def _read(self) -> None:
         assert self._process is not None and self._process.stdout is not None
@@ -165,12 +168,12 @@ class LspClient:
                     if "id" in message:
                         await self._write({"jsonrpc": "2.0", "id": identity,
                                            "error": {"code": -32601, "message": "Method not found"}})
-                    continue  # Source declares no client request/notification extensions.
+                    continue  # 客户端没有注册服务端主动调用的扩展处理器。
                 if type(identity) is not int:
                     continue
                 future = self._pending.get(identity)
                 if future is None or future.done():
-                    continue  # Canceled/late responses never settle a later request.
+                    continue  # 迟到的响应按原请求编号匹配，已取消的编号没有等待方。
                 if "error" in message:
                     error = message["error"]
                     future.set_exception(RuntimeError("LSP server error: " + str(error)))
@@ -187,7 +190,7 @@ class LspClient:
     async def _drain_stderr(self) -> None:
         assert self._process is not None and self._process.stderr is not None
         while await self._process.stderr.read(65536):
-            pass  # Never retain user-server stderr or unbounded diagnostic output.
+            pass  # 持续排空服务端标准错误，避免管道写满或保留用户侧诊断内容。
 
     async def _initialize(self) -> None:
         command = self.command
@@ -360,7 +363,7 @@ class LspClient:
                     try:
                         await asyncio.wait_for(process.wait(), 1)
                     except TimeoutError:
-                        pass  # The bound Job/group is reclaimed below, including inherited pipes.
+                        pass  # 下方回收服务端进程树，以关闭仍被后代进程持有的管道。
             finally:
                 if self._job is not None:
                     await asyncio.to_thread(self._job.close)

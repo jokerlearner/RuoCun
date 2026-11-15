@@ -11,15 +11,18 @@ import httpx
 from ruocun.agent.background_runtime import BackgroundRuntime
 from ruocun.agent.deck_bridge import DeckBridge, DeckOptions
 from ruocun.agent.deck_messages import messagePage
+from ruocun.agent.runtime_context import buildRuntimeContext
 from ruocun.agent.session_scheduler import SessionScheduler
 from ruocun.session.contract import AcceptedInput
 from ruocun.session.session import Session
+from ruocun.tools.types import ToolContext
 from ruocun.tui.render import plainEvents
 
 
 def test_deck_message_projection_hides_system_and_image_payloads():
     messages = [
         {"role": "system", "content": "private instruction"},
+        buildRuntimeContext(ToolContext("synthetic-runtime")),
         {"role": "user", "content": [{"type": "text", "text": "配图"}, {"type": "image_url", "image_url": "private bytes"}]},
         {"role": "assistant", "content": "长" * 24001, "tool_calls": [
             {"id": "tool", "function": {"name": "Read", "arguments": "x" * 12001}},

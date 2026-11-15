@@ -1,6 +1,6 @@
 # 安装、更新和恢复
 
-当前安装产物面向 **Windows x64 / CPython 3.11**，实际验证使用 3.11.9。准备固定候选 wheel、同批运行锁及对应的离线 wheelhouse。用户侧验证和开发依赖各自使用独立 Python 环境。[产物与摘要](release/batch-09.md)
+0.9.0 安装包面向 **Windows x64 / CPython 3.11**，验证使用 3.11.9。从 [GitHub Release](https://github.com/jokerlearner/RuoCun/releases/tag/v0.9.0) 下载 wheel 与校验文件。普通安装见[项目首页](../README.md)，离线安装还需准备仓库内的运行锁和依赖 wheelhouse。[版本说明](release/v0.9.0.md)
 
 ## 新装
 
@@ -8,7 +8,7 @@
 
 ```powershell
 $venvPath = Join-Path $env:LOCALAPPDATA 'RuoCun\venv'
-$wheel = 'C:\path\to\ruocun-0.1.0.dev0-py311-none-win_amd64.whl'
+$wheel = 'C:\path\to\ruocun-0.9.0-py311-none-win_amd64.whl'
 $runtimeLock = 'C:\path\to\requirements-runtime-win311.lock'
 $wheelhouse = 'C:\path\to\wheelhouse'
 py -3.11 -m venv $venvPath
@@ -28,7 +28,7 @@ $ruocunPython = Join-Path $venvPath 'Scripts\python.exe'
 
 1. 使用 `/tasks` 和受管后台工具确认活动任务已完成或明确停止。用 `/exit` 退出，确认本次控制器、runner 和 IPC helper 都已收尾。`/quit --keep-background` 会刻意留下受支持的后台 Shell。
 2. 按原目录结构备份整个 `$HOME\.ruocun`，包含存在的会话数据库、SQLite 伴随文件、设置和运行目录。若用 `--config` 选择了其他配置文件，也单独备份。Windows Credential Manager 保存的 `keyRef` 引用与系统登录绑定，跨账户或跨机恢复时从向导重新录入密钥。若先前的账户来自外部配置，更新前在若存的 `/account` 中配置账户，更新后确认选中该账户。
-3. 保留旧环境和旧包。按新装步骤在新 venv 安装已核对的候选，并执行 `pip check`。若原 venv 由你专用于 RuoCun，也可在更新锁定依赖后使用 `pip install --no-index --no-deps --force-reinstall <新wheel>` 换包。同为开发版 `0.1.0.dev0` 时用发布摘要区分包。
+3. 保留旧环境和旧包。按新装步骤在新 venv 安装已核对的 wheel，并执行 `pip check`。若原 venv 由你专用于 RuoCun，也可在更新锁定依赖后使用 `pip install --no-index --no-deps --force-reinstall <新wheel>` 换包。按版本和发布摘要核对实际安装的包。
 4. 若从旧storage1更新到B-r3/storage3，停全部旧进程并保留备份后，先在原工作区显式运行 `python -m ruocun --cwd <原工作区> --upgrade-session <会话ID>`；不自动升级活动或未确认会话。再用 `python -m ruocun --continue <会话ID>` 打开。恢复判断可用 `/recovery` 查询。旧操作结果不明时保留现场，按真实结果登记决定。旧程序会拒绝新格式，回退时需同时恢复原数据备份，不能只换回旧解释器。
 5. 遇到损坏或不兼容配置，先保存原文件与出错回执，停止使用该配置进行写入。使用保留的旧包或旧环境，并把完整备份恢复到同一用户、同一位置。会话库损坏时保留原数据库及伴随文件。当前交付采用手动备份和手动恢复。
 

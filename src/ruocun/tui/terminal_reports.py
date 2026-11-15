@@ -1,4 +1,7 @@
-"""D06单reader协议适配的产品迁移；CPR仅交还正在等待回包的ptk。"""
+"""在现有终端输入链路中区分普通按键、粘贴和设备回包。
+
+终端查询按顺序执行并设有超时。光标回包仅在 prompt_toolkit 正等待它时转交。
+"""
 from __future__ import annotations
 
 import asyncio
@@ -150,7 +153,7 @@ class Reports:
     def _append_paste(self, text: str, end: int) -> None:
         if self._paste_rejected:
             return
-        # 每次只编码有限片段，跨限feed不会先复制/编码整段载荷。
+        # 逐片计算字节数，避免在判断超限前复制并编码整段粘贴数据。
         for offset in range(0, end, 4096):
             part = text[offset:min(offset + 4096, end)]
             size = len(part.encode("utf-8", errors="surrogatepass"))
@@ -189,10 +192,9 @@ class Reports:
 
 
 class ParserGate:
-    """锁版本窄适配：在 ptk 的 VT parser 前过滤，不增设 stdin reader。
+    """在 prompt_toolkit 3.0.52 的 VT 解析器前过滤输入。
 
-    封装并检查已锁定 3.0.52 的 parser slot。
-    不替换 raw_mode，因此无第二份 raw generation 或模式回滚者。
+    复用原解析器与终端原始模式，整个终端仍由一个输入读取者和一套模式恢复逻辑管理。
     """
 
     def __init__(self, source: Input, reports: Reports, clock: Callable[[], float]) -> None:
@@ -208,7 +210,7 @@ class ParserGate:
     def feed(self, text: str) -> None:
         text = self._high_surrogate + text
         self._high_surrogate = ""
-        # Windows ptk can call feed once per UTF-16 unit, even across reads.
+        # Windows 的 prompt_toolkit 可能分次传入 UTF-16 单元，保留末尾高代理项等待下一次输入。
         if text and "\ud800" <= text[-1] <= "\udbff":
             self._high_surrogate, text = text[-1], text[:-1]
         self.original.feed(self.reports.feed(normalizeSurrogates(text), self.clock()))
@@ -231,7 +233,7 @@ class ParserGate:
 
 
 class TerminalQueries:
-    """同Reports上的串行有界查询；不持stdin/raw_mode，也不新增reader。"""
+    """通过同一回包处理器串行发起有超时的终端查询，输入仍由既有读取者持有。"""
 
     def __init__(self, reports: Reports, write: Callable[[str, Callable[[], bool]], Awaitable[bool]],
                  *, isTTY: bool, cursor_offset: Callable[[], int] = lambda: 0) -> None:
@@ -276,8 +278,8 @@ class TerminalQueries:
         return await self._query("probe")
 
     async def cursor(self) -> dict[str, int] | None:
-        # ptk run_in_terminal查询位于已擦动态区的起点；补回已测行数，
-        # 向原imageAnchor提供“动态区之后”的来源坐标，不猜绝对原点。
+        # 查询发生在 prompt_toolkit 清空实时区之后，读到的是实时区起始行。
+        # 加回已测得的行数，将位置换算为图像锚点使用的实时区末尾坐标。
         offset = self._offset()
         value = await self._query("cursor")
         return {**value, "row": value["row"] + offset} if value and "row" in value else None

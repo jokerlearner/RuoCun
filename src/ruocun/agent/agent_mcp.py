@@ -1,4 +1,4 @@
-"""Frozen runAgent.ts dedicated named MCP resources, using the existing transport."""
+"""按代理定义为子代理准备专属的命名 MCP 资源。连接和传输沿用公共实现，资源生命周期由本次子代理执行管理。"""
 
 from __future__ import annotations
 

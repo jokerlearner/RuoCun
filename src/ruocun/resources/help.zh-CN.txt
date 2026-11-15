@@ -19,6 +19,8 @@
   --goal、--task、--coordinator  启用同一长任务模式，保留权限边界
   --continue, -c [会话ID]  恢复本目录会话，省略ID选最近未完成会话
   --reflect-memory  开启回合间统一反思与记忆维护；默认关闭，会增加模型调用
+  --memory-learning <off|controlled>  默认off；controlled自动提炼有当前依据的项目经验，每次启动最多6次分析，会增加模型调用；交互任务最多两条旧错检查，无法验证如实交付
+  --memory-strategy <startup|task>  默认startup；task按当前任务补充召回，并为已开启的反思提炼条件经验
   --reflect-challenger  开启轮内卡住检测后的挑战者/纠偏反思；默认关闭
   --obs         可选观测；需 observation 依赖，默认本地HTTP :8000/v1/traces
   --no-progress-advice  关闭无人值守入口默认的本地进度提醒
@@ -112,7 +114,7 @@ LSP从用户/项目lsp.json配置servers(command/args/extensions)，按需启动
 /audit [memory|reflect|tools|perms|cache|skills] 查看脱敏本地审计；可选远端trace与本地日志分开记录。
 观测失败不改变业务结果，关闭时不导入可选SDK；LMNR_BASE_URL/HTTP_PORT/PROJECT_API_KEY配置HTTP出口。
 Deck 外部面板通过本机回环协议查看并控制同一会话。
-OS 沙箱默认关闭，支持 Linux bubblewrap 和 macOS Seatbelt。Windows 显式启用时拒绝执行。评估模式和权限审批各自独立。
+OS 沙箱默认关闭；RUOCUN_SANDBOX=1 时 Windows 使用独立固定 Codex CLI 0.169.0/MXC（RUOCUN_SANDBOX_CLI 指定绝对路径），Linux/macOS 沿用原生后端。开启后失败即报错，不回退普通执行；Windows 禁止整次绕过，额外写目录须逐次用户批准。评估模式和权限审批各自独立。
 完整真实终端的最终体验验收仍单独记录。
 环境开关使用 RUOCUN_ 前缀。MAX_BUDGET默认提醒，MAX_BUDGET_HARD=1才硬停；
 MAX_TURNS可设回合工具轮数上限；默认不限制。失败后已确认工具不会自动重放。

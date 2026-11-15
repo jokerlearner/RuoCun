@@ -1,6 +1,6 @@
-"""冻结 index.ts 上下文/预算/文字命令控制器（MIT；失败策略见 ADR-0012）。
+"""会话的上下文和预算控制器，供主循环在发请求前检查窗口与费用，也为压缩、换模型等命令准备候选。
 
-复用 Session 与已审 Conversation 接缝，不导入主循环，不另建存储。
+沿用 Session 与 Conversation 的存储接口。新上下文在归档和持久提交确认后才发布。失败路径见 ADR-0012。
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ from .compaction_policy import (
     estimateRequestTokens,
     resolveCompactionBudget,
 )
+from .runtime_context import buildRuntimeContext, isRuntimeContext, needsRuntimeContext
 
 COMPACT_INSTRUCTION = files("ruocun.agent").joinpath("resources/compact.zh.txt").read_text("utf-8")
 
@@ -45,12 +46,12 @@ Request = Callable[[StreamChatOptions, ResilientContext], ResilientResult]
 
 class ContextJournal(Protocol):
     async def save(self, session: Session) -> None: ...
-    async def replace_context(self, session: Session, messages: list[ChatMessage]) -> None: ...
+    async def replace_context(self, session: Session, messages: list[ChatMessage], *, reset_prompt: bool = True) -> None: ...
     def redact(self, text: str) -> str: ...
 
 
 class CompactionFailed(RuntimeError):
-    """压缩未成功确认；调用方须保留原上下文并停止本轮。"""
+    """压缩结果未经确认，调用方须保留原上下文并停止本轮。"""
 
 
 @dataclass(frozen=True)
@@ -62,7 +63,7 @@ class PreparedModelContext:
 
 
 def _number(value: str | None) -> float:
-    """来源 Number(env) 的有限提取，不把 MAX_TURNS 改成新的正整数规则。"""
+    """保留 MAX_TURNS 对 JavaScript Number(env) 的有限数值解析规则。"""
     if value is None:
         return math.nan
     text = value.strip()
@@ -147,7 +148,7 @@ class ContextManager:
         return self.needs_compaction(opts)
 
     def prepare_request(self, options: StreamChatOptions, *, remember: bool = True) -> StreamChatOptions:
-        """Apply a window-sized default cap to the actual outgoing request."""
+        """按目标窗口为实际外发请求补上默认的输出上限。"""
         extra = options.get("extra", {})
         explicit = (options.get("maxTokens") is not None or bool(resolve_env("MAX_OUTPUT_TOKENS", self.env))
                     or any(key in extra for key in ("max_tokens", "max_completion_tokens", "max_output_tokens")))
@@ -164,7 +165,7 @@ class ContextManager:
         return prepared
 
     def request_body(self, options: StreamChatOptions) -> dict[str, object]:
-        """Measure the same Chat/Responses projection that the client sends."""
+        """沿用客户端的 Chat 或 Responses 请求体构造逻辑，估算常规流式请求的预算。"""
         routed = usesResponses(options.get("baseUrl", ""), options.get("model", self.session.model))
         body = buildRequestBody(options, env=self.env, use_responses=routed)
         return cast(dict[str, object], buildResponsesRequest(body) if routed else body)
@@ -181,8 +182,9 @@ class ContextManager:
         return resolveCompactionBudget(int(self.context_window), cast(int, output), env=self.env)
 
     async def before_request(self, options: StreamChatOptions) -> StreamChatOptions:
-        """Qualify the current complete request and require confirmed progress."""
+        """核对当前完整请求。需要压缩时，要求结果确实缩短上下文后再继续。"""
         for _attempt in range(2):
+            await self._ensureRuntimeContext()
             current = cast(StreamChatOptions, {**options, "messages": copy.deepcopy(self.session.messages)})
             prepared = self.prepare_request(current)
             if not self.needs_compaction(prepared):
@@ -192,10 +194,32 @@ class ContextManager:
             following = cast(StreamChatOptions, {**prepared, "messages": copy.deepcopy(self.session.messages)})
             if estimateRequestTokens(self.request_body(following)) >= before:
                 raise CompactionFailed("上下文超出预算且没有可安全缩小的历史，原文保留；本轮停止。")
+        await self._ensureRuntimeContext()
         final = self.prepare_request(cast(StreamChatOptions, {**options, "messages": copy.deepcopy(self.session.messages)}))
         if self.needs_compaction(final):
             raise CompactionFailed("有界压缩后上下文仍超出预算，已保存进展；本轮停止。")
         return final
+
+    async def _ensureRuntimeContext(self) -> None:
+        if self.ctx.signal.is_set():
+            raise InterruptedError("上下文检查已取消。")
+        snapshot = buildRuntimeContext(self.ctx)
+        if needsRuntimeContext(self.session.messages, snapshot):
+            await self.journal.replace_context(self.session, [*self.session.messages, snapshot], reset_prompt=False)
+
+    @staticmethod
+    def _protectedIndices(messages: list[ChatMessage]) -> set[int]:
+        protected = {index for index, message in enumerate(messages)
+            if message.get("role") == "system" and any(marker in str(message.get("content", ""))
+                for marker in ("[[ruocun:background", "[恢复：", "[后台任务数据", "[后台事件", "[任务等待"))}
+        # 末尾追加的是目录事实。最近一条尚未得到助手处理的用户输入仍须保留。
+        # 助手已经处理过输入时，按平常的保留规则选择裁剪点。
+        for index in range(len(messages) - 1, -1, -1):
+            if messages[index].get("role") == "user" and not isRuntimeContext(messages[index]):
+                if not any(message.get("role") == "assistant" for message in messages[index + 1:]):
+                    protected.add(index)
+                break
+        return protected
 
     def _recordUsage(self, usage: Usage | None, model: str, options: StreamChatOptions | None = None) -> None:
         if usage is None:
@@ -215,10 +239,9 @@ class ContextManager:
                 "msgs": redact(json.dumps(messages, ensure_ascii=False))})
 
     def _pinnedTodos(self) -> str | None:
-        """A reopened projection may retain only its pin, not the old TodoWrite calls.
+        """恢复后可能只有待办置顶记录。按顺序读取已确认的更新，显式空列表也会清除旧记录。
 
-        Walk confirmed visible updates in order so an explicit empty list clears
-        an older pin. Reading the pin never grants authority or replays a tool.
+        恢复只读取当前状态，工具授权和执行由正常派发流程负责。
         """
         if self.ctx.todos:
             return formatTodos(self.ctx.todos)
@@ -247,7 +270,7 @@ class ContextManager:
 
     async def _summarize(self, messages: list[ChatMessage], *,
                          request_options: StreamChatOptions | None = None) -> str:
-        # guard 位于摘要回调内；只有system/旧摘要时 compactMessages 仍可直接无操作返回。
+        # 安全检查放在摘要回调内。只有系统消息和旧摘要时，压缩可直接返回。
         if self._failures >= 3 and time.monotonic() * 1000 - self._breaker_opened_at < self._cooldown_ms:
             raise CompactionFailed("压缩熔断冷却中：连续摘要失败，原上下文已保留；本轮已停止。")
         try:
@@ -281,7 +304,7 @@ class ContextManager:
         for key in ("tool_choice", "max_tokens", "max_completion_tokens", "max_output_tokens"):
             extra.pop(key, None)
         if model != source_model:
-            # Explicit alternate-model summaries cannot reuse the original model's KV.
+            # 换模型生成摘要时，原模型的 KV 缓存无法复用。
             raw_options.pop("tools", None)
             raw_options.pop("parallelToolCalls", None)
             extra = {"thinking": {"type": "disabled"}, "temperature": 0}
@@ -303,7 +326,7 @@ class ContextManager:
         try:
             response = await asyncio.shield(work)
         except asyncio.CancelledError as exc:
-            # 取消等待不会停止线程；发出取消并等请求归并，保留末尾已收到的用量。
+            # 取消等待后线程仍可能运行。先发取消信号，再等请求收尾并收取最后的用量。
             self.ctx.signal.set()
             try:
                 response = await asyncio.shield(work)
@@ -333,7 +356,7 @@ class ContextManager:
         match = re.search(r"<摘要>([\s\S]*?)</摘要>", output)
         summary = (match[1] if match else re.sub(r"<分析>[\s\S]*?</分析>", "", output)).strip()
         if not summary:
-            # 实现差异：不把来源“(摘要为空)”占位视为可替换原上下文的成功摘要。
+            # 空摘要占位没有可替换旧上下文的有效内容，保留原上下文。
             raise CompactionFailed("上下文摘要为空，原上下文已保留；本轮已停止。")
         return summary
 
@@ -360,9 +383,7 @@ class ContextManager:
                 "thresholdTokens": budget.threshold_tokens, "tools": opts.get("tools", []),
                 "measureMessages": lambda items: estimateRequestTokens(self.request_body(
                     cast(StreamChatOptions, {**opts, "messages": items}))),
-                "protectedIndices": {index for index, message in enumerate(original)
-                    if message.get("role") == "system" and any(marker in str(message.get("content", ""))
-                        for marker in ("[[ruocun:background", "[恢复：", "[后台任务数据", "[后台事件", "[任务等待"))},
+                "protectedIndices": self._protectedIndices(original),
                 "archiveIdForRange": lambda indices, kind: f"{kind}-{namespace}-" + "-".join(map(str, indices[:2])),
             }, self._pinnedTodos())
         except InterruptedError:
@@ -398,7 +419,7 @@ class ContextManager:
         return message
 
     async def prepare_model_change(self, options: StreamChatOptions, system_prompt: str) -> PreparedModelContext:
-        """Qualify a target connection before publishing its config or changing live context."""
+        """按目标模型的请求格式和窗口预算准备候选上下文，需要压缩时才调用摘要。"""
         original = copy.deepcopy(self.session.messages)
         target = Session(system_prompt, options["model"], env=self.env)
         target.messages = [{"role": "system", "content": system_prompt}, *copy.deepcopy(original[1:])]
@@ -417,9 +438,9 @@ class ContextManager:
             preview._summary_limit = budget.summary_max_tokens
             namespace = uuid.uuid4().hex
             async def summarize(messages: list[ChatMessage]) -> str:
-                # The target system head is not committed yet. Summarize the
-                # actual old transcript so source index 0 still names what was
-                # read; publish the new system head only with the final rewrite.
+                # 此时新系统头尚未提交。摘要读取实际保存的旧转录，
+                # 原消息索引 0 因此仍指向读取过的系统头。
+                # 等最终改写提交时，再一并发布新系统头。
                 source_messages = [copy.deepcopy(original[0]), *messages[1:]] if messages else messages
                 return await preview._summarize(source_messages, request_options=opts)
             candidate = await buildCompaction(messages, {
@@ -427,8 +448,7 @@ class ContextManager:
                 "thresholdTokens": budget.threshold_tokens,
                 "measureMessages": lambda items: estimateRequestTokens(preview.request_body(
                     cast(StreamChatOptions, {**opts, "messages": items}))),
-                "protectedIndices": {i for i, message in enumerate(messages) if message.get("role") == "system"
-                    and str(message.get("content", "")).startswith(("[后台任务数据", "[恢复：", "[任务等待"))},
+                "protectedIndices": self._protectedIndices(messages),
                 "archiveIdForRange": lambda indices, kind: f"{kind}-{namespace}-" + "-".join(map(str, indices[:2])),
             }, self._pinnedTodos())
             messages, origins = candidate.messages, candidate.origins

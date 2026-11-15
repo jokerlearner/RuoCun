@@ -1,4 +1,4 @@
-"""Frozen tools/task_stop.ts (MIT), guarded stop of the current task run."""
+"""向任务管理器请求取消该任务当前正在进行的执行，是否已经停止由任务管理器确认。"""
 
 from __future__ import annotations
 

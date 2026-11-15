@@ -1,4 +1,4 @@
-"""冻结 read_file.ts 的文本/图片Read工具（MIT）。"""
+"""经路径授权后读取文本或受支持的图片，整理模型可见的行号和片段，并把本次读取基线交回会话。"""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ async def _read(args: dict[str, Any], ctx: ToolContext) -> str:
         )
     if ctx.signal.is_set():
         raise InterruptedError("工具调用已取消")
-    # worker只填本次结果；真实共享读基线在业务loop应用，忙时/files不会遍历到线程写入。
+    # 后台线程使用独立的读取记录。回到业务循环再更新共享基线，避免界面同时遍历时遇到写入。
     worker_ctx = replace(ctx, readFiles=set(), readMeta={}, currentImageData=None, onFileAccessed=None)
     text, accessed = await asyncio.to_thread(_read_text, absolute, args, worker_ctx)
     for path in worker_ctx.readFiles:
@@ -44,7 +44,7 @@ async def _read(args: dict[str, Any], ctx: ToolContext) -> str:
 
 
 def _read_text(absolute: str, args: dict[str, Any], ctx: ToolContext) -> tuple[str, bool]:
-    """返回展示结果和是否完成来源定义的文本访问。"""
+    """返回展示内容，以及调用方是否应记录一次成功的文本访问。"""
     stat = os.stat(absolute)
     if stat.st_size > 5 * 1024 * 1024 and "offset" not in args and "limit" not in args:
         return _msg(
@@ -70,7 +70,7 @@ def _read_text(absolute: str, args: dict[str, Any], ctx: ToolContext) -> tuple[s
     if "\0" in raw:
         return _msg(ctx, "Error: 看起来是二进制文件(含 NUL 字节),Read 只读文本。",
                     "Error: Found NUL bytes in this file. Read can display text or a supported image."), False
-    # 元信息与实际读前 stat 绑定；不使用读后 stat 掩盖读取时的外部改动。
+    # 将基线绑定到实际读取前的 stat。读取期间若有外部修改，后续写入仍能发现原基线已失效。
     ctx.readFiles.add(absolute)
     ctx.readMeta[absolute] = {"mtime": stat.st_mtime_ns / 1_000_000, "size": stat.st_size}
     lines = raw.split("\n")
@@ -82,7 +82,7 @@ def _read_text(absolute: str, args: dict[str, Any], ctx: ToolContext) -> tuple[s
     bodyLines: list[str] = []
     for index, line in enumerate(lines[start:end]):
         encoded = line.encode("utf-16-le", errors="surrogatepass")
-        length = len(encoded) // 2  # 来源JS String.length/slice按UTF-16 code unit。
+        length = len(encoded) // 2  # 用 UTF-16 代码单元计长，延续原版的行截断位置。
         if length > 2000:
             line = encoded[:4000].decode("utf-16-le", errors="surrogatepass") + "…" + _msg(
                 ctx, f"(本行共 {length} 字符,已截断)", f"(line has {length} chars, truncated)",

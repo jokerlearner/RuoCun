@@ -1,4 +1,7 @@
-"""按当前若存工具适配外来技能正文，并缓存转换结果。"""
+"""生成外部技能正文的适配文本，并缓存已经生成的结果。
+
+转换由调用方提供的模型接口完成。适配文本可以直接用于本次执行，缓存只是为了后续复用。
+"""
 
 from __future__ import annotations
 
@@ -54,7 +57,7 @@ def _save_cache(file: Path, body: str) -> None:
     try:
         atomic_publish(file, body.encode("utf-8"), require_durability=False)
     except (OSError, AtomicFileError, UnicodeError):
-        pass  # 缓存失败不丢弃本次已得到的正文。
+        pass  # 缓存发布失败时仍返回本次生成的适配文本。
 
 
 def makeSkillAdapter(

@@ -1,4 +1,4 @@
-"""冻结src/tools/send_message.ts的Python迁移（MIT）。"""
+"""把模型消息交给用户通知入口，可附带指定文件的有界文本预览。"""
 
 from __future__ import annotations
 

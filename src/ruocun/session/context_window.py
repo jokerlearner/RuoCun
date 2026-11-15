@@ -1,7 +1,6 @@
-"""冻结 ``src/index.ts`` 的 /context-window 参数解析（MIT）。
+"""解析 /context-window 的窗口大小参数。
 
-模型默认窗口复用 config.profiles.contextWindowFor；手动锁及环境写回由入口
-维持，来源不把窗口覆写存入 Session 或会话数据库。
+组合入口负责选择模型默认值、管理手动覆盖和写回环境，会话数据库无需保存这一设置。
 """
 
 from __future__ import annotations
@@ -10,7 +9,7 @@ import re
 
 
 def parseContextWindow(argument: str) -> float:
-    """200K / 1M / 纯数字（单位 K）；非法格式或低于 1K 抛 ValueError。"""
+    """接受 200K、1M 或以 K 为单位的纯数字，非法格式和低于 1K 的值抛出 ValueError。"""
     match = re.fullmatch(r"([0-9]+(?:\.[0-9]+)?)\s*([KkMm])?", argument)
     if match is None:
         raise ValueError(

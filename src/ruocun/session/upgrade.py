@@ -1,4 +1,7 @@
-"""Explicit offline v1 -> v3 archive upgrade with an independently verified backup."""
+"""离线将 v1 会话升级到带归档的 v3 格式。
+
+显式调用前先停止仍在使用会话的进程。确认备份可独立验证后，才写入升级后的数据库。
+"""
 
 from __future__ import annotations
 
@@ -42,7 +45,7 @@ from .sqlite_port import connect_database, transaction
 
 def upgrade_session(session_dir: Path, runtime: RuntimeRecord, *, expected_session_id: str | None = None,
                     cwd: Path | None = None) -> dict[str, Any]:
-    """Never called from ordinary startup; callers must stop all old processes first."""
+    """显式升级入口。先关闭仍在使用源数据库的旧进程。"""
     assert_runtime_gate(runtime)
     directory = Path(session_dir).absolute()
     if not (directory / "session.db").is_file():

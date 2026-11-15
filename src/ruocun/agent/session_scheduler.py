@@ -1,6 +1,6 @@
-"""冻结session_scheduler.ts前台调度（MIT）；队列持久化由Conversation承担。
+"""管理前台回合与已保存的输入队列。TaskWait 暂时让出回合，待后台事件或用户输入来临时唤醒。
 
-复用后台收件箱与持久输入：TaskWait让出本轮，事件或用户输入唤醒。
+排队内容由 Conversation 保存，调度器只在提交确认后消费。
 """
 
 from __future__ import annotations
@@ -166,7 +166,7 @@ class SessionScheduler:
                 self._notify()
                 raise
             self.lastError = None
-            # pause在排队提交期间发生时，不能由迟到的ack把暂停改回idle。
+            # 如果保存排队输入时收到暂停，迟到的确认也不能把它改回空闲状态。
             if (generation == self._generation and not self._preserving_wait
                     and (not self._active or self._state == "paused")):
                 self._release_wait()
@@ -178,7 +178,7 @@ class SessionScheduler:
     async def start_loop(self, seconds: float, prompt: str) -> None:
         await self.stop_loop()
         if self._state != "closed":
-            self.lastError = None  # An explicit command authorizes future inputs.
+            self.lastError = None  # 显式命令授权处理之后的输入。
             stop = asyncio.Event()
             self._loop = stop, asyncio.create_task(self._repeat(seconds, prompt, stop))
 
@@ -290,7 +290,7 @@ class SessionScheduler:
                 try:
                     await self._set_state("paused")
                 except Exception:
-                    pass  # 原错保留；Conversation.blocked禁止绕过未确认提交。
+                    pass  # 保留原始错误，由 Conversation 的停止状态挡住未确认提交。
                 if self._notice is not None:
                     self._notice("[会话已暂停] 本轮或保存未完成，请核对后继续。")
         finally:
@@ -315,7 +315,7 @@ class SessionScheduler:
 
     @asynccontextmanager
     async def preserve_wait(self) -> AsyncIterator[bool]:
-        """Keep the same wait while the CLI replaces its conversation context."""
+        """前台替换会话上下文时继续沿用同一次等待。"""
         handle = self._wait
         if self._state not in {"waiting", "paused"} or handle is None:
             yield False
@@ -375,7 +375,7 @@ class SessionScheduler:
     async def close(self) -> None:
         try:
             await self._halt("closed")
-            # 重复close也等待前一个close正在提交的处置。
+            # 重复关闭仍等待前一次关闭提交其处置结果。
             async with self._control:
                 pass
         finally:
@@ -388,7 +388,7 @@ class SessionScheduler:
         await self._halt("paused")
 
     async def clear_pending(self) -> int:
-        """Esc处置尚未消费的输入，保留当前轮次和取消信号。"""
+        """Esc 清理尚未消费的输入，保留当前回合和它的取消信号。"""
         async with self._control:
             count = len(self._queued())
             if not count or self._state == "closed":

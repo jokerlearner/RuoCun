@@ -1,7 +1,6 @@
-"""模型继承与辅助模型选择（来源冻结 ``src/config/model_selection.ts``，MIT）。
+"""为子代理和辅助任务选择模型。
 
-CFG-03：调用 override > agent 定义 > parent；缺可继承主模型明确失败，
-不暗换 provider。CFG-02：自定义网关不猜便宜档。
+子代理优先使用本次指定的模型，其次使用代理定义中的模型，最后才继承父代理。辅助模型由当前提供商和已知模型目录共同决定。
 """
 
 from __future__ import annotations
@@ -39,7 +38,7 @@ def getAgentModel(
 
 
 def defaultAuxiliaryModel(context: ModelSelectionContext) -> str:
-    """仅对已知官方端点的同族模型选择便宜档；自定义网关及其他模型用当前主模型。"""
+    """按提供商约定选择辅助模型，在候选不适用时沿用当前模型。"""
     model = context["model"]
     provider = context["provider"]
     base_url = context["baseUrl"]

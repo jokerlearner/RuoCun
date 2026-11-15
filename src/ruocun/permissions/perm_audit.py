@@ -1,4 +1,4 @@
-"""Frozen permissions/perm_audit.ts (MIT), decision provenance and statistics."""
+"""记录每次权限判断的来源和结果，并按工具汇总允许、拒绝和询问次数。"""
 from __future__ import annotations
 
 import json
@@ -63,7 +63,7 @@ def summarizePermTrace(events: Iterable[Mapping[str, object]]) -> list[PermStat]
         stat = groups.setdefault(tool, {"tool":tool,"allow":0,"deny":0,"askApproved":0,"askDenied":0,"total":0,"askRate":0.0})
         key = kinds.get(str(event.get("decision")))
         if key is not None:
-            # Counters are homogeneous, while the returned row also contains its label.
+            # 汇总行还包含名称，更新计数时须将该列与数字列区分开。
             counters = cast(dict[str, int], stat)
             counters[key] += 1
     for stat in groups.values():

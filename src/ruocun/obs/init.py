@@ -1,7 +1,6 @@
-"""Optional official OTLP HTTP exporter with frozen Laminar attributes.
+"""初始化可选的官方 OTLP HTTP 导出，沿用 Laminar 属性。
 
-Laminar Python requires a grpcio DLL rejected by this Windows application policy.
-The official HTTP exporter avoids importing grpc or auto-instrumenting business I/O.
+当前 Windows 应用策略会拒绝 Laminar Python 所需的 grpcio DLL。HTTP 导出路径可独立运行，业务 I/O 仍由原调用处理。
 """
 
 from __future__ import annotations
@@ -79,7 +78,7 @@ class _OtelBackend:
 
 class _SafeSdkLog(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
-        # SDK error messages can echo collector response bodies, headers or span values.
+        # SDK 异常文本可能携带收集端响应正文、头字段和观测数据，过滤后再展示。
         record.msg = "[obs] 导出器报告异常，详细内容已省略"
         record.args = ()
         record.exc_info = None
@@ -116,7 +115,7 @@ async def initObs(on: bool, *, environ: Mapping[str, str] | None = None,
             raise ValueError("invalid observation port")
         host = f"[{parsed.hostname}]" if ":" in parsed.hostname else parsed.hostname
         endpoint = f"{parsed.scheme}://{host}:{http_port}/v1/traces"
-        # Explicit local endpoint and headers: no SDK .env fallback or global tracer provider.
+        # 本地端点和头字段由若存显式配置，导出器使用独立 provider。
         trace = importlib.import_module("opentelemetry.trace")
         sdk = importlib.import_module("opentelemetry.sdk.trace")
         exports = importlib.import_module("opentelemetry.sdk.trace.export")
@@ -140,8 +139,8 @@ async def initObs(on: bool, *, environ: Mapping[str, str] | None = None,
         wire_transport = transport.RequestsHTTPTransport(session=session, verify=True, cert=None)
         exporter = http.OTLPSpanExporter(endpoint=endpoint, headers={}, timeout=1,
             compression=compression.NoCompression, _transport=wire_transport)
-        # OTel 1.45.2 unconditionally merges ambient OTEL headers even with headers={}.
-        # Fixed-version narrow seam: replace before any span can be queued/exported.
+        # OTel 1.45.2 即使收到空 headers，也会合并环境中的 OTEL 请求头。
+        # 在任何观测项进入队列前改写导出器自带的头字段。
         exporter._client._headers = {"Content-Type": "application/x-protobuf",
             **({"Authorization": f"Bearer {key}"} if key else {})}
         provider.add_span_processor(exports.BatchSpanProcessor(exporter, max_queue_size=2048,

@@ -64,7 +64,7 @@ def test_windows_bash_refuses_before_backup_or_runner_and_allows_ordinary_shell(
     command = "echo ok>shell-result.txt & type fixture.db"
     output = tmp_path / "shell-result.txt"
     backup = tmp_path / "fixture.db.ruocun-backup"
-    enabled = {**os.environ, "RUOCUN_SANDBOX": "1"}
+    enabled = {**os.environ, "RUOCUN_SANDBOX": "1", "RUOCUN_SANDBOX_CLI": str(tmp_path / "missing-codex.exe")}
     selected_plan = buildShellPlan(command, str(tmp_path), environ=enabled, analyze=False)
 
     class UnexpectedStore:
@@ -74,23 +74,23 @@ def test_windows_bash_refuses_before_backup_or_runner_and_allows_ordinary_shell(
     async def scenario():
         ctx = ToolContext(str(tmp_path), getShellPlan=lambda *_: selected_plan)
         managed = ManagedShellManager(tmp_path / "session", "synthetic", UnexpectedStore())
-        with pytest.raises(ToolRejected, match="当前平台不支持沙箱"):
+        with pytest.raises(ToolRejected, match="缺少固定Codex"):
             await execShellTool.handler({"command": command}, ctx)
         ctx.managedShell = managed
         for background in (False, True):
-            with pytest.raises(ToolRejected, match="当前平台不支持沙箱"):
+            with pytest.raises(ToolRejected, match="缺少固定Codex"):
                 await execShellTool.handler({"command": command, "background": background}, ctx)
-            with pytest.raises(ToolRejected, match="当前平台不支持沙箱"):
+            with pytest.raises(ToolRejected, match="缺少固定Codex"):
                 await managed.execute(selected_plan, threading.Event(), background=background)
         # The frozen background branch does not forward the foreground override.
-        with pytest.raises(ToolRejected, match="当前平台不支持沙箱"):
+        with pytest.raises(ToolRejected, match="不能整次绕过"):
             await execShellTool.handler({"command": command, "background": True, "dangerouslyDisableSandbox": True}, ctx)
         assert not output.exists() and not backup.exists() and not (tmp_path / "session").exists()
         ctx.managedShell = None
         assert execShellTool.checkPermissions(json.dumps({"command": command, "dangerouslyDisableSandbox": True})) == "ask"
-        assert "exit 0" in await execShellTool.handler({"command": command, "dangerouslyDisableSandbox": True}, ctx)
-        assert output.read_text().strip() == "ok" and backup.read_text() == "existing test data"
-        output.unlink()
+        with pytest.raises(ToolRejected, match="不能整次绕过"):
+            await execShellTool.handler({"command": command, "dangerouslyDisableSandbox": True}, ctx)
+        assert not output.exists() and not backup.exists()
         ctx.getShellPlan = lambda *_: buildShellPlan(command, str(tmp_path), environ={**enabled, "RUOCUN_SANDBOX": "0"},
                                                      analyze=False)
         assert "exit 0" in await execShellTool.handler({"command": command}, ctx)

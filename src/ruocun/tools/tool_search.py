@@ -1,4 +1,4 @@
-"""冻结tools/tool_search.ts（MIT）；本批组合根仅供应原生延迟工具。"""
+"""将 ToolSearch 的查询交给当前上下文的搜索入口，按需透露匹配的工具定义。"""
 
 import json
 from importlib.resources import files

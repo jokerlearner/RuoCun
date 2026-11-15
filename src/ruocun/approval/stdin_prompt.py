@@ -1,4 +1,7 @@
-"""Interactive approval through an injected terminal input owner (MIT)."""
+"""通过调用方提供的终端输入接口逐项询问审批。
+
+危险操作和禁止持久化的操作只能批准一次。非交互模式下直接拒绝。
+"""
 from typing import Awaitable, Callable
 
 from .types import ApprovalDecision, ApprovalPrompt, ApprovalRequest

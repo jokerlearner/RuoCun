@@ -1,4 +1,7 @@
-"""Expand standard RuoCun commands into model requests."""
+"""把需要模型参与的内置斜杠命令展开为模型请求。
+
+不同命令各自构造提示和执行选项。调用方接收展开结果，再交由代理执行。
+"""
 
 from __future__ import annotations
 

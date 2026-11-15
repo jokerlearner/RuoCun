@@ -1,15 +1,6 @@
-"""Lightweight composition-root entry; business runtime is implemented by later tasks.
+"""把命令行参数分派到若存的启动入口。
 
-Version flag intent: frozen reference src/index.ts:216-220 (MIT).
-
-任务04 扩展：``--chat-demo <合成配置目录> [--model <id>] [prompt...]`` 走
-一次性 prompt 产品路径（合成账户配置 + 本地合成 SSE 服务）。这是显式演示/验收
-入口；既有 ``--version`` / ``--help`` / 包资源 / 普通 Agent 退出码 69 行为不变，
-完整 Agent 运行路径仍由后续任务实现，未实现处不返回占位成功。
-
-任务05 扩展：``--responses-demo <合成配置目录> [--model <id>] [prompt...]`` 走
-Responses 路由的同一对话/工具回合（合成账户配置 + 本地合成 HTTP/SSE 服务 +
-注入式 transport 重写端点）。同样是显式演示入口，不改变任何既有行为。
+版本、帮助、内部子进程、技能安装和合成演示由这里直接分流。其余参数交给 agent.runtime.run_cli，由它装配实际对话和终端界面。
 """
 
 from __future__ import annotations
@@ -90,6 +81,7 @@ def _responses_demo(arguments: list[str]) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     options = arguments[:arguments.index("--")] if "--" in arguments else arguments
+    # 内部子进程直接进入各自协议入口，避免初始化普通对话会话。
     if arguments == ["--ruocun-ipc-helper"]:
         from .platform.windows.ipc import helper_main
 

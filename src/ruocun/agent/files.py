@@ -1,4 +1,4 @@
-"""冻结index.ts的/files查询投影（MIT）；读取事实由调用方拥有。"""
+"""为 /files 生成已知文件的展示列表。实际读过哪些文件，由调用方提供。"""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ def filesReport(workspaceRoot: str, readFiles: Iterable[str]) -> str:
     for path in readFiles:
         try:
             relative = os.path.relpath(path, workspaceRoot)
-        except ValueError:  # Windows跨盘时Node path.relative返回原绝对路径。
+        except ValueError:  # 跨盘路径无法相对化，沿用 Node path.relative 的绝对路径结果。
             relative = path
         files.append(path if relative == "." else relative)
     if not files:

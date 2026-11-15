@@ -1,4 +1,4 @@
-"""Frozen reflect_result.ts: independent, non-throwing result sections (MIT)."""
+"""解析反思输出中的记忆、目标纠正等独立部分。每部分各自校验，错误输入以保守结果交回调用方。"""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import re
 from typing import Any, Literal, NotRequired, TypedDict, cast
 
 from ..memory.types import MemoryType
+from .experience_memory import formatExperience
 
 
 class ReflectMem(TypedDict):
@@ -43,12 +44,32 @@ def _string(value: Any) -> str:
     return value.strip() if isinstance(value, str) else ""
 
 
-def _memory(value: Any) -> ReflectMem | None:
+def _memory(value: Any, *, taskAware: bool = False) -> ReflectMem | None:
     if not isinstance(value, dict):
         return None
     title, text, kind = _string(value.get("title")), _string(value.get("text")), value.get("type")
     if not title or not text or kind not in ("user", "feedback", "procedural", "semantic", "episodic"):
         return None
+    if taskAware:
+        if len(title) > 256 or len(text) > 16384:
+            return None
+        for key, lower, upper in (("importance", 1, 10), ("confidence", 0, 1)):
+            number = value.get(key)
+            if type(number) in (int, float) and not lower <= cast(float, number) <= upper:
+                return None
+        for key, limit in (("source", 2048), ("mergeInto", 256)):
+            raw = value.get(key)
+            if raw is not None and (not isinstance(raw, str) or len(raw) > limit):
+                return None
+        if kind == "procedural" and "experience" not in value:
+            return None
+        if "experience" in value:
+            if kind not in ("semantic", "procedural", "episodic"):
+                return None
+            formatted = formatExperience(text, value["experience"])
+            if formatted is None:
+                return None
+            text = formatted
     result: ReflectMem = {"title": title, "text": text, "type": cast(MemoryType, kind)}
     if type(value.get("importance")) in (int, float):
         result["importance"] = value["importance"]
@@ -80,7 +101,7 @@ def _reject_constant(value: str) -> None:
     raise ValueError("JSON不接受非标准数值")
 
 
-def parseReflectResult(raw: str) -> ReflectResult:
+def parseReflectResult(raw: str, *, taskAware: bool = False) -> ReflectResult:
     fence = re.search(r"```(?:json)?\s*([\s\S]*?)```", raw)
     body = fence[1] if fence else raw
     match = re.search(r"\{[\s\S]*\}", body)
@@ -99,7 +120,7 @@ def parseReflectResult(raw: str) -> ReflectResult:
     confirmed = value.get("confirmed", [])
     result: ReflectResult = {
         "onTrack": on_track, "advisory": None if on_track else advisory,
-        "memories": [memory for item in memories if (memory := _memory(item)) is not None] if isinstance(memories, list) else [],
+        "memories": [memory for item in memories if (memory := _memory(item, taskAware=taskAware)) is not None] if isinstance(memories, list) else [],
         "corrections": [correction for item in corrections if (correction := _correction(item)) is not None] if isinstance(corrections, list) else [],
         "confirmed": [item.strip() for item in confirmed if isinstance(item, str) and item.strip()] if isinstance(confirmed, list) else [],
     }

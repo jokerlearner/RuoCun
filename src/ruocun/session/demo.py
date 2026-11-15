@@ -84,7 +84,7 @@ async def _phase(root: Path, archive: Path, phase: str) -> dict[str, Any]:
 
 
 def run_phase(root: Path, archive: Path, phase: str) -> dict[str, Any]:
-    """Internal child entry; the orchestrator owns the new synthetic root."""
+    """子进程内部入口，使用编排进程创建的合成工作区。"""
     return asyncio.run(_phase(root, archive, phase))
 
 

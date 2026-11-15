@@ -1,4 +1,4 @@
-"""Frozen tools/tool_audit.ts (MIT); redacted best-effort observational JSONL."""
+"""在工具执行后尝试写入脱敏的逐行 JSON 记录。审计记录用于观察与汇总，写入失败不会影响已执行的工具结果。"""
 
 from __future__ import annotations
 
@@ -60,8 +60,8 @@ class _Sink:
         if self.directory is None:
             return
         try:
-            # JS slice counts UTF-16 units. Redact the complete arguments first,
-            # so a key crossing the output boundary cannot leave its prefix.
+            # 对完整参数脱敏之后，再按 UTF-16 代码单元截取预览。
+            # 先截取可能只留下凭据的前缀，导致脱敏规则漏掉它。
             preview = self._safe(args).encode("utf-16-le", errors="surrogatepass")[:240].decode(
                 "utf-16-le", errors="surrogatepass")
             event = {"kind": "call", "ts": time.time_ns() // 1_000_000, "name": self._safe(name),
@@ -74,8 +74,8 @@ class _Sink:
                     "a", encoding="utf-8", errors="backslashreplace", newline="\n") as trace:
                 trace.write(json.dumps(event, ensure_ascii=False, separators=(",", ":")) + "\n")
         except Exception:
-            # Neither an unavailable trace path nor a failed redactor changes a
-            # completed tool's result. No retry can re-execute its business call.
+            # 跟踪路径不可用或脱敏失败时放弃这条记录。
+            # 工具已经执行，补记审计时不得重放业务调用。
             pass
 
 

@@ -1,4 +1,4 @@
-"""Frozen obs/wrap.ts, adapted to the synchronous Python request result port."""
+"""为模型请求和工具执行附加观测，沿用同步 Python 请求的结果接口。"""
 
 from __future__ import annotations
 
@@ -62,8 +62,8 @@ def wrapRequest(inner: Callable[..., R]) -> Callable[..., R]:
     return wrapped
 
 
-# client.streamChat and streamChatResilient both return complete Python result objects;
-# callbacks still forward every delta during the original single request.
+# streamChat 和 streamChatResilient 都在 Python 侧返回完整请求结果。
+# 增量仍由回调在同一次请求期间逐步转发。
 wrapStreamChat = wrapRequest
 
 
@@ -97,7 +97,7 @@ def wrapToolHandler(inner: Callable[..., Awaitable[R]], name: str,
 
 
 def wrapToolExec(inner: Callable[..., Awaitable[R]]) -> Callable[..., Awaitable[R]]:
-    """Source batch-duration approximation; ordinary dispatcher uses actual handler scopes."""
+    """对批工具调用沿用批耗时近似。普通分发按各处理器的真实范围观测。"""
     if getBackend() is None:
         return inner
 

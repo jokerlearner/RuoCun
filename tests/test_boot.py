@@ -40,7 +40,7 @@ def test_installed_version_does_not_start_an_agent(tmp_path, arguments):
     """Frozen index.ts:216-220; RuoCun own development version, ENT-01."""
     result = cli(tmp_path, *arguments)
     assert result.returncode == 0, result.stderr
-    assert result.stdout == "RuoCun v0.1.0.dev0\n"
+    assert result.stdout == "RuoCun v0.9.0\n"
     assert result.stderr == ""
 
 

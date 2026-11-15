@@ -1,4 +1,4 @@
-"""冻结 src/tools/skill.ts 的按需正文工具（MIT）。"""
+"""从当前会话的技能清单查找并返回正文，在读取时记录实际使用的技能。"""
 
 from __future__ import annotations
 

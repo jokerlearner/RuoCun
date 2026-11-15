@@ -1,7 +1,6 @@
-"""D10 NEW-07只读剪贴板窄端口。没有EmptyClipboard/SetClipboardData路径。
+"""只在用户显式附图时读取 Windows 剪贴板。
 
-原生读取只在用户显式附图动作触发；独立base-Python进程受5秒监督，
-传回内存结果，不将用户剪贴板写入临时文件/日志。
+由独立的基础 Python 进程执行原生读取，父进程最多等待五秒。图片通过内存返回，读取过程不修改剪贴板。
 """
 
 from __future__ import annotations
@@ -83,7 +82,7 @@ def _read_native() -> ClipboardPayload:
                         result = ClipboardPayload("unavailable", error="unlock-failed")
             break
     finally:
-        # GetClipboardData是系统所有权；不GlobalFree、DeleteObject或关闭该handle。
+        # GetClipboardData 返回的句柄归系统所有，调用方无需释放。
         if not user.CloseClipboard():
             result = ClipboardPayload("unavailable", error="close-failed")
     return result
@@ -97,7 +96,7 @@ class WindowsClipboard:
         environment = {"SYSTEMROOT": "C:\\Windows", "WINDIR": "C:\\Windows",
                        "PATH": "C:\\Windows\\System32", "PYTHONUTF8": "1", "PYTHONNOUSERSITE": "1"}
         try:
-            # base解释器直接运行自包含stdlib文件，不经过venv转发shim或shell。
+            # 直接用基础解释器运行本模块，省去虚拟环境转发器和额外的 Shell。
             result = subprocess.run([executable, "-I", "-X", "utf8", str(Path(__file__).resolve()), "--read"],
                                     env=environment, stdin=subprocess.DEVNULL, capture_output=True, timeout=5)
             if result.returncode or len(result.stdout) > MAX_BYTES * 2 + 65536:

@@ -1,4 +1,4 @@
-"""Frozen agent_memory.ts layout, adapted to the native RuoCun state root (MIT)."""
+"""按代理身份和作用域组织记忆目录，并把相应目录挂到若存的原生状态根下。"""
 from pathlib import Path, PureWindowsPath
 
 _NOTES = {

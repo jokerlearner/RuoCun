@@ -1,4 +1,4 @@
-"""从若存的中英文模板组装系统提示词，按既定顺序填充占位符。"""
+"""按固定顺序把模型、工具和运行信息填入随包模板，供新会话和恢复会话组装系统提示。"""
 
 from __future__ import annotations
 
@@ -104,7 +104,7 @@ def _session_guidance(is_en: bool) -> str:
     return _SESSION_EN if is_en else _SESSION_ZH
 
 
-# These headers identify the injected system message in older saved sessions.
+# 用首行标记定位长任务系统消息，供模式切换时替换或移除。
 LONG_TASK_HEADERS = ("[长任务自主模式已开启]", "[Long-task autonomous mode enabled]")
 
 LONG_TASK_DIRECTIVE = """[长任务自主模式已开启]
@@ -126,7 +126,7 @@ LONG_TASK_DIRECTIVE = """[长任务自主模式已开启]
   · continue vs spawn:与某 worker 上下文高度重叠 → 直接继续做;低重叠、或要新鲜视角(如验证别人刚写的代码)→ 新开一个自包含 worker。
   · 不要预测结果:派出 agent 后,简述你派了什么、然后单独调用 TaskWait 等结果,绝不编造或假设 worker 的结论。
   · 实现阶段:独立、可并行的分块并行派;需改同一文件的串行做(避免冲突)。
-- 声称完成前必须验证。非琐碎改动(3+ 文件编辑、后端/API 改动、基础设施变更)必须派 `verify` 子代理独立验证--你自己的检查不能替代它的判定。通过后抽查:重跑 2-3 条命令确认。不通过就修、再派 verify,直到通过。
+- 先实测用户要求，再按风险和证据缺口决定是否派 `verify`。高风险、用户明确要求独立验收，或有能够独立实测的具体缺口时才派发。交接待验项、已有证据、允许的执行方式及收尾条件。必要验收满足后直接答复，仍受阻的检查如实列明。
 - 仅在真正卡住(反复失败、缺必要外部信息或需要用户决策)时才用 AskUserQuestion 求助。
 - 输出已落盘时,需要时按返回路径用 Read/Grep 取回,别把无关大块塞进推理。
 - 全部完成后给一段简明总结:做了什么、验收结果、剩余风险/后续建议。"""
@@ -150,14 +150,14 @@ You will autonomously and continuously drive this long task to completion. Guide
   · Continue vs spawn: high context overlap with a worker → directly continue; low overlap, or need a fresh perspective (e.g., verifying code someone else just wrote) → spawn a new self-contained worker.
   · Don't predict results: after dispatching an agent, briefly state what you dispatched, then call TaskWait alone and wait for results; never fabricate or assume the worker's conclusions.
   · Implementation phase: independent, parallelizable chunks → dispatch in parallel; those modifying the same file → serialize (avoid conflicts).
-- Before claiming completion, you MUST verify. For non-trivial changes (3+ file edits, backend/API changes, infrastructure changes) you MUST dispatch a `verify` subagent for independent verification - your own checks cannot substitute for its verdict. After PASS, spot-check: re-run 2-3 commands to confirm. On FAIL, fix and re-dispatch verify until PASS.
+- First verify the user's requirements. Use an independent `verify` subagent when risk is substantial, the user requests independent review, or a specific gap can be resolved with independent execution. Provide the remaining checks, existing evidence, an allowed execution method and the stopping condition. Answer once required verification is satisfied and report outstanding blocked checks.
 - Only use AskUserQuestion for help when truly stuck (repeated failures, missing essential external information, or needing user decision).
 - When output is saved to disk, use Read/Grep on the reported path to retrieve it as needed; don't stuff irrelevant large chunks into reasoning.
 - When all is done, give a concise summary: what was done, verification result, remaining risks / follow-up suggestions."""
 
 
 def buildSystemPrompt(opts: dict[str, Any]) -> str:
-    """按当前模型、交互方式和工作环境填充提示词。"""
+    """用当前模型、交互方式和运行参数填充模板，生成最终系统提示。"""
     is_en = opts.get("lang") == "en"
     text = _template(is_en)
     model_id = opts["modelId"]
@@ -174,7 +174,6 @@ def buildSystemPrompt(opts: dict[str, Any]) -> str:
         "{model_vision_note_en}": _vision_note(model_id, True),
         "{project_instruction_files}": opts.get("projectInstructions") or none,
         "{tools}": opts["toolSummaries"],
-        "{cwd}": opts.get("cwd") or unknown,
         "{platform}": opts.get("platform") or unknown,
         "{env_snapshot}": opts.get("envSnapshot") or "",
         "{memory}": opts.get("memories") or none_yet,

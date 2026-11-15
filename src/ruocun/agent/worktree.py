@@ -1,4 +1,4 @@
-"""Frozen agent/worktree.ts (MIT), with exact ownership checks before removal."""
+"""为子代理创建和收尾 Git 工作树。每次清理前核对工作树身份与本轮所有权，保留用户修改和无法确认结果的 Git 操作现场。"""
 
 from __future__ import annotations
 
@@ -22,11 +22,11 @@ _DEVICE = re.compile(r"(?:con|prn|aux|nul|com[0-9]|lpt[0-9])(?:\..*)?\Z", re.IGN
 
 
 class GitBoundaryError(ValueError):
-    """Operation was rejected before the requested Git mutation."""
+    """在所请求的 Git 改动发生前拒绝操作。"""
 
 
 class GitMutationUnknown(RuntimeError):
-    """A Git mutation may have happened. Preserve the observed state."""
+    """Git 改动可能已发生，保留可观察到的现场。"""
 
 
 class WorktreeChanges(GitBoundaryError):
@@ -41,7 +41,7 @@ class WorktreeChanges(GitBoundaryError):
 
 
 class GitCommand:
-    """Local argv-only Git. Inherited GIT_* values cannot redirect repository I/O."""
+    """用独立参数执行本地 Git。移除继承的 GIT_* 变量，避免它们重定向仓库访问。"""
 
     def __init__(self, environ: Mapping[str, str] | None = None, *, isolated: bool = False, timeout: float = 10) -> None:
         self.environment = {key: value for key, value in (os.environ if environ is None else environ).items()
@@ -88,7 +88,7 @@ def directory_identity(path: Path, *, create: bool = False) -> tuple[int, int]:
 
 
 def private_git_directory(repo: Path, name: str) -> Path:
-    """Create only the private child and its own ignore file."""
+    """只创建私有子目录及其忽略文件。"""
     private = repo / ".ruocun"
     directory_identity(private, create=True)
     root = private / name
@@ -130,7 +130,7 @@ def _repository_root(git: GitCommand, path: Path) -> Path | None:
 
 
 def gitDiff(root: str | Path, *, environ: Mapping[str, str] | None = None) -> str | None:
-    """Frozen /diff summary for a verified project or linked checkout root."""
+    """为经过核验的仓库或链接工作树生成 /diff 摘要。"""
     git = GitCommand(environ)
     if git.executable is None:
         return None
@@ -198,7 +198,7 @@ class Worktree:
         return bool(self._git.run(Path(self.root), args).stdout)
 
     def _commits(self, head: str) -> bool:
-        # Without `--`, Git may stat the long revision range as a filename.
+        # 双横线分隔路径参数，避免 Git 把长修订范围误当作文件名。
         return bool(self._git.read(Path(self.root), "rev-list", "-1", f"{self._base}..{head}", "--"))
 
     def hasChanges(self) -> bool:
@@ -206,7 +206,7 @@ class Worktree:
         return self._dirty()
 
     def verify(self) -> None:
-        """Check that this live ownership handle still names the same checkout."""
+        """检查活动所有权凭证是否仍指向同一工作树。"""
         self._checked_head()
 
     def hasUnpushedCommits(self) -> bool:
@@ -228,7 +228,7 @@ class Worktree:
                 raise GitMutationUnknown("目录或 Git 工作树记录仍存在，保留分支。")
             if self._git.read(self._repository, "rev-parse", "--verify", branch_ref) != head:
                 raise GitMutationUnknown("工作树已移除，分支状态发生变化并已保留。")
-            # branch -D retains Git's guard against deleting a checked-out branch.
+            # branch -D 仍会拒绝删除已在工作树中检出的分支。
             self._git.run(self._repository, ["branch", "-D", "--", self.branch], mutation=True)
             present = self._git.run(self._repository, ["show-ref", "--verify", "--quiet", branch_ref], allow=(0, 1))
             if present.returncode == 0:
@@ -287,7 +287,7 @@ def createWorktree(repoRoot: str | Path, id: str, *, environ: Mapping[str, str] 
 
 
 async def openAgentWorktree(ctx: ToolContext, mode: Literal["worktree", "remote"]) -> Worktree:
-    """Create a local Git checkout for either isolation spelling."""
+    """为两种隔离写法创建本地 Git 工作树。"""
     create = ctx.createWorktree
     if create is None or ctx.signal.is_set():
         raise GitBoundaryError(f"当前无法创建 {mode} 隔离工作树。")
@@ -299,7 +299,7 @@ async def openAgentWorktree(ctx: ToolContext, mode: Literal["worktree", "remote"
 
 
 def verifyAgentWorktree(repo_root: Path, worktree_root: Path, *, environ: Mapping[str, str]) -> None:
-    """Verify persisted isolation without granting ownership for deletion."""
+    """核对持久化的隔离工作树。清理权限仍须单独核实。"""
     try:
         repo = repo_root.resolve(strict=True)
         private = repo / ".ruocun" / "worktrees"
@@ -331,7 +331,7 @@ def verifyAgentWorktree(repo_root: Path, worktree_root: Path, *, environ: Mappin
 
 
 async def finishAgentWorktree(worktree: Worktree, text: str) -> str:
-    """Keep changes and clean only the exact checkout owned by this run."""
+    """保留修改，只清理本次执行确有所有权的工作树。"""
     location = f"分支 {worktree.branch}，目录 {worktree.root}"
     try:
         await asyncio.to_thread(worktree.cleanup, discard_changes=False)

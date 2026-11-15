@@ -1,4 +1,4 @@
-"""Frozen reference memory/frontmatter.ts (MIT), with Windows CRLF input."""
+"""解析和生成记忆 Markdown 的文件头元数据，兼容 Windows 的 CRLF 换行。"""
 
 from __future__ import annotations
 

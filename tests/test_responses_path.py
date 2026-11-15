@@ -222,7 +222,7 @@ def test_responses_demo_requires_config_dir_argument(tmp_path):
 def test_existing_version_help_agent_and_chat_demo_preserved(tmp_path):
     version = _cli(tmp_path, "--version")
     assert version.returncode == 0
-    assert version.stdout == "RuoCun v0.1.0.dev0\n"
+    assert version.stdout == "RuoCun v0.9.0\n"
     assert version.stderr == ""
     help_result = _cli(tmp_path, "--help")
     assert help_result.returncode == 0

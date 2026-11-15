@@ -1,4 +1,4 @@
-"""冻结 src/tools/notify_user.ts (MIT)，按 ADR-0010/W6 改为终端渠道。"""
+"""把模型的 NotifyUser 请求交给终端通知入口。"""
 
 from __future__ import annotations
 

@@ -1,22 +1,7 @@
-"""Windows 原子文件发布、私有 DACL 与目录同步（NEW-03 / REC-12 / MM-591）。
+"""把私有文件原子发布到 Windows 本地磁盘，并分别确认内容可见和目录持久化。
 
-依据（独立来源，不从 Python 当前实现倒推）：
-- ``09-storage-extension-route.md`` ``# SQLite及文件路线``：私有父目录 →
-  同目录唯一临时文件 → 完整写入/flush → 同卷 ``os.replace`` → 平台目录同步与
-  状态记录；权限/同步失败不降级成成功；replace 前失败保旧；replace 已发生而
-  后续同步失败必须报告「发布已可见、持久确认未完成」，不伪报未执行或盲删候选；
-  Windows 用显式 DACL/真实 ACL 读回，不以 chmod 数字代替。
-- ``18-windows-durable-io-experiment.md`` / d18-accepted-review：共享占用与
-  ACL 拒绝都可能表现为错误 5；目录 RW 句柄 flush 有本机证据；无断电保证。
-- 冻结 ``src/session/durable_file.ts``：``wx`` 唯一临时、完整写入 + fsync、
-  rename、父目录 fsync；其 POSIX ``open(dir)+fsync`` 在 Windows 返回 EACCES，
-  不能直接照抄，故这里用 Win32 ``CreateFileW`` + ``FlushFileBuffers``。
-
-新目录以当前用户 SID 的受保护、可继承 DACL 创建；已有目录只验证不修改。
-目录同步使用可写目录句柄；仅 GENERIC_READ 在 D18 实验中返回错误 5。
-
-runner 文件与 session DB 是两个原子域；本模块不宣称跨文件分布式原子性，
-也不承诺断电不丢（无断电实证）。
+父目录和目标路径先通过所有者、DACL 与重解析点检查。候选内容完整写入同目录的唯一临时文件，刷新后用 os.replace 发布，再刷新父目录并读回目标 ACL。
+替换前失败尽量收取临时文件。替换调用未回包时，记录是否发布未知。已替换而后续校验失败时保留候选并报告持久确认未完成。
 """
 
 from __future__ import annotations
@@ -47,7 +32,7 @@ _OPEN_EXISTING = 3
 
 
 class PublishDurabilityError(DurabilityUnconfirmedError):
-    """发布已可见、持久确认未完成；保留结构化回执供上层如实报告。"""
+    """新文件已可见，持久确认仍未完成。调用方可从异常中读取发布回执。"""
 
     def __init__(self, receipt: PublishReceipt, message: str) -> None:
         super().__init__(message)
@@ -55,7 +40,7 @@ class PublishDurabilityError(DurabilityUnconfirmedError):
 
 
 class AtomicPublishPreReplaceError(AtomicFileError):
-    """Pre-replace failure with explicit temporary-file cleanup outcome."""
+    """原子替换未返回。异常携带临时文件清理情况和替换结果是否未知。"""
 
     def __init__(
         self, retained_path: str | None, cleanup_error: BaseException | None,
@@ -133,10 +118,9 @@ def _local_absolute_path(path: Path) -> Path:
 
 
 def local_path(path: Path) -> Path:
-    """Keep short local paths unchanged; use extended DOS names beyond MAX_PATH.
+    """将超过 MAX_PATH 的本地路径改成 Windows 扩展路径格式。
 
-    This is only a name conversion. Fixed-volume, reparse and private ACL
-    verification remain mandatory at the actual I/O boundary.
+    这里只转换名称。实际 I/O 仍须检查固定卷、重解析点和私有 ACL。
     """
     absolute = _local_absolute_path(path)
     if len(str(absolute).encode("utf-16-le")) // 2 >= 248:
@@ -145,12 +129,12 @@ def local_path(path: Path) -> Path:
 
 
 def _assert_safe_path(path: Path) -> None:
-    """Reject network volumes and existing reparse components before use."""
+    """拒绝网络卷，以及已有路径组件中的重解析点。"""
     absolute = _local_absolute_path(path)
     kernel = _C.WinDLL("kernel32", use_last_error=True)
     kernel.GetDriveTypeW.argtypes = [_C.c_wchar_p]
     kernel.GetDriveTypeW.restype = _C.c_uint
-    if kernel.GetDriveTypeW(absolute.anchor) != 3:  # DRIVE_FIXED
+    if kernel.GetDriveTypeW(absolute.anchor) != 3:  # DRIVE_FIXED 表示本地固定卷。
         raise AtomicFileError("不能在非固定本地卷启用私密持久化。")
     for part in (absolute, *absolute.parents):
         try:
@@ -200,7 +184,7 @@ def _read_acl_sddl(path: Path) -> str:
 
 
 def _read_owner_sid(path: Path) -> str:
-    """Read the file owner from Windows; do not infer owner from the DACL."""
+    """直接查询文件所有者 SID。DACL 描述的是访问权限，无法替代所有者身份。"""
     from ctypes import wintypes as W
 
     adv = _advapi32()
@@ -233,7 +217,7 @@ def _read_owner_sid(path: Path) -> str:
 
 
 def _assert_private_acl(path: Path, *, directory: bool) -> str:
-    """Verify protected, exact current-user ACL and directory inheritance."""
+    """核对是否仅授权当前用户，并确认 DACL 受保护以及目录继承符合预期。"""
     _assert_safe_path(path)
     sddl = _read_acl_sddl(path)
     sid = _current_user_sid()
@@ -255,7 +239,7 @@ def _assert_private_acl(path: Path, *, directory: bool) -> str:
 
 
 def _ensure_private_dir_unpinned(path: Path) -> str:
-    """Create a private directory, or verify an existing one without editing it."""
+    """以私有权限创建目录，或只核验已存在目录的权限。"""
     if sys.platform != "win32":
         raise AtomicFileError("私有 DACL 仅在 Windows 已验证。")
     from ctypes import wintypes as W
@@ -291,7 +275,7 @@ def _ensure_private_dir_unpinned(path: Path) -> str:
         attrs = SecurityAttributes(_C.sizeof(SecurityAttributes), descriptor, False)
         if not kernel.CreateDirectoryW(str(path), _C.byref(attrs)):
             error = _C.get_last_error()
-            if error != 183:  # A racing creator: verify its result without modifying it.
+            if error != 183:  # 另一进程可能抢先建成目录，此处按已有目录核验，不接管其权限。
                 raise AtomicFileError(f"无法创建私有目录（Win32 {error}）。")
     finally:
         _local_free(descriptor)
@@ -314,12 +298,9 @@ def _kernel() -> Any:
 
 
 def _open_plain_file(path: Path, *, create_guard: bool) -> Any:
-    """Atomically reject reparses while opening an absolute local NT name.
+    """用 Windows 原生打开接口解析绝对 NT 路径，在同一次操作中拒绝重解析。
 
-    OBJECT_ATTRIBUTES/UNICODE_STRING/IO_STATUS_BLOCK follow the documented
-    native ABI with natural alignment. RootDirectory is NULL: no relative
-    create or rename, variable-layout name structure, or native asynchronous
-    buffer is used. No caller content is written by this function.
+    系统结构按 ABI 对齐，RootDirectory 设为空。这个入口只打开路径，不写入调用方内容。
     """
     from ctypes import wintypes as W
 
@@ -355,7 +336,7 @@ def _open_plain_file(path: Path, *, create_guard: bool) -> Any:
     unicode_name = UnicodeString(encoded_length, encoded_length + 2, _C.cast(buffer, W.LPWSTR))
     attributes = ObjectAttributes(
         _C.sizeof(ObjectAttributes), None, _C.pointer(unicode_name),
-        0x40 | 0x1000, None, None,  # OBJ_CASE_INSENSITIVE | OBJ_DONT_REPARSE
+        0x40 | 0x1000, None, None,  # 打开对象时忽略大小写并拒绝跟随重解析。
     )
     status_block = IoStatusBlock()
     handle = W.HANDLE()
@@ -366,8 +347,8 @@ def _open_plain_file(path: Path, *, create_guard: bool) -> Any:
         W.ULONG, _C.c_void_p, W.ULONG,
     ]
     native.NtCreateFile.restype = W.LONG
-    # FILE_READ_DATA participates in sharing checks; attributes-only opens do
-    # not protect against another handle deleting the anchor. No data is read.
+    # FILE_READ_DATA 使打开操作进入共享冲突检查，才能阻止其它句柄删除锚点。
+    # 此处只持有句柄，实际不读取文件内容。
     access = 0x100000 | 0x80 | 1 | (0x10000 if create_guard else 0)
     options = 0x20 | 0x40 | 0x200000 | (0x1000 if create_guard else 0)
     status = native.NtCreateFile(
@@ -389,10 +370,10 @@ def _open_plain_file(path: Path, *, create_guard: bool) -> Any:
 def _open_directory_pin(
     path: Path, *, exclusive_write: bool = False, readonly: bool = False,
 ) -> Any:
-    """Open the final component itself; never follow a reparse point."""
+    """打开并固定最后一个目录组件，遇到重解析点时拒绝继续。"""
     kernel = _kernel()
     access = _GENERIC_READ | _GENERIC_WRITE if exclusive_write else 0x80
-    sharing = 1 if exclusive_write or readonly else 1 | 2  # never FILE_SHARE_DELETE
+    sharing = 1 if exclusive_write or readonly else 1 | 2  # 不开放 FILE_SHARE_DELETE，使已固定的目录无法在操作期间被其他进程删除。
     handle = kernel.CreateFileW(
         str(local_path(path)), access, sharing, None, _OPEN_EXISTING,
         _FILE_FLAG_BACKUP_SEMANTICS | 0x00200000, None,
@@ -411,13 +392,10 @@ def _open_directory_pin(
 
 
 class PrivateDirectory:
-    """Keep a validated namespace stable for the complete I/O lifetime.
+    """在整个 I/O 生命周期中保持已核验的目录链稳定。
 
-    Each ancestor denies DELETE sharing. An unremovable empty guard keeps the
-    final directory nonempty, so FSCTL_SET_REPARSE_POINT cannot turn it into a
-    junction. Atomic OBJ_DONT_REPARSE name parsing closes the empty-to-guard
-    window. Readonly mode instead holds a required existing file. No relative
-    creation or native rename structures are involved.
+    祖先目录的句柄禁止共享删除。可写模式持有不可移除的空文件，让目标目录保持非空，避免被改成联接点；创建该文件时由 OBJ_DONT_REPARSE 覆盖此前的空目录窗口。
+    只读模式持有调用方要求存在的文件。
     """
 
     def __init__(
@@ -489,13 +467,13 @@ class PrivateDirectory:
 
 
 def ensure_private_dir(path: Path) -> str:
-    """Create/verify without taking over an existing directory's ACL."""
+    """创建或验证私有目录，保持已有目录的 ACL。"""
     with PrivateDirectory(path) as directory:
         return directory.acl
 
 
 def verify_private_file(path: Path) -> str:
-    """Reject reparse, non-files, hardlink aliases and non-private ACLs."""
+    """验证目标是普通私有文件，拒绝重解析点和硬链接别名。"""
     path = local_path(path)
     _assert_safe_path(path)
     info = path.lstat()
@@ -504,10 +482,9 @@ def verify_private_file(path: Path) -> str:
     return _assert_private_acl(path, directory=False)
 
 def sync_directory(path: Path) -> str:
-    """Win32 目录 RW 句柄 FlushFileBuffers；失败由调用方升级为「持久确认未完成」。
+    """用可读写的 Win32 目录句柄调用 FlushFileBuffers。
 
-    本机实测：仅 GENERIC_READ 的目录句柄 FlushFileBuffers 返回错误 5；
-    GENERIC_READ|GENERIC_WRITE 返回成功。这是本机事实，不推广为断电保证。
+    本机仅用 GENERIC_READ 刷新目录时发生错误 5，加入 GENERIC_WRITE 后可用。刷新失败由上层转换为持久确认未完成。
     """
     if sys.platform != "win32":
         raise AtomicFileError("目录同步仅在 Windows 已验证。")
@@ -548,14 +525,10 @@ def atomic_publish(
     require_durability: bool = True,
     sync_directory_fn: Callable[[Path], str] | None = None,
 ) -> PublishReceipt:
-    """原子发布：私有父目录 → 唯一临时 → 完整写入/flush → os.replace → 目录同步。
+    """在受保护的父目录内原子发布新内容，返回替换和目录同步的回执。
 
-    - replace 前任何失败：删除临时文件、保留旧文件、抛 AtomicFileError。
-    - replace 已发生而目录同步/ACL 失败：报告「发布已可见、持久确认未完成」，
-      不伪报未执行、不删除已发布候选；require_durability=True 时抛
-      PublishDurabilityError 并附带结构化回执。
-    - ``sync_directory_fn`` 是登记过的测试故障注入 seam（仅显式传参可达），
-      缺省使用真实 Win32 目录同步；不通过隐藏全局变量改写产品行为。
+    先核验临时文件 ACL，再写入完整内容并刷新文件，然后原子替换。替换调用未返回时保留结果未知的证据。
+    如果替换已生效而同步失败，回执描述可见但未获持久确认。严格调用方通过 require_durability 要求抛出带回执的异常。
     """
     with PrivateDirectory(file.parent) as directory:
         return _atomic_publish_pinned(
@@ -579,7 +552,7 @@ def _atomic_publish_pinned(
     try:
         fd = os.open(local_path(tmp), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         created = True
-        # Verify inherited private ACL before writing any sensitive bytes.
+        # 写入任何敏感字节前先读回临时文件继承的私有 ACL。
         _assert_private_acl(tmp, directory=False)
         with os.fdopen(fd, "wb") as stream:
             fd = -1
@@ -625,7 +598,7 @@ def _atomic_publish_pinned(
             retained_path, cleanup_error, replacement_attempted, receipt
         ) from exc
 
-    # replace 已完成：从这里开始只能是「发布已可见」或「持久确认完成」。
+    # 替换已经成功返回，后续失败只影响持久确认，文件发布已可见。
     sync_fn = sync_directory_fn or sync_directory
     try:
         sync_note = sync_fn(parent)
@@ -641,8 +614,8 @@ def _atomic_publish_pinned(
             note="发布已可见、持久确认未完成；不伪报未执行、不盲删候选。",
         )
         if not isinstance(exc, Exception):
-            # Preserve cancellation/system-exit identity, while making the
-            # already-visible publication discoverable to the caller.
+            # 继续抛出原始取消或退出异常，
+            # 同时附上已经可见的发布回执供上层核对。
             exc.publish_receipt = receipt  # type: ignore[attr-defined]
             raise
         if require_durability:

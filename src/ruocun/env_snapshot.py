@@ -1,8 +1,6 @@
-"""环境探测纯函数（来源冻结 ``src/env_snapshot.ts``，MIT）。
+"""把环境探测结果整理成可放进模型请求的文本。
 
-保留来源的格式化、代理凭据脱敏、文件名清洗、顶层目录与内存快照、延迟探测
-tag 等纯函数；真实 Windows/Python 运行时探测命令由平台端口按 R-05 替换，
-本模块不 spawn 外部进程、不读真实用户状态、不发起网络探测。
+先处理代理地址中的凭据，再格式化平台、目录等字段。快速字段可以先显示，较晚拿到的字段由调用方单独投递。
 """
 
 from __future__ import annotations
@@ -17,7 +15,7 @@ _TOP_LEVEL_DIR_CAP = 40
 
 
 def redactProxyCredentials(raw: str) -> str:
-    """只抹 userinfo，保留 scheme/host/port；幂等（env_snapshot.ts:68-72）。"""
+    """擦除代理地址中的用户名和密码，保留其余地址信息。"""
     match = re.match(r"^([a-zA-Z][a-zA-Z0-9+.-]*://)?([^/]*@)(.*)$", raw)
     if not match:
         return raw
@@ -25,7 +23,7 @@ def redactProxyCredentials(raw: str) -> str:
 
 
 def formatEnvSnapshot(data: dict[str, Any] | None, is_en: bool) -> str:
-    """纯格式化，不做 I/O（env_snapshot.ts:163-196）。"""
+    """将已探测的环境字段整理为显示文本。"""
     if not data:
         return ""
     parts: list[str] = []
@@ -66,7 +64,7 @@ def formatEnvSnapshot(data: dict[str, Any] | None, is_en: bool) -> str:
 
 
 def _sanitize_entry_name(name: str) -> str:
-    """C0/C1 控制字符压成 U+FFFD，单条名字限长（env_snapshot.ts:205-211）。"""
+    """替换控制字符并限制目录项名称的长度。"""
     flattened = _CONTROL.sub("\ufffd", name)
     if len(flattened) > _ENTRY_NAME_MAX_LEN:
         return flattened[:_ENTRY_NAME_MAX_LEN - 1] + "…"
@@ -74,7 +72,7 @@ def _sanitize_entry_name(name: str) -> str:
 
 
 def probeTopLevelDir(cwd: str | Path) -> list[str] | None:
-    """只列 cwd 直接子项（不递归），排除 .git；目录优先、字母序。"""
+    """只检查当前目录的直接子项，返回有界的文件列表。"""
     try:
         entries = list(Path(cwd).iterdir())
     except OSError:
@@ -115,7 +113,7 @@ def formatFastEnvFields(
 
 
 def wrapDelayedEnvNotice(formatted: str, is_en: bool) -> str:
-    """慢字段补投递时包一层 tag，措辞中性不暗示迟到（env_snapshot.ts:285-290）。"""
+    """给延迟获得的环境探测结果加上独立标记。"""
     if not formatted.strip():
         return ""
     if is_en:

@@ -1,1 +1,1 @@
-"""Pure Bash parser and security walker (MIT)."""
+"""解析 Bash 命令并遍历语法树，为权限判断提取可识别的命令。"""

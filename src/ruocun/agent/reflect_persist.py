@@ -1,4 +1,4 @@
-"""Frozen reflect_persist.ts, through the existing native MemoryStore port (MIT)."""
+"""通过现有 MemoryStore 应用并审计记忆变更。写入意图与确认边界由调用方维护。"""
 
 from __future__ import annotations
 
@@ -84,7 +84,7 @@ async def applyConfirmed(confirmed: Sequence[str], existing: Sequence[MemoryEntr
 
 async def applyReflectResult(result: ReflectResult, store: MemoryStore, *, today: str,
                              origin: str | None = None, signal: Event | None = None) -> ReflectApplied:
-    """Caller journals the entire write segment. Partial failures are deliberately not swallowed."""
+    """由调用方为整段写入建立意图记录。个别写入失败也会向上报告，供恢复区分已确认和未确认状态。"""
     existing = await store.load()
     memories = [entry.memory for entry in existing]
     added = merged = 0

@@ -1,4 +1,4 @@
-"""冻结 ProviderStep.tsx (MIT) 的首启服务商顺序。"""
+"""按首次引导的预定顺序生成服务商选项。"""
 
 from ....config.profiles import Provider
 from ....i18n.i18n import t

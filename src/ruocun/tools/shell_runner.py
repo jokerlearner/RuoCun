@@ -1,7 +1,6 @@
-"""Independent same-package Shell runner (frozen shell_runner.ts, MIT; D08/D09).
+"""独立运行 Shell 命令，持有命令的 Windows 作业对象和输出文件，并发布签名状态。
 
-The runner owns its command Job and output files. Transport helpers never own
-execution truth or the session database.
+传输辅助进程转发控制消息，执行进程确认实际结果，上层控制器维护会话数据库。
 """
 from __future__ import annotations
 
@@ -20,6 +19,7 @@ from typing import TYPE_CHECKING, Any, BinaryIO, cast
 from ..platform.process_tree import ForegroundResult, run_foreground_plan
 from ..platform.shell_plan import ShellAnalysis, ShellExecutionPlan
 from ..platform.windows.durable_file import (
+    AtomicPublishPreReplaceError,
     PrivateDirectory,
     atomic_publish,
     ensure_private_dir,
@@ -49,13 +49,30 @@ def digest(value: Any) -> str:
 
 def write_signed(path: Path, payload: dict[str, Any], capability: bytes) -> None:
     mac = hmac.new(capability, canonical(payload), hashlib.sha256).hexdigest()
-    atomic_publish(path, canonical({"payload": payload, "mac": mac}))
+    data = canonical({"payload": payload, "mac": mac})
+    deadline = time.monotonic() + .6
+    while True:
+        try:
+            atomic_publish(path, data)
+            return
+        except AtomicPublishPreReplaceError as error:
+            cause = error.__cause__
+            # Windows 上，其他进程短暂读旧文件时可能导致替换被拒绝。
+            # 仅对替换操作本身返回的共享或访问拒绝重试，其他发布错误交由上层处理。
+            if (not error.replacement_uncertain or error.cleanup_error is not None
+                    or error.retained_path is not None or not isinstance(cause, OSError)
+                    or getattr(cause, "winerror", None) not in (5, 32)
+                    or time.monotonic() >= deadline):
+                raise
+            time.sleep(.02)
 
 
 def read_signed(path: Path, capability: bytes) -> dict[str, Any]:
     verify_private_file(path)
-    raw = path.read_bytes()
-    if len(raw) > 2 * 1024 * 1024:
+    limit = 2 * 1024 * 1024
+    with path.open("rb") as stream:
+        raw = stream.read(limit + 1)
+    if len(raw) > limit:
         raise ValueError("runner收据或清单超过允许大小。")
     value = json.loads(raw)
     if not isinstance(value, dict) or not isinstance(value.get("payload"), dict) or not isinstance(value.get("mac"), str):
@@ -77,7 +94,8 @@ def identity(value: Any) -> ProcessIdentity:
 def package_files() -> dict[str, str]:
     root = Path(__file__).resolve().parents[1]
     names = ("tools/shell_runner.py", "platform/process_tree.py", "platform/windows/process_tree.py",
-             "platform/windows/ipc.py", "platform/shell_output.py", "version.py")
+             "platform/windows/ipc.py", "platform/shell_output.py", "platform/sandbox.py",
+             "platform/sandbox_policy.py", "platform/windows/sandbox.py", "platform/shell_plan.py", "version.py")
     return {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in names}
 
 
@@ -93,6 +111,9 @@ def parse_plan(value: dict[str, Any]) -> ShellExecutionPlan:
     data["analysis"] = ShellAnalysis(**raw_analysis)
     data["argv"] = tuple(data["argv"])
     data["environment"] = tuple(tuple(pair) for pair in data["environment"])
+    if data.get("sandbox") is not None:
+        from ..platform.sandbox_policy import parseSandboxPolicy
+        data["sandbox"] = parseSandboxPolicy(data["sandbox"])
     plan = ShellExecutionPlan(**data)
     if not Path(plan.argv[0]).is_absolute() or not Path(plan.cwd).is_absolute():
         raise ValueError("runner执行计划缺少绝对路径。")
@@ -261,6 +282,7 @@ class Runner:
         for name in ("version", "session_id", "task_id", "run_id", "launch_id", "plan_digest", "control_epoch", "owner_identity"):
             if grant.get(name) != self.state.get(name):
                 raise ValueError("runner启动许可已经过期或身份不匹配。")
+        # 以独占方式认领启动。即使已写出认领、尚未更新签名状态，也能挡住重复执行。
         claim = self.directory / "start.claim"
         with claim.open("xb") as data:
             payload = {"run_id": self.state["run_id"], "launch_id": self.state["launch_id"],
@@ -329,7 +351,7 @@ class Runner:
         try:
             return self.control(payload, peer.owner_identity)
         except BaseException as error:
-            # A rejected stale request must not tear down an otherwise healthy transport helper.
+            # 过期请求只收到错误回包，传输辅助进程继续服务其他请求。
             return {"error": type(error).__name__}
 
     def serve(self) -> None:
@@ -402,6 +424,6 @@ def main(directory: Path) -> int:
         signal.signal(signal.SIGINT, lambda *_: runner.stop.set())
         return runner.run()
     except BaseException as error:
-        # Never print manifest arguments, capability or raw I/O exception values.
+        # 错误提示只使用异常类型，防止命令参数、控制凭据或底层 I/O 信息进入日志。
         print(f"Shell runner停止（{type(error).__name__}），请保留运行目录核实。", flush=True)
         return 74

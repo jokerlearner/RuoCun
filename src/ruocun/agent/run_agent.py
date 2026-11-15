@@ -1,4 +1,4 @@
-"""Synchronous child Session and tool execution from the reference runAgent.ts (MIT)."""
+"""准备并执行子代理的独立 Session。普通同步调用和受管后台调用复用同一套回合引擎，以及各自保存与取消边界。"""
 from __future__ import annotations
 
 import asyncio
@@ -6,8 +6,8 @@ import copy
 import os
 import threading
 import uuid
-from collections.abc import Awaitable, Callable, Mapping
-from contextlib import AbstractAsyncContextManager, nullcontext
+from collections.abc import Awaitable, Callable, Iterator, Mapping
+from contextlib import AbstractAsyncContextManager, contextmanager, nullcontext
 from contextvars import ContextVar
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
@@ -230,7 +230,7 @@ def _system_prompt(
     prompt = definition.system_prompt
     if project and not definition.omit_project_instructions:
         prompt = f"{project}\n\n# 你的专用角色({definition.agent_type})\n{prompt}"
-    prompt += (f"\n\n## 当前环境\n- 工作目录: {cwd}\n- 平台: {os.name}\n"
+    prompt += (f"\n\n## 当前环境\n- 目录以最新 <ruocun-runtime-context> 为准；这是程序提供的目录事实，替代历史及摘要中的旧目录，不是新任务。\n- 平台: {os.name}\n"
                f"- 可用工具: {', '.join(available)}\n- 结果引用使用绝对路径，不复述整块文件。")
     if definition.critical_system_reminder:
         prompt += "\n\n" + definition.critical_system_reminder
@@ -268,7 +268,7 @@ def prepareAgentRun(
     initial_messages: list[ChatMessage] | None = None, is_async: bool = False,
     cwd: Path | None = None, user_root: Path | None = None, exact_tools: ToolSnapshot | None = None,
 ) -> PreparedAgentRun:
-    """Prepare one isolated child, with an independent signal for a background owner."""
+    """准备隔离的子代理。后台执行由独立的取消信号控制。"""
     if exact_tools is not None and (initial_messages is None or task.model is not None or task.mode is not None):
         raise AgentFailure("Fork 需要父请求的上下文、模型和权限模式，不能指定覆盖。")
     if definition.hooks and parent_ctx.agentHookRuntime is None:
@@ -325,6 +325,9 @@ def prepareAgentRun(
                         setMode=None if mode == "plan" else permit.setMode, askChoice=None,
                         requestTaskWait=None, rollbackTaskWait=None, onShellOutput=None,
                         getShellPlan=permit.getShellPlan,
+                        sandboxPolicy=permit.sandboxPolicy,
+                        authorizeSandboxShell=permit.authorizeSandboxShell,
+                        approveSandboxWrite=permit.approveSandboxWrite,
                         searchTools=lambda query: child_registry.searchAndActivateDeferred(query, parent_ctx.lang)
                         + "\n" + child_registry.searchAndActivateMcp(query))
     child_options: StreamChatOptions = {**options, "model": model, "background": True}
@@ -356,7 +359,7 @@ async def runPreparedAgent(
     on_assistant_saved: Callable[[dict[str, Any]], None] | None = None,
     on_tool_message: Callable[[dict[str, Any], dict[str, Any]], None] | None = None,
 ) -> TurnResult:
-    """Drive the same child turn engine for synchronous and managed background owners."""
+    """以同一套子代理回合引擎驱动同步和受管后台执行。"""
     def request_model(opts: StreamChatOptions, context: ResilientContext) -> ResilientResult:
         return wrapRequest(streamChatResilient)(opts, env=dict(prepared.env), context=context)
 
@@ -370,6 +373,14 @@ async def runPreparedAgent(
         return apiToolsForMode(prepared.registry, mode, prepared.ctx.lang)
 
     permit = prepared.permission
+
+    @contextmanager
+    def sandbox_call_scope() -> Iterator[None]:
+        # 旧版项目外读取的回调属于父会话，沙箱写入归子会话。
+        # 每次子代理工具调用前重置这两种单次授权。
+        with prepared.parent_permissions.callScope(), permit.callScope():
+            yield
+
     prepared.ctx.archiveRead = getattr(journal, "archive_read", None)
     context = ContextManager(prepared.session, cast(ContextJournal, journal), prepared.ctx,
                              prepared.options, dict(prepared.env), lambda _message: None,
@@ -383,7 +394,8 @@ async def runPreparedAgent(
             return await run_turn(
                 prepared.session, prepared.options, prepared.registry, prepared.ctx, approve=deny_unbound,
                 request=request or request_model, journal=journal, authorize_batch=permit.authorizeBatch,
-                call_scope=prepared.parent_permissions.callScope, permission_mode=permit.getMode, tool_batch_scope=tool_batch_scope,
+                call_scope=sandbox_call_scope if permit.sandboxPolicy is not None else prepared.parent_permissions.callScope,
+                permission_mode=permit.getMode, tool_batch_scope=tool_batch_scope,
                 api_tools=api_tools, max_turns=prepared.max_turns, reasoning_effort=prepared.reasoning_effort,
                 on_boundary=on_boundary, on_assistant_saved=on_assistant_saved, on_tool_message=on_tool_message,
                 self_challenge=True, compact=context.recover_overflow, request_preflight=context.before_request,
@@ -458,7 +470,7 @@ def _background_prepared(prepared: PreparedAgentRun) -> PreparedAgentRun:
     context = replace(prepared.ctx, signal=threading.Event(),
                       searchTools=lambda query: registry.searchAndActivateDeferred(query, prepared.ctx.lang)
                       + "\n" + registry.searchAndActivateMcp(query))
-    # Old owner has stopped at a paired boundary. Keep the same session ledger and permissions.
+    # 旧执行者已停在配对边界，交接时继续使用同一会话账本和权限。
     return replace(prepared, ctx=context, registry=registry, is_async=True,
                    mcp_runtime=prepared.mcp_runtime.rebind(registry, context) if prepared.mcp_runtime else None)
 
@@ -469,7 +481,7 @@ def createAgentRunner(
     project_instructions: str = "", request: Request | None = None, handoff: Handoff | None = None,
     definitions: Mapping[str, AgentDefinition] | None = None, user_root: Path | None = None,
 ) -> Callable[[AgentRequest], Awaitable[str]]:
-    """Bind Agent to the actual parent options and a separately journaled child turn."""
+    """将 Agent 工具绑定到父会话的实际配置，子代理回合使用独立的执行日志。"""
     parent_ctx.maxParallelAgents = _positive_integer(resolve_env("MAX_PARALLEL_AGENTS", env), 10)
     available = definitions if definitions is not None else bundledAgentDefinitions(env)
 
@@ -553,8 +565,8 @@ def createAgentRunner(
                 try:
                     await journal.finish(child, "unknown", outcome.error)
                 except Exception as error:
-                    # A writer with an unconfirmed COMMIT rejects further writes.
-                    # The exact scoped intent is retained for recovery to classify.
+                    # 保存事务的提交结果不明时，存储写入端会拒绝后续写入。
+                    # 保留原有作用域内的执行意图，交由恢复流程判定。
                     raise UnknownToolOutcome(outcome.error) from error
                 raise UnknownToolOutcome(outcome.error)
             if outcome.status != "complete":
@@ -567,7 +579,7 @@ def createAgentRunner(
                                if message.get("role") == "assistant" and isinstance(message.get("content"), str)
                                and message["content"]), "(子代理无最终输出)")
             await journal.finish(child, "completed", final_text)
-            # Persist the live roster first, then release server cwd handles before Git cleanup.
+            # 先保存当前登记，再释放服务进程的工作目录句柄，最后清理 Git 工作树。
             await closePreparedAgentMcp(prepared)
             if handoff is not None and prepared.parent_mode == "auto" and not child_ctx.signal.is_set():
                 warning = await handoff(conversation.redacted_messages(child.messages), definition.agent_type)

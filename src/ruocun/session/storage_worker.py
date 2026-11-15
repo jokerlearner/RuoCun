@@ -1,4 +1,7 @@
-"""Single SQLite thread and cancellable waits for accepted checkpoint work."""
+"""用一个专属线程串行执行会话 SQLite 工作。
+
+上层提交操作后可取消等待，已接纳的数据库工作仍继续执行。检查点等操作通过原请求身份和持久回执核对，从而区分完成、失败和结果未知。
+"""
 
 from __future__ import annotations
 
@@ -45,8 +48,8 @@ async def _wait_without_cancelling(future: Future[_T]) -> _T:
     try:
         return await asyncio.shield(wrapped)
     except asyncio.CancelledError:
-        # The accepted work still runs.  Retrieve an eventual error so an
-        # abandoned asyncio wrapper cannot emit it to the loop's log.
+        # 调用方取消等待后，数据库线程仍处理已接纳的工作。
+        # 收取迟到的异常，避免无人等待的 Future 触发未处理异常日志。
         def consume(done: asyncio.Future[_T]) -> None:
             if not done.cancelled():
                 done.exception()
@@ -69,7 +72,7 @@ class CheckpointHandle:
     _future: Future[int]
 
     async def wait(self) -> int:
-        """Cancellation stops this wait, never the already accepted DB request."""
+        """取消只停止本次等待，数据库线程继续处理已经接纳的请求。"""
         return await _wait_without_cancelling(self._future)
 
     def status(self) -> CheckpointStatus:
@@ -82,8 +85,8 @@ class CheckpointHandle:
         except StoreError as exc:
             return CheckpointStatus("failed", error=exc)
         except BaseException as exc:
-            # An unclassified interruption may have occurred after COMMIT.
-            # Do not turn missing evidence into an assertion of rollback.
+            # 未分类的异常也可能发生在提交之后。
+            # 缺少确认时保留结果未知状态，等待原请求的证据。
             return CheckpointStatus("outcome_unknown", error=exc)
         return CheckpointStatus("committed", revision=revision)
 
@@ -96,7 +99,7 @@ class OperationStatus:
 
 @dataclass(frozen=True)
 class OperationHandle(Generic[_T]):
-    """Accepted work tracking; archive run/results additionally persist a receipt."""
+    """跟踪已接纳的工作。归档运行和结果写入另外保存持久回执。"""
 
     operation_id: str
     _future: Future[_T]
@@ -120,7 +123,7 @@ class OperationHandle(Generic[_T]):
 
 
 class StorageWorker:
-    """Create, use and close one StoragePort on its own serialized thread."""
+    """在自己的线程上创建、操作和关闭同一个 StoragePort。"""
 
     def __init__(self, factory: Callable[[], tuple[StoragePort, DbOwner]]) -> None:
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="ruocun-db")
@@ -129,7 +132,7 @@ class StorageWorker:
         self._jobs: dict[str, CheckpointHandle] = {}
         self._closed = False
         self._close_future: Future[None] | None = None
-        # This field is read and set only on the dedicated DB thread.
+        # 该字段只由专属数据库线程读写。
         self._write_fault: BaseException | None = None
 
     @classmethod
@@ -137,7 +140,7 @@ class StorageWorker:
         cls, session_dir: Path, session_id: str, cwd: Path, runtime: RuntimeRecord,
         identities: IdentityProvider | None = None,
     ) -> StorageWorker:
-        """Construct, claim, use and close the real port on the same DB thread."""
+        """在数据库线程上建立端口并取得会话所有权，此后的操作都运行在同一个线程。"""
         from .durable_store import DurableStore
         from .process_identity import RealIdentityProvider
 
@@ -159,7 +162,7 @@ class StorageWorker:
             self._write_fault = exc
             raise
         except StoreError:
-            # Expected contract rejection: no DB transaction was committed.
+            # 这是明确的契约拒绝，数据库没有提交事务。
             raise
         except BaseException as exc:
             self._write_fault = exc
@@ -282,8 +285,8 @@ class StorageWorker:
         archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> CheckpointHandle:
-        # Frozen dataclasses can still contain mutable message/usage mappings.
-        # Freeze the accepted payload before hashing or queueing it.
+        # 冻结的数据类内部可能仍引用可变的消息或用量字典。
+        # 先复制参数，再计算摘要和入队，确保提交的请求与摘要对应。
         checkpoint = copy.deepcopy(checkpoint)
         archive_rewrite, archive_import = copy.deepcopy((archive_rewrite, archive_import))
         consumed_event_ids = tuple(consumed_event_ids)
@@ -304,8 +307,8 @@ class StorageWorker:
                     raise StoreError("检查点操作 ID 内容冲突。")
                 if existing.status().state != "failed":
                     return existing
-                # A confirmed rejected/rolled-back request has no committed receipt.
-                # Permit the same staged event batch after its cause is corrected.
+                # 已明确拒绝或回滚的请求没有提交回执。
+                # 修复原因后，可再次提交同一批暂存事件。
                 self._jobs.pop(op_id)
 
             def commit() -> int:
@@ -370,7 +373,7 @@ class StorageWorker:
         return await _wait_without_cancelling(future)
 
     async def close(self) -> None:
-        """After all accepted requests, release owner and close the DB on its thread."""
+        """处理完已接纳的工作后，在数据库线程释放会话所有权并关闭连接。"""
         with self._lock:
             if self._close_future is None:
                 self._closed = True
@@ -384,6 +387,6 @@ class StorageWorker:
         try:
             await _wait_without_cancelling(future)
         finally:
-            # A cancelled caller cannot cancel the queued close; do not wait on
-            # the event-loop thread while accepted operations are still running.
+            # 等待取消后，已排队的关闭操作仍会继续。
+            # 让数据库线程自行收尾，避免事件循环阻塞在待完成的工作上。
             self._executor.shutdown(wait=False)

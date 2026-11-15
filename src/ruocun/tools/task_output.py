@@ -1,10 +1,11 @@
-"""Frozen tools/task_output.ts (MIT), incremental output per task object."""
+"""按任务对象记录读取进度，只返回本次新增的可展示消息。工作目录快照属于会话内部信息，在此处略过。"""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 from weakref import WeakKeyDictionary
 
+from ..agent.runtime_context import isRuntimeContext
 from .schema import objectSchema
 from .types import Tool, ToolContext
 
@@ -38,6 +39,8 @@ def _text(value: Any) -> str:
 
 
 def _render(message: dict[str, Any]) -> str:
+    if isRuntimeContext(message):
+        return ""
     role = message.get("role")
     content = _text(message.get("content")).strip()
     if role == "assistant":

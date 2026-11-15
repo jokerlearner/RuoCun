@@ -1,7 +1,6 @@
-"""Reference permissions/settings.ts (MIT): rule union, tier mode and native writes.
+"""合并各层权限规则和模式，提供原生设置文件的读写入口。
 
-ADR-0013: reading malformed settings remains tolerant; mutating an existing
-malformed document raises instead of discarding its contents.
+读取时容忍损坏的配置，修改时要求已有文件可以解析，以免覆盖用户原有内容。
 """
 from __future__ import annotations
 
@@ -103,7 +102,7 @@ def extractCliPermissions(args: list[str]) -> CliPermissions:
         arg = args[index]
         value = args[index + 1] if index + 1 < len(args) else None
         if value == "--api-key":
-            value = None  # An explicit credential flag cannot be a permission argument.
+            value = None  # 认证参数应由凭据配置处理，不纳入权限规则。
         if arg in flags and value is not None:
             config[flags[arg]].append(value)
             index += 2

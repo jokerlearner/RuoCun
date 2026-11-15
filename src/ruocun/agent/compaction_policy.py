@@ -1,6 +1,6 @@
-"""Request budgets adapted from DeepSeek Harness compaction-basic (MIT, 2026).
+"""根据模型窗口为实际请求划分预算。先留出输出和估算误差的空间，再决定何时压缩以及多长的近期消息须保留原文。
 
-The output_limit returned here must be applied to the actual routed request.
+调用方须把返回的 output_limit 用于真正发送的请求。改编自 DeepSeek Harness compaction-basic（MIT，2026）。
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ def resolveCompactionBudget(
     window: int, output_limit: int, *, output_explicit: bool = True,
     env: Mapping[str, str] | None = None,
 ) -> CompactionBudget:
-    """Reserve actual output, adaptive headroom and a verbatim recent tail."""
+    """为实际输出、动态余量和近期消息原文预留空间。"""
     if type(window) is not int or window <= 0:
         raise ValueError("context window must be a positive integer")
     if type(output_limit) is not int or output_limit <= 0:
@@ -79,17 +79,16 @@ def _price(value: Any) -> int:
         return sum(_price(item) for item in value)
     if isinstance(value, dict):
         if value.get("type") in {"image_url", "input_image", "image"}:
-            return 1024  # Conservative route-independent estimate, not a pixel tokenizer.
+            return 1024  # 按固定值保守估算图片，供两种请求格式共用。
         return sum(_price(item) for key, item in value.items()
                    if key not in {"role", "type"})
     return 0
 
 
 def estimateRequestTokens(body: Mapping[str, Any]) -> int:
-    """Estimate the final Chat/Responses input, excluding output caps and base64 size.
+    """粗估最终 Chat 或 Responses 请求的输入 token，计入消息结构与工具定义。
 
-    The heuristic includes message framing and tools. API usage remains distinct;
-    callers must retain the server context-overflow stop/recovery path.
+    输出上限与图片的 base64 字节不计入输入估算。调用方仍需处理模型服务实际返回的上下文超限。
     """
     messages = body.get("messages", body.get("input", []))
     if isinstance(messages, list):

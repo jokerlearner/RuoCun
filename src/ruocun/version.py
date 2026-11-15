@@ -1,3 +1,3 @@
-"""Single source for the RuoCun distribution and CLI version."""
+"""供分发构建和命令行共同读取的若存版本号。"""
 
-__version__ = "0.1.0.dev0"
+__version__ = "0.9.0"

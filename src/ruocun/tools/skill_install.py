@@ -1,4 +1,4 @@
-"""冻结 tools/skill_install.ts（MIT）的延迟安装工具。"""
+"""委托技能安装模块处理安装请求，成功后触发技能清单刷新。"""
 
 from __future__ import annotations
 

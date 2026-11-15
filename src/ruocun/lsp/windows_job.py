@@ -1,4 +1,7 @@
-"""LSP duplex-process binding to the existing Windows Job tree contract."""
+"""把 LSP 子进程接入 Windows Job 的进程树回收机制。
+
+客户端关闭时通过 Job 一并回收服务器及其子进程，避免后代继续持有通信管道。
+"""
 
 from __future__ import annotations
 
@@ -25,7 +28,7 @@ class WindowsJob:
             limits = _Extended()
             limits.basic.flags = 0x2000
             _check(k.SetInformationJobObject(self.handle, 9, C.byref(limits), C.sizeof(limits)))
-            # CPython 3.11 exposes the same owned Popen via SubprocessTransport extras.
+            # 从 CPython 3.11 的 SubprocessTransport 取出已有的 Popen，复用已持有的进程对象。
             popen = process._transport.get_extra_info("subprocess")
             _check(k.AssignProcessToJobObject(self.handle, int(popen._handle)))
             self._resume_initial_thread(process.pid)
@@ -43,7 +46,7 @@ class WindowsJob:
         k.Thread32Next.argtypes = [W.HANDLE, C.POINTER(_ThreadEntry)]
         k.OpenThread.argtypes = [W.DWORD, W.BOOL, W.DWORD]
         k.OpenThread.restype = W.HANDLE
-        snapshot = k.CreateToolhelp32Snapshot(4, 0)  # TH32CS_SNAPTHREAD
+        snapshot = k.CreateToolhelp32Snapshot(4, 0)  # TH32CS_SNAPTHREAD 用于拍摄系统线程快照。
         if snapshot == C.c_void_p(-1).value:
             raise C.WinError(C.get_last_error())
         try:
@@ -57,7 +60,7 @@ class WindowsJob:
                 available = k.Thread32Next(snapshot, C.byref(entry))
             if len(tids) != 1:
                 raise RuntimeError("LSP suspended进程的初始线程无法唯一核实。")
-            thread = _check(k.OpenThread(2, False, tids[0]))  # THREAD_SUSPEND_RESUME
+            thread = _check(k.OpenThread(2, False, tids[0]))  # THREAD_SUSPEND_RESUME 只申请挂起和恢复线程所需的权限。
             try:
                 if k.ResumeThread(thread) != 1:
                     raise RuntimeError("LSP初始线程恢复状态无法核实。")

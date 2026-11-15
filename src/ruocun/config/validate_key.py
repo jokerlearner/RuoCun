@@ -1,4 +1,7 @@
-"""Frozen config/validate_key.ts (MIT), provider auth and gateway model probes."""
+"""向模型服务验证账户凭据，并在需要时读取网关提供的模型列表。
+
+配置向导可以据请求结果判断密钥是否可用，再决定是否保存账户。
+"""
 from __future__ import annotations
 
 import asyncio

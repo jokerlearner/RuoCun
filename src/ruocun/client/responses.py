@@ -1,9 +1,6 @@
-"""Responses 路由桥（来源冻结 ``src/client/responses.ts``，MIT）。
+"""在 Chat 请求和 Responses 协议之间做路由与转换。只有符合端点和模型前缀的请求走 Responses。
 
-- WIRE-04：仅官方 OpenAI 的 GPT-6 系列走 Responses；自定义网关与其它模型保持
-  Chat Completions（冻结 responses.ts:5-7；不以 SDK 支持推定另一套原生协议）。
-- 复用 04 的 SSE 增量解码/分帧、请求组装与统一事件回传，不另起第二套 client。
-- ADR-0003 精神：错误与未知结果如实报告；无完成事件的断流不伪报成功。
+将 Responses 事件转为统一的 Chat 增量，复用同一解码和结果累积路径。没有完成事件的断流以错误报告。
 """
 
 from __future__ import annotations
@@ -17,24 +14,23 @@ from .sse import SSEStreamParser
 
 RESPONSES_ENDPOINT = "https://api.openai.com/v1/responses"
 
-# 冻结 responses.ts:6 /^gpt-6(?:[.-]|$)/i
+# 模型名前缀须在 gpt-6 后遇到点、连字符或结尾。
 _GPT6 = re.compile(r"^gpt-6(?:[.-]|$)", re.IGNORECASE)
-# 冻结 responses.ts:59 /astra|6\.1-sol/（&& 优先于 || 的真实运算顺序）
+# 特殊模型映射同时考虑模型名和推理配置，沿用原判定优先级。
 _ASTRA_SOL = re.compile(r"astra|6\.1-sol")
 _MAX_OUTPUT_TOKENS = 128_000
 _INCLUDE = ("reasoning.encrypted_content",)
 
 
 def usesResponses(baseUrl: str, model: str) -> bool:
-    """冻结 responses.ts:5-7：官方 v1 端点 + GPT-6 前缀判据。"""
+    """官方 v1 端点与 GPT-6 前缀同时满足时走 Responses。"""
     return baseUrl.rstrip("/") == "https://api.openai.com/v1" and bool(_GPT6.match(model))
 
 
 def inputMessages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """冻结 responses.ts:11-32：Chat messages → Responses input items。
+    """将 Chat 历史投影为 Responses 输入项。
 
-    tool → function_call_output；assistant → reasoning items + 可选 content +
-    function_call；多模态 user → input_text/input_image。内部字段不进入 wire。
+    工具结果对应 function_call_output，助手消息带推理和函数调用，多模态用户消息携带文字和图片。内部字段留在会话里。
     """
     out: list[dict[str, Any]] = []
     for message in messages:
@@ -88,12 +84,7 @@ def inputMessages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def responsesUsage(raw: dict[str, Any]) -> dict[str, Any]:
-    """冻结 responses.ts:34-39：Responses usage → Chat usage 字段名。
-
-    ``input_tokens`` → ``prompt_tokens``，``output_tokens`` → ``completion_tokens``，
-    ``input_tokens_details`` → ``prompt_tokens_details``；原生 cache 字段优先与
-    ``cached_tokens`` 补齐由 04 的 ``client.normalizeUsage`` 联动完成（R-06）。
-    """
+    """将 Responses 的输入、输出用量和详情字段转换为 Chat 字段名，再由 normalizeUsage 统一补齐缓存字段。"""
     out: dict[str, Any] = {
         "prompt_tokens": raw.get("input_tokens"),
         "completion_tokens": raw.get("output_tokens"),
@@ -106,11 +97,7 @@ def responsesUsage(raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def responsesMessage(output: list[dict[str, Any]]) -> dict[str, Any]:
-    """冻结 responses.ts:41-49：output items → assistant message 片段。
-
-    text/refusal 拼接、function_call → tool_calls、只保留 reasoning items；
-    空文本为 ``None``，空 tool_calls 不生成键。
-    """
+    """汇总输出项中的文本、拒绝、函数调用和推理。空文本为 None，没有工具调用时省略该字段。"""
     texts: list[str] = []
     calls: list[dict[str, Any]] = []
     reasoning: list[dict[str, Any]] = []
@@ -140,11 +127,9 @@ def responsesMessage(output: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def buildResponsesRequest(chat: dict[str, Any]) -> dict[str, Any]:
-    """冻结 responses.ts:53-65：Chat 请求体 → Responses 请求体。
+    """将 Chat 请求转换成 Responses 请求，统一输出上限、推理强度和工具定义。
 
-    store/include 固定；max_output_tokens 取 ``max_completion_tokens ?? max_tokens``
-    并裁到 128000；effort 按 reasoning_effort / thinking / 特殊模型映射；
-    tools 展开为顶层 function 声明 + strict:false；可选字段仅定义时透传。
+    选用已给出的上限并限制为至多 128000，可选输入字段仅在已定义时传递。
     """
     effort = chat.get("reasoning_effort")
     if effort is None:
@@ -161,7 +146,7 @@ def buildResponsesRequest(chat: dict[str, Any]) -> dict[str, Any]:
         mapped_effort = effort
     max_completion = chat.get("max_completion_tokens")
     limit_value = max_completion if max_completion is not None else chat.get("max_tokens")
-    # 04 的 buildRequestBody 总带上限字段；非数值仅作内部契约防御，产品路径不触发。
+    # 正常 Chat 请求自带输出上限。这里给内部调用传入非数值时提供防御。
     limit = int(limit_value) if isinstance(limit_value, (int, float)) else _MAX_OUTPUT_TOKENS
     messages = chat.get("messages")
     body: dict[str, Any] = {
@@ -189,20 +174,16 @@ def buildResponsesRequest(chat: dict[str, Any]) -> dict[str, Any]:
 
 
 class ResponsesStreamError(RuntimeError):
-    """Responses 流中断 / 协议错误（不伪报成功空回复）。"""
+    """Responses 流中断或事件格式错误。"""
 
 
 def _chatFrame(value: dict[str, Any]) -> bytes:
-    """冻结 responses.ts:90：emit 标准 Chat SSE ``data: {json}\\n\\n`` 帧。"""
+    """把单条增量包装成标准 Chat SSE 数据帧。"""
     return ("data: " + json.dumps(value, ensure_ascii=False) + "\n\n").encode("utf-8")
 
 
 class ResponsesToChat:
-    """冻结 responses.ts:73-131：Responses SSE 事件流 → 标准 Chat SSE data 帧。
-
-    复用 04 的 ``SSEStreamParser`` 做增量严格 UTF-8 解码与 CRLF/空行分帧，
-    输出统一 Chat 帧，使 04 的 ``ChatAccumulator`` 直接复用（不另起事件类型）。
-    """
+    """把 Responses SSE 增量转为 Chat SSE 帧。字节解码、CRLF 和空行分帧复用 SSEStreamParser，输出可交给原有 Chat 累积器。"""
 
     def __init__(self) -> None:
         self._parser = SSEStreamParser()
@@ -218,7 +199,7 @@ class ResponsesToChat:
         return frames
 
     def flush(self) -> list[bytes]:
-        """冻结 transform.flush：残余补帧后 drain；无完成事件明确抛错。"""
+        """在流结束时消费尾部残余帧。缺少完成事件则报告中断。"""
         frames: list[bytes] = []
         for payload in self._parser.flush():
             frames.extend(self._drain(payload))
@@ -230,7 +211,7 @@ class ResponsesToChat:
         return _chatFrame({"choices": [{"delta": value}]})
 
     def _call(self, index: int, item: dict[str, Any], frames: list[bytes]) -> None:
-        """冻结 responses.ts:92-102：注册调用并按已累积长度发 arguments 差量。"""
+        """登记工具调用，并按累计长度发出新增参数字符。"""
         if index not in self._calls:
             self._calls[index] = {"name": str(item.get("name") or ""), "args": ""}
             frames.append(self._delta({"tool_calls": [{
@@ -247,10 +228,10 @@ class ResponsesToChat:
             acc["args"] = arguments
 
     def _drain(self, payload: str) -> list[bytes]:
-        """冻结 responses.ts:88-129 的事件分发。"""
+        """按 Responses 事件类型更新状态并产生相应的 Chat 帧。"""
         if payload in ("[DONE]", ""):
             return []
-        event: Any = json.loads(payload)  # 坏 JSON 明确失败，不静默跳过
+        event: Any = json.loads(payload)  # 数据帧 JSON 不可解析时直接报告错误。
         if not isinstance(event, dict):
             return []
         etype = event.get("type")
@@ -312,11 +293,7 @@ class ResponsesToChat:
 
 
 def iterChatFrames(chunks: Iterable[bytes]) -> Iterator[bytes]:
-    """把 Responses SSE 字节流增量转成标准 Chat SSE 字节流。
-
-    对应冻结 ``responsesFetch`` 对 fetch/流的包装：client 侧仍用同一套
-    ``SSEStreamParser`` + ``ChatAccumulator`` 消费，不另起第二套 client。
-    """
+    """增量转换 Responses 字节流，供原有 Chat 分帧器和累积器统一消费。"""
     converter = ResponsesToChat()
     for chunk in chunks:
         for frame in converter.feed(chunk):

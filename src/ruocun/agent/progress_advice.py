@@ -1,7 +1,6 @@
-"""Deterministic prompts when a running turn stops making observable progress.
+"""依据一轮中已经观察到的行动判断是否需要进展提醒。每次 runTurn 创建独立状态，调用方保存返回的建议并发布终端提示。
 
-Create one state per runTurn, then append a returned advisory to saved history.
-The caller also publishes ``notice``; this module never requests a model.
+规则判定只用本轮证据，无需额外发起模型请求。
 """
 
 from __future__ import annotations
@@ -20,7 +19,7 @@ POLL_TOOLS = frozenset(("BashOutput", "TaskOutput", "TaskGet", "TaskList"))
 _TEMPLATES = (
     "[进度提醒] 已连续 ${noProgress} 轮没有执行命令或修改文件。"
     "挑一个尚无证据的假设，用小脚本、命令结果或文档核实；也可以先运行一个最小的实现。"
-    "如果已做完，逐条核对用户要求和验收记录，较大的改动交给 verify 独立复核。"
+    "已有证据覆盖必要验收时就答复。有具体证据缺口或高风险时再考虑派 verify。"
     "如果缺必要条件，${stuckFallback}。",
     "[进度提醒·第${stuckAdviceCount}次] ${noProgress} 轮没有执行命令或修改文件，"
     "先前 ${stuckAdviceCount - 1} 次提醒后仍无可核实的进展。"

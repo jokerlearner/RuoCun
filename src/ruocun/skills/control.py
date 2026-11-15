@@ -1,4 +1,4 @@
-"""冻结index.ts的Skills开关与App选择语义；文字输入适配，不代替完整TUI。"""
+"""读取内置技能的停用状态，并组织技能选择器的列表与启停操作。"""
 
 from __future__ import annotations
 

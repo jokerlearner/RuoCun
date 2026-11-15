@@ -1,4 +1,7 @@
-"""D06输入owner职责的最小TTY接线；真实重定向stdin仍走原顺序入口。"""
+"""交互终端的输入所有者，管理草稿、模态审批和终端刷新。它在同一个终端输入源上分配键盘事件，防止确认键落入下一次提交。
+
+重定向的 stdin 仍由原有顺序输入路径读取。
+"""
 
 from __future__ import annotations
 
@@ -89,8 +92,8 @@ class _SharedViewportRenderer(Renderer):
         columns = self.output.get_size().columns
         if not 0 < columns < self._last_size.columns:
             return
-        # prompt_toolkit 3.0.52 diffs from the old relative cursor. Windows Terminal
-        # has already hard-wrapped the previous dynamic frame at the new width.
+        # prompt_toolkit 3.0.52 依据旧的相对光标计算差异。
+        # Windows Terminal 已按新宽度硬换行，旧帧的擦除范围须随之重算。
         rows = self.last_rendered_screen.data_buffer
         cursor = self._cursor_pos
         physical_rows = 0
@@ -110,7 +113,7 @@ class _SharedViewportRenderer(Renderer):
             try:
                 info = console_info()
             except Exception:
-                return  # An unavailable host geometry is not a safe erase origin.
+                return  # 拿不到宿主的终端尺寸时，无法安全定位擦除起点。
             if info.dwCursorPosition.X != position.x or origin_distance > info.dwCursorPosition.Y - info.srWindow.Top:
                 return
         self._cursor_pos = Point(position.x, origin_distance)
@@ -526,12 +529,12 @@ class InputBroker:
             self._tab.clear()
 
     def post_notification(self, text: str) -> None:
-        """次要终端提示；不写桌面、不向模型宣称用户已看到。"""
+        """向当前终端投递次要提示。提示没有用户已读确认，也不触发桌面通知。"""
         if not self._closed and not self._closing:
             self.mark_attention()
             if self._motion is not None:
                 self._welcome_untracked = True
-                self._motion.resized()  # 无精确静态行测量时，按来源禁用猜测锚点。
+                self._motion.resized()  # 静态行数无法准确测量时，放弃按推测位置擦除。
             self._enqueue_output(cleanNotificationText(text) + "\n", "notification")
 
     def _attention_write(self, sequence: str) -> None:
@@ -552,7 +555,7 @@ class InputBroker:
         screen = self.app.renderer.last_rendered_screen
         if screen is None:
             return self._last_dynamic_rows
-        # Screen.height含HSplit填补剩余空间的虚拟窗口；只量实际布局窗口。
+        # Screen.height 包含 HSplit 补齐剩余空间的虚拟窗口，测量时只取实际窗口。
         windows = set(self.app.layout.find_all_windows())
         self._last_dynamic_rows = max((position.ypos + position.height for window, position in screen.visible_windows_to_write_positions.items()
                                        if window in windows), default=0)
@@ -567,7 +570,7 @@ class InputBroker:
                self._welcome_epoch, len(self._viewport_entries))
         if key != self._static_rows_key:
             if owned_replay:
-                # The replay order includes ordinary notices as well as rendered messages.
+                # 历史回放须按原顺序插入普通通知和渲染后的消息。
                 replay = "".join(self._view.render_item(entry) + "\n" if isinstance(entry, TranscriptItem) else entry
                                  for entry in self._viewport_entries)
             else:
@@ -633,8 +636,8 @@ class InputBroker:
         await future
         self._update_motion()
         self.app.invalidate()
-        # The caller may append startup text as soon as this returns. Draw the
-        # first native frame before that text invalidates the welcome anchor.
+        # 调用方可能在返回后立即追加启动文字。
+        # 先画出首个原生画面，避免新增文字覆盖欢迎区的锚点。
         await self._motion.advance()
 
     def configure_images(self, *, clipboard: Callable[[], ClipboardPayload] | None = None) -> None:
@@ -774,10 +777,10 @@ class InputBroker:
                         frame = self._motion.still_at_viewport_top(size.columns, size.rows)
                         if frame is not None:
                             try:
-                                # The owned clear establishes the anchor before the replay scrolls it away.
+                                # 清屏先确立锚点，再回放会话，避免把锚点滚出屏幕。
                                 self._output.write_raw(frame)
                             except Exception:
-                                pass  # The text fallback is already visible; continue replaying history.
+                                pass  # 文本降级已经显示，可以继续回放历史。
                             else:
                                 still_presented = True
                 formatted: list[str] = []
@@ -827,7 +830,7 @@ class InputBroker:
                             self._output.write_raw(text)
                             self._output.flush()
                         elif formatted is True:
-                            # run_in_terminal already owns this write. Keep the paint inside its completion barrier.
+                            # 当前写入由 run_in_terminal 接管，须在这次操作返回之前完成绘制。
                             print_formatted_text(self._output, ANSI(text), _OUTPUT_STYLE)
                         else:
                             self._output.write(text)
@@ -842,7 +845,7 @@ class InputBroker:
                     if formatted in {"control", "notification"}:
                         if future is not None and not future.done():
                             future.set_exception(error)
-                        continue  # 提示/标题失败不丢弃后续业务输出或结束任务。
+                        continue  # 次要提示或标题更新失败后，后续业务输出和任务仍继续。
                     self._render_error = error
                     if future is not None and not future.done():
                         future.set_exception(error)
@@ -948,7 +951,7 @@ class InputBroker:
         if modal is None:
             return False
         if modal.finished:
-            return True  # 当前输入批仍归此模态，不能把确认后的Enter下溢为主草稿提交。
+            return True  # 当前这批按键由模态窗口消费，避免确认后的 Enter 又提交主草稿。
         try:
             handled = modal.handle(key, text, self._answer)
         except Exception as error:
@@ -1039,8 +1042,8 @@ class InputBroker:
                 return await self._open_modal(prompt, modal=modal, secret=True)
             finally:
                 if task is not None:
-                    # A submitted write may already have committed. Join it before
-                    # releasing this owner's approval slot or reporting failure.
+                    # 写入提交后可能已经落盘，先等到结果明确，
+                    # 再释放当前输入所有者的审批位置或报告失败。
                     await asyncio.shield(task)
 
     async def ask_trust(self, prompt: str) -> bool | None:
@@ -1061,7 +1064,7 @@ class InputBroker:
                 try:
                     fresh = await refresh()
                 except Exception:
-                    return  # 只读模型列表失败保留当前模型，沿来源fallback。
+                    return  # 模型列表读取失败时，保留当前模型。
                 if fresh and self._modal is modal and not modal.finished:
                     modal.selection.items = list(fresh)
                     modal.selection.index = next((index for index, item in enumerate(fresh) if item["value"] == original), 0)
@@ -1091,7 +1094,7 @@ class InputBroker:
             for index, request in enumerate(requests):
                 answer = await self._open_modal("", modal=Modal.approval(request, index, len(requests)), cancelled=cancelled)
                 if answer is None:
-                    return {}  # Esc/取消否决整个batch，包括先前未执行的临时选择。
+                    return {}  # Esc 或取消否决整个批次，包括之前临时选定但尚未执行的项。
                 result[request["id"]] = "always" if answer == "always" else "once" if answer == "once" else "deny"
             return result
 
@@ -1110,7 +1113,7 @@ class InputBroker:
             return await self._open_modal(prompt, cancelled=cancelled)
 
     def restore_submission(self, text: Content) -> None:
-        """未确认的提交回到草稿；已在编辑的内容与相对光标均保留。"""
+        """把未确认的提交放回草稿，并保留用户正在编辑的内容与相对光标位置。"""
         text = self._pastes.restore_content(text)
         current = self.buffer.document
         prefix = text + "\n" if current.text else text
@@ -1190,7 +1193,7 @@ class InputBroker:
             if not self._closing:
                 self.set_theme(background)
         except Exception:
-            pass  # 显示探测不能停止业务；原dark安全兜底保留。
+            pass  # 显示探测失败时，以深色方案继续，业务循环不受影响。
         finally:
             if not ready.done():
                 ready.set_result(None)

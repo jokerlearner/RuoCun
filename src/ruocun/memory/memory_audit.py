@@ -1,4 +1,4 @@
-"""Frozen memory_audit.ts (MIT): best-effort maintenance and reflection audit."""
+"""记录记忆维护和反思的审计事件，供使用者追查选取和写入过程。审计按尽力而为执行。"""
 
 from __future__ import annotations
 
@@ -78,6 +78,13 @@ class _Recalled(RecallCounts):
     ts: int
 
 
+class _TaskRecalled(TypedDict):
+    kind: Literal["task_recalled"]
+    ts: int
+    ids: list[str]
+    statistics: dict[str, int]
+
+
 class _Wrote(TypedDict):
     kind: Literal["wrote"]
     ts: int
@@ -85,7 +92,7 @@ class _Wrote(TypedDict):
     merged: bool
 
 
-MemoryTraceEvent = _Distilled | _Consolidated | _Reflected | _Corrected | _Recalled | _Wrote
+MemoryTraceEvent = _Distilled | _Consolidated | _Reflected | _Corrected | _Recalled | _TaskRecalled | _Wrote
 
 
 class MemoryAuditSink:
@@ -100,7 +107,7 @@ class MemoryAuditSink:
             text = json.dumps(event, ensure_ascii=False, separators=(",", ":"))
             redact = self._redact
             if redact:
-                # Redact string values before encoding to preserve valid JSON, even for quoted keys.
+                # 先对字符串值脱敏，再编码 JSON，避免引号等内容破坏输出格式。
                 def safe(value: Any) -> Any:
                     if isinstance(value, str):
                         return redactSecrets(redact(value))
@@ -125,6 +132,10 @@ class MemoryAuditSink:
 
     def wrote(self, type: str, merged: bool) -> None:
         self._write({"kind": "wrote", "ts": time.time_ns() // 1_000_000, "type": type, "merged": merged})
+
+    def task_recalled(self, ids: Sequence[str], statistics: dict[str, int]) -> None:
+        self._write({"kind": "task_recalled", "ts": time.time_ns() // 1_000_000,
+                     "ids": list(ids), "statistics": statistics})
 
     def distilled(self, extracted: int, added: int, updated: int) -> None:
         self._write({"kind": "distilled", "ts": time.time_ns() // 1_000_000,

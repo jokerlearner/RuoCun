@@ -1,8 +1,6 @@
-"""Incremental output decoding for explicit UTF-8 or observed Windows output.
+"""增量解码 Shell 输出，支持指定 UTF-8 或识别 Windows 输出编码。
 
-Auto mode distinguishes BOM/valid UTF-8 from the inherited OEM encoding per
-line. Arbitrary mixed encodings remain ambiguous; raw bytes and diagnostics
-are retained by the foreground result.
+自动模式结合 BOM 和每行的 UTF-8 有效性选择编码，必要时使用继承的 OEM 编码。任意混合编码仍有歧义，因此前台结果保留原始字节和诊断。
 """
 
 from __future__ import annotations
@@ -18,7 +16,7 @@ class ShellOutputDecoder:
         self.fallback = policy.partition(":")[2] if self.auto else policy
         codecs.lookup(
             self.fallback
-        )  # Reject an invalid policy before a business process starts.
+        )  # 提前拒绝无法识别的编码策略，避免命令已启动后才发现输出无法按约定解码。
         self.diagnostics: list[str] = []
         self._decoder: codecs.IncrementalDecoder | None = None
         self._codec = ""

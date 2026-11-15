@@ -1,4 +1,7 @@
-"""Frozen reference mcp/mcp.ts, with ADR-0003's no-replay boundary (MIT)."""
+"""维护 MCP 服务连接，并将发现的工具、资源和提示接入若存。
+
+连接和能力列表可以刷新。一次调用如果已进入发送流程但没有可信结果，将未确认状态交还给调用方，避免重连时把可能已执行的操作再发一遍。
+"""
 
 from __future__ import annotations
 
@@ -80,14 +83,14 @@ def unpackPrompt(result: Mapping[str, Any]) -> str:
 
 
 class _FetchClient(httpx.AsyncClient):
-    """Preserve frozen fetch redirects and cross-origin credential stripping."""
+    """跟随重定向，请求头如何随跳转转交由 HTTPX 处理。"""
 
     async def send(self, request: httpx.Request, **kwargs: Any) -> httpx.Response:
         return await super().send(request, **{**kwargs, "follow_redirects": True})
 
 
 class _RedactLog(logging.Filter):
-    """Redact SDK records before any configured or fallback handler renders them."""
+    """在纳入过滤的 SDK 日志送往处理器前清理敏感内容。"""
 
     def __init__(self, redact: Callable[[str], str]) -> None:
         super().__init__()
@@ -111,28 +114,28 @@ _SDK_LOGGERS = ("mcp.client.sse", "mcp.client.streamable_http", "mcp.client.stdi
 
 
 class _NotSent(RuntimeError):
-    """The manager rejected an unavailable operation before entering send_request."""
+    """服务不可用，调用在进入发送接口前被拒绝。"""
 
 
 class _ProtocolRejected(RuntimeError):
-    """An actual JSON-RPC error response confirmed the request's outcome."""
+    """服务器已返回有效的 JSON-RPC 错误，应以该响应结算本次调用。"""
 
 
 class _ReadResourceParams(types.ReadResourceRequestParams):
-    # Frozen source accepts a string without URL canonicalization; local schema checks its type.
+    # 资源 URI 是服务端识别原资源的字符串，仅校验类型，保留原有写法。
     uri: Any
 
 
 class _ReadResourceRequest(types.ClientRequest):
     @model_serializer
     def wire(self) -> dict[str, Any]:
-        # Serialize the source string directly instead of the SDK's AnyUrl serializer.
+        # 直接序列化原字符串，避免 SDK 转换 URI 后妨碍服务端匹配。
         root = cast(types.ReadResourceRequest, self.root)
         return {"method": "resources/read", "params": {"uri": root.params.uri}}
 
 
 class _ReadTap:
-    """Observe actual wire responses before public SDK result validation."""
+    """在 SDK 校验公开返回值之前观测收到的协议响应。"""
 
     def __init__(self, stream: Any, owner: _Connection) -> None:
         self.stream, self.owner = stream, owner
@@ -253,7 +256,7 @@ class _Connection:
                 try:
                     await self.owner._refresh(self.name, self, notice="tools" in allowed)
                 except Exception:
-                    # Frozen source isolates notification refresh failures from the session.
+                    # 能力列表刷新失败时保留当前会话，等待下一次通知或刷新。
                     pass
 
     async def _serve(self) -> None:
@@ -366,7 +369,7 @@ class _Connection:
         if self._task is not None:
             await self._task
         if self.error is not None and not self._ready.cancelled() and self._ready.done():
-            # Setup failures are already isolated by connectServer.
+            # 连接建立失败已由 connectServer 记录和处理。
             if self._ready.exception() is None:
                 raise RuntimeError("MCP transport closure was not confirmed.") from self.error
 
@@ -534,6 +537,7 @@ class McpManager:
                     await asyncio.gather(work, return_exceptions=True)
                     raise UnknownToolOutcome("MCP 请求已取消但远端结果未确认；现场保留，未自动重放。")
             return work.result()
+        # 区分尚未发送的本地拒绝、服务端明确回复的错误，以及结果仍待确认的调用。
         except _NotSent as error:
             raise ToolRejected(str(error)) from error
         except _ProtocolRejected as error:

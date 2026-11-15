@@ -1,4 +1,4 @@
-"""Frozen tools/lsp.ts nine semantic navigation operations (MIT)."""
+"""为当前项目解析语言服务器，把定义、引用和符号等导航请求发给相应客户端。"""
 
 from collections.abc import Awaitable, Callable
 from typing import Any

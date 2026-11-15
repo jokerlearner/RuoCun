@@ -1,4 +1,7 @@
-"""Reference PermissionGate (MIT); classifier callback is optional, never created here."""
+"""把规则判断和工具的权限检查合并，再处理需要审批的调用。
+
+自动模式允许注入的分类器先判安全调用。高风险、分类器未放行或明确要求人工处理的请求都交给终端审批。
+"""
 from __future__ import annotations
 
 import time

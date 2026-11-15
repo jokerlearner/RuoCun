@@ -1,4 +1,4 @@
-"""冻结 skills/adapt.ts（MIT）的外来技能结构识别。"""
+"""扫描技能正文中的命名空间和工具引用，判断是否需要按若存的能力适配。"""
 
 from __future__ import annotations
 

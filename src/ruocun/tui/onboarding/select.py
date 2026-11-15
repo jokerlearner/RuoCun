@@ -1,4 +1,4 @@
-"""冻结onboarding/Select.tsx（MIT），通用选择状态；不读stdin。"""
+"""维护通用列表的当前选项，由调用方驱动移动和选取。"""
 
 from collections.abc import Sequence
 from typing import TypedDict

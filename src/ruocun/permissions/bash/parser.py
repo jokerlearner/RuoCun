@@ -1,4 +1,7 @@
-"""Reference parser.ts (MIT): pure parser wrapper and resource-abort distinction."""
+"""限制 Bash 解析入口的输入长度，并把解析失败表示为调用方可判断的结果。
+
+原始入口用 PARSE_ABORTED 区分解析中止，普通入口用 None 表示无法提供命令数据。
+"""
 from __future__ import annotations
 
 from typing import TypedDict

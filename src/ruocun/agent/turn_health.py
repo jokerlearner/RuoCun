@@ -1,4 +1,4 @@
-"""Frozen turn_health.ts deterministic failure/refocus assessment (MIT)."""
+"""根据本轮结果更新健康状态，判断重复失败或目标偏移是否值得插入提示。"""
 
 from __future__ import annotations
 

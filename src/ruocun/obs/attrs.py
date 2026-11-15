@@ -1,4 +1,4 @@
-"""Frozen obs/attrs.ts: Laminar token attributes and cache signals."""
+"""构造 Laminar 观测属性，包括模型 token 用量和缓存信号，便于导出层统一命名。"""
 
 from __future__ import annotations
 

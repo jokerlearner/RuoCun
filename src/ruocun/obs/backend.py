@@ -1,4 +1,4 @@
-"""Observation port; SDK failure cannot retry or replace a business operation."""
+"""为模型和工具提供可选观测接口。业务动作只执行一次，观察器异常由接口层消化。"""
 
 from __future__ import annotations
 
@@ -92,7 +92,7 @@ def setObsRedactor(redact: Callable[[str], str] | None) -> None:
 
 
 def safeValue(value: Any) -> Any:
-    """Only copies observations; original model/tool data never changes."""
+    """生成用于观测的副本，保留原模型和工具数据。"""
     if isinstance(value, str):
         text = _redact(value) if _redact else value
         return redactSecrets(text)
@@ -163,7 +163,7 @@ def spanScope(name: str, *, spanType: SpanType = "DEFAULT", input: Any = None,
             activation.__enter__()
     except Exception:
         activation = None
-    # Never catch-and-retry the business body: an effect may already have happened.
+    # 业务操作可能已经发生副作用，观测层不得以异常为由重做本次业务。
     try:
         yield span
     finally:
@@ -204,7 +204,7 @@ async def _bounded(callback: Callable[[], Any], key: tuple[int, str], timeoutMs:
                 _flushing.discard(key)
             done.set()
 
-    # Daemon rather than default executor: a hung observer cannot block asyncio.run teardown.
+    # 观测线程采用守护方式，避免退出时被卡住的观察器阻塞 asyncio.run 清理。
     threading.Thread(target=flush, name="ruocun-obs-flush", daemon=True).start()
     deadline = asyncio.get_running_loop().time() + max(0, timeoutMs) / 1000
     while not done.is_set() and asyncio.get_running_loop().time() < deadline:

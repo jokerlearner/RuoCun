@@ -1,22 +1,7 @@
-"""受控 SQLite 运行库门禁（REC-15 / MM-601 / NEW-03 相关）。
+"""在 Windows 持久会话打开数据库前，核验并加载受控 SQLite 运行库。
 
-依据（均为已收录的独立来源，不从当前 Python 输出回填预期）：
-- ``09-storage-extension-route.md`` ``# SQLite及文件路线``：固定供应源
-  ``sqlite-dll-win-x64-3540100.zip``、官方 3.54.1 DLL SHA-256 与 source ID，
-  WAL/FULL/busy_timeout、专属线程、缺库/hash 不符/旧库已加载/实际库不符明确失败。
-- ``sqlite-runtime/candidate.json``：官方 ZIP SHA3-256、ZIP SHA-256、DLL SHA-256、
-  expected_runtime、expected_source_id。
-- ``sqlite-runtime/sources/wal.html`` ``#walresetbug``：官方 WAL-reset 修复在
-  3.51.3 及以后，3.44.6 / 3.50.7 有回移修复；3.54.1 官方构建高于修复版本。
-- D19 决策票与独立复核：CPython 3.11.9 x64 + stdlib + 该 DLL 为已验证候选；
-  本机默认 3.45.1 不达产品门禁。
-
-关键边界：
-- 进程若在导入 ``sqlite3`` 之前预加载本 DLL，``_sqlite3`` 绑定到受控 3.54.1；
-  若 ``sqlite3`` 已导入且实际库不是官方候选，明确拒绝（不静默退回 3.45.1）。
-- 普通压力通过不作为修复证明；修复依据来自官方版本/构建来源与固定摘要。
-- wheel / standalone / 仓库外产物的运行库清单属发布票（79-81 / D13），本票
-  只覆盖开发期产品路径；不宣称全产物通过。
+固定 ZIP 与 DLL 的摘要限制可用的分发件。先用绝对路径加载，再读回实际版本、构建身份、加载路径和 VFS，确保标准库用的是经过核验的运行库。
+如果进程已加载其他 SQLite，保留未达核验的记录，让持久化入口明确拒绝。
 """
 
 from __future__ import annotations
@@ -32,7 +17,7 @@ from typing import Any
 
 from .contract import RuntimeGateError, RuntimeRecord
 
-# 官方固定供应源（candidate.json / 09 报告）
+# 固定 SQLite 分发件的文件名、摘要和预期构建身份。
 OFFICIAL_DLL_SHA256 = "4b59d3cded9dc1608544160f3b4b10ac974c6ac0d6ffc23064e5f4c8dbd05aea"
 OFFICIAL_ZIP_SHA3_256 = "c2d09c8babb9399277055c057c97a53f1ffd7c5f11d0c1f2118ffdfa39f2daa4"
 OFFICIAL_ZIP_SHA256 = "f436f53ad8f965af43f3817b42c99c0689e6787f6b7ace208fe38dab7ffc4971"
@@ -46,7 +31,7 @@ WAL_FIX_BASIS = (
     "固定构建，source ID 与官方发布记录一致，高于修复版本。"
 )
 
-# 预加载的 DLL 句柄必须活到进程结束，不能被 GC 提前 FreeLibrary。
+# 对已加载的 DLL 持有进程级引用，防止在 SQLite 仍使用它时卸载。
 _LOADED_LIBRARY: Any = None
 
 
@@ -55,10 +40,7 @@ def _sha256(path: Path) -> str:
 
 
 def verify_official_archive(archive: Path, dest_dir: Path) -> Path:
-    """核验官方 ZIP 的三个摘要并解出 DLL；返回受控 DLL 绝对路径。
-
-    固定供应源与摘要来自 candidate.json（已收录的独立来源），不是本次产物回填。
-    """
+    """核对 ZIP 和其中 DLL 的摘要，在指定目录准备核验后的 sqlite3.dll。"""
     data = archive.read_bytes()
     if hashlib.sha3_256(data).hexdigest() != OFFICIAL_ZIP_SHA3_256:
         raise RuntimeGateError("官方固定 ZIP SHA3-256 不符，拒绝启用受控运行库。")
@@ -101,10 +83,9 @@ def _windows_module_path(handle: Any) -> str:
 
 
 def preload_controlled_runtime(dll_path: Path) -> str:
-    """在导入 sqlite3 之前按绝对路径/受限搜索预加载受控 DLL。
+    """先于 sqlite3 导入加载绝对路径下的受控 DLL。
 
-    winmode=0x1100 = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR，
-    不修改 PATH、不写全局安装、不追随下载页漂移。返回实际加载的模块路径。
+    采用 Windows 的受限搜索标志，让后续加载绑定到这份 DLL，同时保持进程 PATH。
     """
     global _LOADED_LIBRARY
     dll = dll_path.resolve()
@@ -140,7 +121,7 @@ def preload_controlled_runtime(dll_path: Path) -> str:
 
 
 def _vfs_name() -> str:
-    """用同一 DLL 的公共 C API sqlite3_file_control(SQLITE_FCNTL_VFSNAME=12) 读 VFS。"""
+    """通过同一个 DLL 调用 sqlite3_file_control，读回连接实际使用的 VFS。"""
     library = _LOADED_LIBRARY
     if library is None:
         raise RuntimeGateError("没有受控 DLL 句柄，不能核实 VFS。")
@@ -170,7 +151,7 @@ def _vfs_name() -> str:
 
 
 def verify_controlled_runtime(dll_path: Path) -> RuntimeRecord:
-    """核验并返回产品实际使用的运行库清单（REC-15 结构化证据）。"""
+    """读回并核对已加载的 SQLite，返回能交给数据库入口核验的运行库清单。"""
     loaded = preload_controlled_runtime(dll_path)
     import _sqlite3
     import sqlite3
@@ -214,7 +195,7 @@ def verify_controlled_runtime(dll_path: Path) -> RuntimeRecord:
 
 
 def unmet_record(reason: str) -> RuntimeRecord:
-    """门禁未达时的结构化记录：读回实际（本机默认）运行库，绝不伪称已修复。"""
+    """运行库未通过核验时仍记录实际加载结果，供诊断定位。"""
     version, source_id = _actual_runtime()
     return RuntimeRecord(
         version=version,

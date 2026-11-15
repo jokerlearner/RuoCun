@@ -1,4 +1,4 @@
-"""Shared parser tree and security result; offsets are UTF-8 byte offsets."""
+"""定义 Bash 语法节点和安全分析结果。节点位置采用 UTF-8 字节偏移。"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

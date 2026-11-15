@@ -1,16 +1,6 @@
-"""Chat 请求组装、SSE 累积与流式路径（来源冻结 ``src/client/client.ts``，MIT）。
+"""组装 Chat 请求并消费流式响应。收到的文字、推理和工具参数按索引累积，结束后统一交给调用方。
 
-- WIRE-01：固定 system/messages/tool schema 顺序、角色/字段/空值与 extra 覆盖。
-- WIRE-02：默认 128000、特殊空截断重试 256000，均受模型 cap 裁剪；按模型选择
-  max_tokens/max_completion_tokens；不加未配置 temperature/top_p 等采样参数。
-- WIRE-03：文本/reasoning/工具调用参数按 index 完整累积；usage/finish_reason
-  只按有效数据确认。
-- WIRE-05：assistant null content 转空串；工具轮 reasoning 回传；内部字段不泄漏。
-- 取消/失败边界：非 2xx、SSE error、非法 UTF-8、中途断流/无产出都明确失败或
-  保留已累积部分并标 ``partial``，不伪报成功；按 ADR-0003 精神本票不引入重放语义。
-
-传输用注入式 ``Transport``：默认走真实 ``urllib`` HTTP；演示与测试注入 fake
-HTTP/SSE（合成账户配置 + 合成字节流，绝不调用真实模型）。
+重试层复用一次流式尝试。解析中断后保留已有内容并标记部分结果。真实 HTTP 由默认传输负责，调用方也可提供独立传输。
 """
 
 from __future__ import annotations
@@ -41,12 +31,7 @@ _EMPTY_TRUNCATION_RETRY_TOKENS = 256000
 
 
 class ApiError(RuntimeError):
-    """非 2xx 响应等明确 API 失败。
-
-    ``status`` / ``headers`` 是任务06 的兼容扩展（默认 None/空）：供重试层按
-    冻结 client.ts:297-310 分类 429/529 与 Retry-After；04 的
-    ``pytest.raises(ApiError)`` / 消息断言不受影响，构造函数向后兼容。
-    """
+    """明确的 API 失败。保留状态码和响应头，供重试层识别限流和服务过载，并读取 Retry-After。"""
 
     def __init__(
         self, message: str, status: int | None = None,
@@ -58,15 +43,15 @@ class ApiError(RuntimeError):
 
 
 class SseError(RuntimeError):
-    """SSE 流内 error 事件（不静默吞成空响应，也不自动重放）。"""
+    """流内收到的 SSE 错误事件，交给重试层按状态处理。"""
 
 
 class StreamError(RuntimeError):
-    """SSE 中途断流且无任何产出。"""
+    """SSE 在产生任何有效内容前中断。"""
 
 
 class StreamDisconnected(RuntimeError):
-    """transport 信号：流在产出过程中被断开/取消。"""
+    """传输层报告流在接收过程中断开或被取消。"""
 
 
 @dataclass(frozen=True)
@@ -92,7 +77,7 @@ class StreamResult:
 def buildWireMessages(
     messages: list[ChatMessage], *, use_responses: bool = False,
 ) -> list[dict[str, Any]]:
-    """冻结 client.ts:72-91 的历史清洗（不机械附带 reasoning、不泄漏内部字段）。"""
+    """将保存的会话历史转换为适合外发的消息，保留当前协议需要的字段。"""
     out: list[dict[str, Any]] = []
     for m in messages:
         role = m.get("role")
@@ -112,7 +97,7 @@ def buildWireMessages(
                         wm["responseItems"] = response_items
                     out.append(wm)
                 else:
-                    # 默认不回传无工具轮 reasoning；官方 DeepSeek 带工具请求另行保留。
+                    # 通常只在有工具调用的助手轮保留推理。官方 DeepSeek 带工具时另行保留完整历史。
                     out.append({"role": role, "content": wire_content})
             else:
                 rest = {k: v for k, v in m.items() if k != "responseItems"}
@@ -121,7 +106,7 @@ def buildWireMessages(
                     rest["responseItems"] = response_items
                 out.append(rest)
         elif role == "tool" and m.get("imageData") is not None:
-            # imageData 是内部字段，不发 API（图片已通过单独 user message 注入）
+            # imageData 供程序内部使用，图片已通过单独的用户消息发出。
             out.append({
                 "role": role, "tool_call_id": m.get("tool_call_id"),
                 "content": m.get("content"),
@@ -137,7 +122,7 @@ def resolveMaxTokens(
     empty_truncation_retry: bool = False,
     env: Mapping[str, str] | None = None,
 ) -> int:
-    """默认 128000（env/单次覆盖）；特殊空截断重试 256000；均受模型 cap 裁剪。"""
+    """单次输出上限优先使用显式参数。默认档为 128000，并可从环境读取。空截断重试档为 256000。各档都受模型能力裁剪。"""
     explicit = opts.get("maxTokens")
     if explicit is not None:
         requested = int(explicit)
@@ -155,10 +140,9 @@ def buildRequestBody(
     env: Mapping[str, str] | None = None,
     use_responses: bool = False,
 ) -> dict[str, Any]:
-    """冻结 client.ts:104-120 的请求体。extra 覆盖放最后，不加未配置采样参数。
+    """组装请求体，最后应用 extra 覆盖。只有明确配置时才附采样参数。
 
-    ``use_responses`` 为 WIRE-04 兼容扩展：控制 responseItems 是否保留。
-    官方 DeepSeek 的带工具 Chat 请求按当前协议保留全部历史 assistant reasoning。
+    use_responses 控制是否保留 responseItems。官方 DeepSeek 带工具的 Chat 请求按协议保留历史助手推理。
     """
     requested = (
         max_tokens_override if max_tokens_override is not None
@@ -173,7 +157,7 @@ def buildRequestBody(
     effective_tools = extra.get("tools", tools) if extra else tools
     if (not use_responses and effective_tools and opts.get("provider") == "deepseek"
             and urlsplit(opts["baseUrl"]).hostname == "api.deepseek.com"):
-        # 官方 Chat 带 tools 时要求完整重放历史 reasoning，包括已结束的普通回合。
+        # 官方 Chat 请求携带工具时，已结束的普通轮也要保留历史推理。
         for message, wire in zip(messages, wire_messages, strict=True):
             reasoning = message.get("reasoningContent")
             if message.get("role") == "assistant" and isinstance(reasoning, str):
@@ -197,7 +181,7 @@ def buildRequestBody(
 
 
 def normalizeUsage(raw: dict[str, Any]) -> dict[str, Any]:
-    """冻结 client.ts:50-55：原生 cache 字段优先；缺则用 details.cached_tokens 补齐。"""
+    """优先采用原生缓存字段，缺失时用 details.cached_tokens 补齐。"""
     if "prompt_cache_hit_tokens" in raw:
         return dict(raw)
     details = raw.get("prompt_tokens_details")
@@ -213,7 +197,7 @@ def normalizeUsage(raw: dict[str, Any]) -> dict[str, Any]:
 
 @dataclass
 class ChatAccumulator:
-    """请求级累积器（冻结 client.ts:208-269, 380-415）。"""
+    """保存一次流式请求的增量状态，直到能生成完整或标明部分的结果。"""
 
     content: str = ""
     reasoning: str = ""
@@ -231,7 +215,7 @@ class ChatAccumulator:
         try:
             parsed: Any = json.loads(payload)
         except json.JSONDecodeError:
-            return []  # 半个 JSON 不该出现，保险跳过
+            return []  # 忽略该条不可解析的 SSE 数据。
         if not isinstance(parsed, dict):
             return []
         error = parsed.get("error")
@@ -278,7 +262,7 @@ class ChatAccumulator:
                     index, {"id": "", "name": "", "args": ""})
                 frag_id = frag.get("id")
                 if isinstance(frag_id, str) and frag_id:
-                    acc["id"] = frag_id  # 空串不冲掉已捕获的真实 id
+                    acc["id"] = frag_id  # 保留之前取得的有效 ID。
                 function = frag.get("function")
                 if isinstance(function, dict):
                     name = function.get("name")
@@ -319,7 +303,7 @@ def urllib_transport(
     on_socket: Callable[[socket.socket], None] | None = None,
     timeout: float = 60,
 ) -> HttpResponse:
-    """默认真实 HTTP transport（产品路径）。"""
+    """通过 urllib 发送实际 HTTP 请求。"""
     def register_socket(response_object: Any) -> None:
         current = response_object
         for _ in range(4):
@@ -338,7 +322,7 @@ def urllib_transport(
             response = urllib.request.urlopen(request, timeout=timeout)
         else:
             connection_hook = on_connection
-            # urllib 仍负责代理、重定向与错误处理；记录真实连接以便中断正在读写的 socket。
+            # 继续由 urllib 处理代理、重定向和 HTTP 错误。登记实际连接可中断正在读写的套接字。
             class ObservedHTTP(urllib.request.HTTPHandler):
                 def http_open(self, req: urllib.request.Request) -> Any:
                     def make(host: str, **kwargs: Any) -> http.client.HTTPConnection:
@@ -351,8 +335,8 @@ def urllib_transport(
                 def https_open(self, req: urllib.request.Request) -> Any:
                     class ObservedHTTPSConnection(http.client.HTTPSConnection):
                         def connect(self) -> None:
-                            # 保持 HTTPConnection 原 TCP 与 CONNECT 顺序；先登记 SSL
-                            # 持有的实际 socket，再进入可能阻塞的证书校验/握手。
+                            # 沿用 HTTPConnection 的 TCP 和 CONNECT 顺序，先登记 SSL
+                            # 使用的套接字，再进行可能阻塞的证书校验和握手。
                             http.client.HTTPConnection.connect(self)
                             hostname = getattr(self, "_tunnel_host", None) or self.host
                             context = getattr(self, "_context")
@@ -375,7 +359,7 @@ def urllib_transport(
             opener = urllib.request.build_opener(ObservedHTTP(), ObservedHTTPS())
             response = opener.open(request, timeout=timeout)
     except urllib.error.HTTPError as error:
-        # urllib 把非 2xx 作为异常抛出；保留状态和响应头供上层按来源规则分类。
+        # urllib 通过异常报告非 2xx，状态码和响应头供上层选择处理办法。
         with error:
             register_socket(error)
             detail = error.read().decode("utf-8", errors="replace")
@@ -386,11 +370,11 @@ def urllib_transport(
     status = int(response.status)
     resp_headers = {str(k).lower(): str(v) for k, v in response.headers.items()}
     if on_socket is not None:
-        # HTTP/1.0/Connection: close 时 HTTPConnection 会将 socket 移交给 response。
+        # HTTP/1.0 或 Connection: close 时，套接字由 HTTPConnection 移交给 response。
         register_socket(response)
 
     def chunks() -> Iterable[bytes]:
-        # read1 返回已到达的字节，不等 4096 字节或连接关闭才投递首帧。
+        # read1 及时返回已到达的字节，首帧可在填满缓冲区前交付。
         with response:
             while chunk := response.read1(4096):
                 yield chunk
@@ -407,13 +391,9 @@ def runStreamAttempt(
     on_delta: Callable[[StreamDelta], None] | None = None,
     state_out: dict[str, Any] | None = None,
 ) -> StreamResult:
-    """一次流式尝试（冻结 client.ts 单个 attempt）。
+    """消费一次流式尝试。能重试的入口复用这里的解码、分帧和累积逻辑。
 
-    04 的 ``streamChat`` 与任务06 重试层共用这**唯一一份** chunks 消费逻辑：
-    ``chunks: Iterable[bytes]`` 局部变量与 Responses 路由分支（05）保持不变，
-    不在重试层重定义。``on_chunk`` / ``on_effective_delta`` / ``state_out`` 是
-    可选 seam，默认关闭时行为与 04 完全一致；重试层借此接入 idle watchdog
-    （仅有效 delta 重置）与「已产出部分」证据，不改动公开契约。
+    on_chunk 可观察字节进度，on_effective_delta 用于更新有效输出计时，state_out 保存已产出内容的证据。不给回调时也可独立完成一次请求。
     """
     send: Transport = urllib_transport if transport is None else transport
     use_responses = responses.usesResponses(opts["baseUrl"], opts["model"])
@@ -429,7 +409,7 @@ def runStreamAttempt(
         "Content-Type": "application/json",
         "Authorization": f"Bearer {opts['apiKey']}",
     }
-    # JSON.stringify会转义UTF-16截断留下的孤立代理项；普通Unicode字节不变。
+    # 序列化时转义 UTF-16 截断留下的孤立代理项，普通 Unicode 字节照常发送。
     body_bytes = json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode("utf-8", errors="backslashreplace")
     if state_out is not None:
         state_out["body"] = body
@@ -481,7 +461,7 @@ def runStreamAttempt(
                     on_delta(delta)
     except StreamDisconnected:
         if deltas:
-            status = "partial"  # 保留已累积部分，明确标记，不伪报成功
+            status = "partial"  # 返回已累积的内容，并标记为部分结果。
         else:
             raise StreamError("SSE 中途断流且尚无产出") from None
     finally:
@@ -489,8 +469,8 @@ def runStreamAttempt(
             close_chunks = getattr(stream, "close", None)
             if close_chunks is not None:
                 close_chunks()
-    # 冻结 client.ts:406：推理耗尽长度预算且尚无正文/工具时，通知上层切换收敛重试档。
-    # 在正常流收尾处判断；异常/断流不能冒充完整的空截断回答。
+    # 正常流已结束，推理若耗尽输出预算且没有正文和工具，交给上层切换重试上限。
+    # 中断的流走部分结果或错误路径，只有正常结束才确认空截断。
     message = acc.buildMessage()
     if (status == "complete" and acc.finish_reason == "length"
             and not message["content"] and not message.get("tool_calls")):
@@ -513,10 +493,9 @@ def streamChat(
     env: Mapping[str, str] | None = None,
     context: ResilientContext | None = None,
 ) -> StreamResult:
-    """从请求组装 → HTTP/SSE 字节流 → 严格解码 → 分帧 → 累积 → 回答。
+    """发送模型请求并累积流式结果。传输和路由确定后，统一执行取消、重试和部分结果处理。
 
-    公开入口复用任务06的重试/取消，成功与部分结果保持04/05结果形状。
-    原有参数仍可使用；可选 context 提供增量投递与取消。
+    可选 context 提供取消信号和增量投递，既有参数仍可直接使用。
     """
     from .resilient import streamChatResilient
 
@@ -532,5 +511,5 @@ def streamChat(
     )
 
 
-# Usage TypedDict 在 types.py 维护；归一化结果以普通映射承载，避免协议层
-# 用新校验器改写来源的宽容边界。
+# Usage 在 types.py 定义。归一化结果继续用普通映射承载，
+# 使协议层能保留现有的宽容字段边界。

@@ -1,4 +1,4 @@
-"""Shared durable-file failures and publication receipt."""
+"""定义文件发布的回执和失败类型，供不同平台的原子写入接口共用。"""
 
 from __future__ import annotations
 
@@ -7,11 +7,11 @@ from typing import Literal
 
 
 class AtomicFileError(RuntimeError):
-    """Private file or directory operation did not complete."""
+    """私有文件或目录操作未能完成。"""
 
 
 class DurabilityUnconfirmedError(AtomicFileError):
-    """Publication is visible, but durable acknowledgement is unknown."""
+    """新内容已可见，但持久化未获确认。"""
 
 
 @dataclass(frozen=True)

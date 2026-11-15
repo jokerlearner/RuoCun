@@ -1,4 +1,7 @@
-"""Frozen reference tools/sandbox.ts file and network sandbox routing (MIT)."""
+"""按实际平台封装命令计划，应用可选的文件和网络沙箱。
+
+开启后按环境选择 Windows MXC、macOS sandbox-exec 或 Linux bwrap。启动准备失败会返回明确错误，避免命令落到普通 Shell 执行。
+"""
 
 from __future__ import annotations
 
@@ -17,7 +20,7 @@ _BINARY_DIRS = ("/usr/bin", "/bin", "/usr/local/bin", "/opt/homebrew/bin")
 
 
 class SandboxUnavailable(RuntimeError):
-    """The requested OS sandbox cannot start, so the command is not run."""
+    """请求的操作系统沙箱无法准备，命令未启动。"""
 
 
 class SpawnSpec(TypedDict):
@@ -78,7 +81,31 @@ def sandboxSpawn(command: str, cwd: str, disableSandbox: bool = False, *,
 
 
 def sandboxExecutionPlan(plan: ShellExecutionPlan, disableSandbox: bool = False) -> ShellExecutionPlan:
-    """Wrap the approved command and frozen environment without changing its identity."""
+    """用本平台的沙箱包装已审批命令，保留计划中的原命令与工作目录。"""
+    if sys.platform == "win32" and (plan.sandbox is not None or sandboxActive(dict(plan.environment))):
+        if disableSandbox:
+            raise SandboxUnavailable("Windows 沙箱已开启，不能整次绕过；请请求本次额外可写目录。")
+        from .sandbox_policy import canonical, createSandboxPolicy, sandboxEnvironment
+        from .windows.sandbox import (
+            WindowsSandboxError,
+            validateWindowsSandbox,
+            windowsSandboxExecutionPlan,
+        )
+        policy = plan.sandbox or createSandboxPolicy(plan.cwd, dict(plan.environment))
+        assert policy is not None
+        try:
+            if canonical(plan.argv[0]) == canonical(policy.executable) and plan.commandLine is None:
+                validateWindowsSandbox(policy.executable)
+                return plan
+            environment = sandboxEnvironment(dict(plan.environment), policy)
+            frozen = replace(plan, environment=tuple(sorted(environment.items())), sandbox=policy)
+            return windowsSandboxExecutionPlan(
+                frozen, executable=policy.executable, stateRoot=policy.stateRoot,
+                writableRoots=policy.writableRoots, tempRoot=policy.tempRoot, cacheRoot=policy.cacheRoot,
+                protectedRoots=policy.protectedRoots, noNet=sandboxNoNet(environment),
+            )
+        except (OSError, ValueError, WindowsSandboxError) as error:
+            raise SandboxUnavailable(f"Windows MXC 沙箱启动准备失败，命令未执行：{error}") from error
     spec = sandboxSpawn(plan.command, plan.cwd, disableSandbox, environ=dict(plan.environment))
     if spec is None:
         return plan

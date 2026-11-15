@@ -1,4 +1,4 @@
-"""Ordinary durable checkpoint continuation from frozen resume_agent.ts (MIT)."""
+"""从已保存的检查点续接普通子代理。恢复先确认身份、权限和预算，再准备可继续执行的私有会话。"""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def agentRecoveryMaterial(prepared: PreparedAgentRun, messages: list[dict[str, A
     identity = directory_identity(cwd)
     endpoint = prepared.options.get("baseUrl", "")
     location = urlsplit(endpoint)
-    # A credential-bearing endpoint cannot be reproduced from safe material.
+    # 安全保存的数据不含端点中的凭据，无法还原带凭据的原连接。
     endpoint_safe = (location.scheme in {"https", "http"} and bool(location.hostname)
                      and not any((location.username, location.password, location.query, location.fragment)))
     mode = prepared.permission.getMode()
@@ -56,11 +56,9 @@ def agentCheckpointSnapshot(
     snapshot: dict[str, Any], messages: list[dict[str, Any]], material: dict[str, Any],
     turns_remaining: int, inbox_messages: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Stage transcript, recovery budget and inbox consumption in one candidate.
+    """把转录、恢复预算和收件箱消费记录放进同一个候选。
 
-    Owners validate their identity/budget policy before staging, and publish the
-    candidate before consuming inbox messages or changing their live state.
-    The material is freshly built recovery data, never the saved checkpoint.
+    执行所有者先校验身份和预算，候选确认发布后再消费收件箱、更新活动状态。原检查点保留供追溯。
     """
     material["turnsRemaining"] = turns_remaining
     if isinstance(snapshot.get("archive_scope"), str):
@@ -74,7 +72,7 @@ def agentCheckpointSnapshot(
 
 
 async def agentOutputMessages(conversation: Conversation, record: RunRecord) -> list[dict[str, Any]]:
-    """Read admitted child activity by original-message position, never compacted indices."""
+    """按原消息位置读取获准交付的子代理活动，跨压缩时仍以同一位置为准。"""
     offset = record.snapshot.get("output_raw_offset", record.snapshot.get("output_start", 0))
     if type(offset) is not int or offset < 0:
         raise ValueError("子代理原文输出边界无效。")
@@ -91,7 +89,7 @@ async def agentOutputMessages(conversation: Conversation, record: RunRecord) -> 
 
 
 async def prepareAgentArchive(conversation: Conversation, prepared: PreparedAgentRun) -> ArchiveImport | None:
-    """Copy only a trusted visible prefix; the new task is an explicit appended suffix."""
+    """只复制已验证的可见前缀，并把新任务明确接在其后。"""
     if prepared.archive_source_scope is None:
         return None
     imported = await conversation.worker.archive_branch(prepared.archive_source_scope,
@@ -119,7 +117,7 @@ def continuationToolPolicy(continuation: AgentContinuation) -> Literal["synchron
     if policy == "background":
         return "background"
     if "toolPolicy" not in continuation.material and continuation.material.get("format") == 1:
-        # The first background checkpoint format did not write a policy field.
+        # 最初的后台检查点格式没有保存策略字段。
         previous = continuation.previous
         snapshot = previous.snapshot
         execution = snapshot.get("background_execution")
@@ -134,7 +132,7 @@ def continuationToolPolicy(continuation: AgentContinuation) -> Literal["synchron
 
 
 def restorePreparedContinuation(prepared: PreparedAgentRun, continuation: AgentContinuation) -> None:
-    """Rebuild mutable visibility and mode on the private child before authorizing continuation."""
+    """先在私有子会话重建可见范围和运行模式，再授权继续执行。"""
     saved = continuation.material
     permissions, roster = saved.get("permissions"), saved.get("toolRoster")
     if not isinstance(permissions, dict) or not isinstance(roster, list) or not all(isinstance(name, str) for name in roster):

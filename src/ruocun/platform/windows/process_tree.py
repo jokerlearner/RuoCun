@@ -1,7 +1,6 @@
-"""前台 Windows Job：先挂入再恢复，回收整个树后才返回。
+"""用 Windows Job 持有并回收整个前台命令进程树。
 
-窄实现沿 D17/IPC 已验证的 CREATE_SUSPENDED + KILL_ON_JOB_CLOSE 路线。
-不提供持久 runner、接管、后台或进程逃逸支持。
+先挂起创建主进程，把它加入 Job 后再恢复，避免子进程在 Job 建立前跑出管理边界。返回前确认进程树已回收。
 """
 
 from __future__ import annotations
@@ -74,7 +73,7 @@ def run_managed(
     *, commandLine: str | None = None, onChunk: Callable[[int, bytes], None] | None = None,
     captureOutput: bool = True, stdinData: bytes | None = None, perStreamLimit: bool = False,
 ) -> tuple[bytes, bytes, int, bool, bool]:
-    """返回 stdout/stderr/code/aborted/capped；异常不冒充已取消。"""
+    """返回 stdout、stderr、退出码和取消、超量状态，执行异常继续向上抛出。"""
     import msvcrt
 
     from ..process_tree import _write_process_input
@@ -96,8 +95,8 @@ def run_managed(
         return int(info.active)
 
     def stop_tree() -> None:
-        # ActiveProcesses归零与各进程对象signaled并非同一个观察点；
-        # 先绑定当前Job成员的句柄，再终止并等句柄，避免仅凭计数宣称退出。
+        # Job 的 ActiveProcesses 归零与进程对象可等待结束的时点不同。
+        # 先取得当前 Job 成员的句柄，再终止并等待这些句柄，以确认对象已退出。
         handles: list[Any] = []
         capacity = 64
         try:
@@ -109,14 +108,14 @@ def run_managed(
                 ids = ProcessIds()
                 if k.QueryInformationJobObject(job, 3, C.byref(ids), C.sizeof(ids), None):
                     break
-                if C.get_last_error() != 234:  # ERROR_MORE_DATA
+                if C.get_last_error() != 234:  # ERROR_MORE_DATA 表示缓冲区还需扩容。
                     raise C.WinError(C.get_last_error())
                 capacity = max(capacity * 2, int(ids.assigned))
             for pid in list(ids.ids)[:ids.count]:
-                handle = k.OpenProcess(0x100000, False, int(pid))  # SYNCHRONIZE
+                handle = k.OpenProcess(0x100000, False, int(pid))  # 仅申请等待进程退出所需的 SYNCHRONIZE 权限。
                 if handle:
                     handles.append(handle)
-                elif C.get_last_error() != 87:  # 已不存在不需要等待
+                elif C.get_last_error() != 87:  # 进程已消失，跳过为它取得等待句柄。
                     raise C.WinError(C.get_last_error())
             if active():
                 _check(k.TerminateJobObject(job, 1))
@@ -150,7 +149,7 @@ def run_managed(
 
     try:
         limits = _Extended()
-        limits.basic.flags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        limits.basic.flags = 0x2000  # 关闭最后一个 Job 句柄时由系统终止其中的进程。
         _check(k.SetInformationJobObject(job, 9, C.byref(limits), C.sizeof(limits)))
         startup = subprocess.STARTUPINFO()
         startup.dwFlags = subprocess.STARTF_USESHOWWINDOW | subprocess.STARTF_USESTDHANDLES
@@ -213,7 +212,7 @@ def run_managed(
                 break
         native.WaitForSingleObject(process, 10000)
         code = int(native.GetExitCodeProcess(process))
-        # 首版没有后台语义；Shell已退出后留下的子孙也必须回收。
+        # 主 Shell 退出时可能还有子孙存活，前台操作返回前要回收它们。
         stop_tree()
         native.WaitForSingleObject(process, 10000)
         for reader in readers:

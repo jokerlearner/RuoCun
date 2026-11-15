@@ -1,4 +1,4 @@
-"""Frozen AgentTasksPanel.tsx (MIT), a read-only view of the agent task manager."""
+"""将任务管理器中的子代理任务显示为可选列表。面板只读取任务状态，选择结果交回调用者处理。"""
 
 from __future__ import annotations
 

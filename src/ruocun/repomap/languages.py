@@ -1,4 +1,4 @@
-"""Frozen repomap/languages.ts grammar and definition-node coverage (MIT)."""
+"""把文件扩展名映射到解析语法及需要提取的定义节点类型。"""
 
 from dataclasses import dataclass
 from pathlib import PurePath

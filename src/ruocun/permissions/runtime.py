@@ -1,8 +1,7 @@
-"""Frozen index.ts permission assembly/commands, adapted to native D09 sources.
+"""连接用户与工作区规则、工具权限判断和终端审批，并管理一次性授权。
 
-The caller owns schema validation, final argument selection and the plan dispatch
-hard gate. The caller binds the classifier and session audit. Every settings mutation targets a
-native user/project file; explicitly declared compatibility sources stay read-only.
+调用方在这里汇集分类器和审计，同时负责工具参数校验、选择实际执行参数和计划模式硬限制。
+写入规则时只改若存原生配置，兼容配置留作只读输入。
 """
 from __future__ import annotations
 
@@ -14,7 +13,7 @@ import sys
 from collections.abc import Awaitable, Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from types import MappingProxyType
@@ -25,6 +24,11 @@ from ..approval.store import appendAlwaysApproved, loadAlwaysApproved
 from ..approval.types import ApprovalPrompt, ApprovalRequest
 from ..config.compat import Compatibility, CompatibilitySource, auto_approve
 from ..config.trust import hasProjectConfig, shouldTrustProject
+from ..platform.sandbox_policy import (
+    SandboxPolicy,
+    createSandboxPolicy,
+    sandboxEnvironment,
+)
 from ..platform.shell_plan import ShellExecutionPlan, prepareShellPlan
 from ..session.session import Session
 from ..tools.tool_batch import BatchCall
@@ -97,7 +101,7 @@ def isMutatingCommand(text: str) -> bool:
 
 
 def _describe(tool: str, raw: str) -> str:
-    # Frozen tools/execute.ts describeCall, current ordinary CLI language is zh.
+    # 把关键参数提炼成中文摘要，供终端审批展示。
     try:
         args = json.loads(raw, parse_constant=_rejectConstant)
     except ValueError:
@@ -122,10 +126,13 @@ class PermissionRuntime:
     def __init__(
         self, cwd: Path, session: Session, tiers: list[_Tier], prompt: ApprovalPrompt,
         interactive: bool, yolo: bool, readOnlyRoots: Sequence[Path], alwaysApproved: set[str],
-        *, executionEnv: Mapping[str, str] | None = None,
+        *, executionEnv: Mapping[str, str] | None = None, sandboxPolicy: SandboxPolicy | None = None,
     ) -> None:
         self.cwd, self.session, self._tiers = cwd, session, tiers
-        self._executionEnv = dict(executionEnv) if executionEnv is not None else None
+        source_env = dict(executionEnv if executionEnv is not None else os.environ)
+        self.sandboxPolicy = sandboxPolicy if sandboxPolicy is not None else createSandboxPolicy(cwd, source_env)
+        self._executionEnv = (sandboxEnvironment(source_env, self.sandboxPolicy) if self.sandboxPolicy is not None
+                              else dict(executionEnv) if executionEnv is not None else None)
         self.localSettingsFile = cwd / ".ruocun" / "settings.local.json"
         self.approvalsFile = cwd / ".ruocun" / "approvals.json"
         self.sourceStates: dict[str, str] = {}
@@ -185,7 +192,7 @@ class PermissionRuntime:
         denyIdentities = identities
         denyRules = rules["deny"]
         if plan.dialect == "cmd":
-            # Windows command/cmdlet names are case-insensitive. Folding deny targets is conservative.
+            # Windows 命令和 cmdlet 名称不区分大小写，统一比较后拒绝规则也能命中大小写变体。
             denyIdentities = [{"ccTool": "Bash", "value": identity["value"].casefold()} for identity in identities]
             folded: list[str] = []
             for rule in denyRules:
@@ -207,7 +214,7 @@ class PermissionRuntime:
             return "allow"
         if any(ruleMatches(parseRule(rule), identity) for rule in rules["ask"] for identity in identities):
             return "ask"
-        # A full-command allow applies only after actual syntax was understood.
+        # 只有识别了实际命令语法，才使用整条命令的允许规则。
         if any(ruleMatches(parseRule(rule), {"ccTool": "Bash", "value": plan.command}) for rule in rules["allow"]):
             return "allow"
         if mode == "auto":
@@ -278,12 +285,12 @@ class PermissionRuntime:
             self.sourceStates[tier.source.id] = state
 
     def forAgent(self, cwd: Path, session: Session, mode: PermissionMode) -> PermissionRuntime:
-        """Use the parent rules and prompt port with a child-local mode, state and transcript."""
+        """子代理沿用父级规则和审批入口，模式、一次性状态和对话由子代理各自维护。"""
         child = PermissionRuntime(cwd, session, [], self._prompt, self._interactive,
                                   mode == "bypassPermissions", self._readOnlyRoots,
                                   {name for name, enabled in (("external-read", self._externalRead),
                                    ("external-write", self._externalWrite)) if enabled},
-                                  executionEnv=self._executionEnv)
+                                  executionEnv=self._executionEnv, sandboxPolicy=self.sandboxPolicy)
         child._rules = copy.deepcopy(self.getRules())
         child._rules["defaultMode"] = mode
         child._override = mode
@@ -294,7 +301,7 @@ class PermissionRuntime:
         return child
 
     def externalAgentPolicy(self) -> dict[str, object]:
-        """Capture the persistent parent boundary without any once-only grants."""
+        """导出父级可持久的权限边界，一次性授权留在原执行上下文。"""
         return {
             "yolo": self._yolo, "externalRead": self._externalRead, "externalWrite": self._externalWrite,
             "additionalDirectories": sorted(_canonical(self.cwd / path) for path in self._rules["additionalDirectories"]),
@@ -344,7 +351,9 @@ class PermissionRuntime:
                 if not isinstance(command, str):
                     raise ValueError("Shell command must be a string")
                 if command not in plans:
-                    plans[command] = await prepareShellPlan(command, str(executionCwd or self.cwd), environ=self._executionEnv)
+                    prepared_plan = await prepareShellPlan(command, str(executionCwd or self.cwd), environ=self._executionEnv)
+                    plans[command] = (replace(prepared_plan, sandbox=self.sandboxPolicy)
+                                      if self.sandboxPolicy is not None else prepared_plan)
         self._shellPlans.set(MappingProxyType(plans))
         self._approvedShellPlans.set(MappingProxyType({}))
         for call in calls:
@@ -353,6 +362,9 @@ class PermissionRuntime:
             command = shell_args.get("command")
             plan = plans.get(command) if isinstance(command, str) else None
             sandbox_bypass = tool.name == "Bash" and shell_args.get("dangerouslyDisableSandbox") is True
+            if sandbox_bypass and self.sandboxPolicy is not None:
+                decisions[call.call_id] = False
+                continue
             if plan is not None and tool.name == "Bash":
                 decision = self._shellDecision(plan)
                 checked = tool.checkPermissions(raw) if tool.checkPermissions else None
@@ -416,7 +428,7 @@ class PermissionRuntime:
 
     @contextmanager
     def callScope(self) -> Iterator[None]:
-        """Keep a once-only outside path grant in its actual dispatch task."""
+        """把工作区外路径的一次性授权限制在实际派发该操作的任务中。"""
         token = self._callGrants.set(_CallGrants())
         try:
             yield
@@ -424,11 +436,13 @@ class PermissionRuntime:
             self._callGrants.reset(token)
 
     async def authorize(self, tool: Tool, rawArgs: str) -> bool:
-        # Compatibility with callers that authorize and dispatch sequentially.
+        # 保留先审批、再单独派发工具的调用方式。
         self._callGrants.set(_CallGrants())
         return (await self.authorizeBatch([BatchCall("tool", tool, rawArgs)]))["tool"]
 
     async def _approveExternal(self, absolute: str, *, write: bool) -> bool:
+        if write and self.sandboxPolicy is not None:
+            return await self.approveSandboxWrite(absolute)
         grants = self._callGrants.get()
         once = (grants.write if write else grants.read) if grants is not None else None
         key = _canonical(absolute)
@@ -464,6 +478,85 @@ class PermissionRuntime:
 
     async def approveExternalWrite(self, absolute: str) -> bool:
         return await self._approveExternal(absolute, write=True)
+
+    async def approveSandboxWrite(self, absolute: str) -> bool:
+        """临时授权绑定规范化的写入目标，仅本次工具调用有效。"""
+        policy = self.sandboxPolicy
+        if policy is None:
+            return await self._approveExternal(absolute, write=True)
+        if self.getMode() == "plan" or not os.path.isabs(absolute) or "\0" in absolute:
+            return False
+        if policy.isProtected(absolute):
+            return False
+        if policy.allowsWrite(absolute):
+            return True
+        key = _canonical(absolute)
+        grants = self._callGrants.get()
+        if grants is not None and key in grants.write:
+            return True
+        if not self._interactive:
+            return False
+        request: ApprovalRequest = {
+            "id": "sandbox-file-write", "toolName": "沙箱外写入（仅本次）", "capability": "write",
+            "summary": redactSecrets(self._redact("仅本次允许文件工具写入：\n请求路径：" + absolute + "\n实际目标：" + key)),
+            "sensitive": True, "noPersist": True,
+        }
+        decision = (await self._prompt([request])).get(request["id"], "deny")
+        if decision != "once" or _canonical(absolute) != key or policy.isProtected(absolute):
+            return False
+        if grants is not None:
+            grants.write.add(key)
+        return True
+
+    async def authorizeSandboxShell(self, plan: ShellExecutionPlan, requested_roots: list[str]) -> ShellExecutionPlan:
+        """把人工批准的额外根目录绑定到本次执行，命令缓存不持有这些授权。"""
+        policy = self.sandboxPolicy
+        if policy is None:
+            if requested_roots:
+                raise ToolRejected("当前未启用写入沙箱，不能请求沙箱额外写入目录。")
+            return plan
+        if plan.sandbox != policy:
+            raise ToolRejected("Shell执行计划的基本沙箱策略不匹配，命令未执行。")
+        if not requested_roots:
+            return plan
+        approved = self.getShellPlan(plan.command, plan.cwd)
+        expected = replace(approved, sandbox=policy,
+                           environment=tuple(sorted(sandboxEnvironment(dict(approved.environment), policy).items())))
+        if plan != expected:
+            raise ToolRejected("额外写入目录必须绑定已批准的Shell执行计划，命令未执行。")
+        if not isinstance(requested_roots, list):
+            raise ToolRejected("额外写入目录必须是路径列表，命令未执行。")
+        roots: list[str] = []
+        descriptions: list[str] = []
+        for requested in requested_roots:
+            if (not isinstance(requested, str) or not requested or requested != requested.strip()
+                    or "\0" in requested or not os.path.isabs(requested)):
+                raise ToolRejected("额外写入目录必须是明确的绝对目录，命令未执行。")
+            root = _canonical(requested)
+            if not Path(root).is_dir() or root == _canonical(Path(root).anchor):
+                raise ToolRejected("额外写入路径必须是已存在的目录且不能是磁盘根目录，命令未执行。")
+            if policy.isProtected(root) or any(_under(protected, [Path(root)]) for protected in policy.protectedRoots):
+                raise ToolRejected("额外写入目录与受保护路径重叠，命令未执行。")
+            if policy.allowsWrite(root):
+                raise ToolRejected("该目录已在基本写入范围内，无需申请额外授权，命令未执行。")
+            if any(_under(root, [Path(existing)]) or _under(existing, [Path(root)]) for existing in roots):
+                raise ToolRejected("额外写入目录重复或相互包含，命令未执行。")
+            roots.append(root)
+            descriptions.append("请求目录：" + requested + "\n实际目标：" + root)
+        if not self._interactive or self.getMode() == "plan":
+            raise ToolRejected("本次额外写入目录需要用户人工授权，命令未执行。")
+        summary = "仅本次命令增加以下写入目录：\n" + "\n".join(descriptions) + "\n" + plan.summary()
+        request: ApprovalRequest = {
+            "id": "sandbox-shell-write", "toolName": "沙箱目录授权（仅本次）", "capability": "exec",
+            "summary": redactSecrets(self._redact(summary)), "sensitive": True, "noPersist": True,
+        }
+        if (await self._prompt([request])).get(request["id"], "deny") != "once":
+            raise ToolRejected("用户未批准本次额外写入目录，命令未执行。")
+        if any(_canonical(requested) != root or policy.isProtected(root) or not Path(root).is_dir()
+               or any(_under(protected, [Path(root)]) for protected in policy.protectedRoots)
+               for requested, root in zip(requested_roots, roots)):
+            raise ToolRejected("审批期间额外写入目录的实际目标已改变，命令未执行。")
+        return replace(plan, sandbox=replace(policy, writableRoots=(*policy.writableRoots, *roots)))
 
     async def command(self, text: str) -> str | None:
         parts = text.strip().split()
@@ -545,6 +638,7 @@ async def createPermissionRuntime(
     executionEnv: Mapping[str, str] | None = None,
     approvalPrompt: ApprovalPrompt | None = None,
     projectTrusted: bool | None = None,
+    sandboxPolicy: SandboxPolicy | None = None,
 ) -> PermissionRuntime:
     cwd, userRoot = cwd.resolve(), userRoot.resolve()
     projectSources = [source for source in compatibility.sources if source.scope == "project" and source.resource in ("settings", "settings_local")]
@@ -569,7 +663,8 @@ async def createPermissionRuntime(
     prompt = approvalPrompt if approvalPrompt is not None and interactive else makeApprovalPrompt(ask, interactive)
     runtime = PermissionRuntime(cwd, session, tiers, prompt, interactive,
                                 yolo or auto_approve(env), tuple(Path(root) for root in readOnlyRoots),
-                                await loadAlwaysApproved(cwd / ".ruocun/approvals.json"), executionEnv=executionEnv)
+                                await loadAlwaysApproved(cwd / ".ruocun/approvals.json"), executionEnv=executionEnv,
+                                sandboxPolicy=sandboxPolicy)
     await runtime._reload()
     if runtime._rules.get("defaultMode") == "plan":
         session.mode = "plan"

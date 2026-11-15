@@ -1,4 +1,4 @@
-"""MM-772/W6：终端内 best-effort 提示；不调用来源桌面通知后端。"""
+"""清理提示文字并交给终端界面。通知尝试独立于业务执行结果。"""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ def cleanNotificationText(text: str) -> str:
 
 def notify(title: str, message: str, *, write: Callable[[str], None] | None = None,
            env: Mapping[str, str] | None = None) -> bool:
-    """True 只代表提示已交给 owner，不代表用户已看到。"""
+    """返回真值表示提示已交给终端展示入口，用户是否看到由实际终端状态决定。"""
     actual_env = os.environ if env is None else env
     disabled = actual_env.get("RUOCUN_NO_NOTIFY")
     if disabled == "1" or write is None:

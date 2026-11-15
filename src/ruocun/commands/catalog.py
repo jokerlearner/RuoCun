@@ -1,14 +1,13 @@
-"""Frozen commands/index/App routing names; CMD inventory preserves excluded provenance.
+"""维护斜杠命令的名称和别名，按大小写识别命令名。
 
-Names are case-sensitive. This module only recognizes lexical command form;
-dispatch, permission changes and pause/settled belong to the composition root.
+解析器只切分命令和参数。入口根据解析结果选择处理器、权限模式和会话状态。
 """
 
 from __future__ import annotations
 
 import re
 
-# Fixed 52 CMD-* records, including source aliases and the excluded plugin record.
+# 旧名称清单仍记录 plugin，公开清单在下方将其排除。
 COMMAND_NAMES = (
     "model", "plan", "clear", "compact", "cost", "lang", "help", "exit", "quit", "skills",
     "context", "context-window", "tasks", "mcp", "diff", "doctor", "memory", "permissions",
@@ -20,7 +19,7 @@ COMMAND_NAMES = (
 PUBLIC_COMMAND_NAMES = tuple(name for name in COMMAND_NAMES if name != "plugin")
 COMMAND_ALIASES = {"accounts": "account", "yolo": "bypass", "task": "goal", "quit": "exit"}
 
-# ECMAScript trim / \s, rather than Python's extra U+001C..001F whitespace.
+# 按 ECMAScript 的空白字符切分，避免 Python 将额外控制字符当成分隔符。
 _JS_WHITESPACE = "\t\n\v\f\r \u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
 _SPACE = re.compile("[" + _JS_WHITESPACE + "]+")
 _NAME = re.compile(r"[a-zA-Z0-9:_-]+")

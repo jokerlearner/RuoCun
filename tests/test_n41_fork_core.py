@@ -15,6 +15,7 @@ from ruocun.agent.fork_agent import (
 )
 from ruocun.agent.loop import run_turn
 from ruocun.agent.run_agent import prepareAgentRun, runPreparedAgent
+from ruocun.agent.runtime_context import buildRuntimeContext
 from ruocun.client.resilient import ResilientResult
 from ruocun.client.types import ImageData, StreamChatOptions
 from ruocun.config.compat import Compatibility
@@ -129,7 +130,7 @@ def test_fork_uses_exact_parent_wire_catalog_and_independent_execution_pool(tmp_
         outcome = await runPreparedAgent(prepared, journal=_Journal(), request=child_request)
         assert outcome.status == "complete" and len(requests) == 3
         assert all(opts["tools"] == source and opts["model"] == parent.model for opts in requests[1:])
-        assert requests[1]["messages"] == initial and parent.messages == original
+        assert requests[1]["messages"] == [*initial, buildRuntimeContext(prepared.ctx)] and parent.messages == original
         tools = {message["tool_call_id"]: message["content"] for message in requests[-1]["messages"] if message["role"] == "tool"}
         assert "不能再派子代理" in tools["nested"] and "actual scoped file" in tools["read"]
         assert prepared.permission.getMode() == permissions.getMode() == "default"

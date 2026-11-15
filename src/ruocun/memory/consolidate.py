@@ -1,4 +1,4 @@
-"""Frozen memory/consolidate.ts (MIT) plan parsing, thresholds and request."""
+"""按阈值选出需要归并的来源，通过模型生成合并计划，再确认计划写入。新记录可靠发布之后才标记来源被替代。"""
 
 from __future__ import annotations
 
@@ -177,7 +177,7 @@ async def applyConsolidationPlan(
     store: MemoryStore, scope: Scope, plan: ConsolidationPlan, existing: Sequence[MemoryEntry], today: str, *,
     signal: Event | None = None,
 ) -> AppliedConsolidation:
-    """Confirm a canonical publication before soft-superseding any of its sources."""
+    """先确认合并后的正式记录已经发布，再将来源记录标记为已替代。"""
     original = _nativeActive(existing, scope)
     current = _nativeActive(await store.loadNative(scope), scope) if plan["groups"] else {}
     used: set[str] = set()
@@ -197,7 +197,7 @@ async def applyConsolidationPlan(
                 continue
             base = expected.memory if expected is not None else targets[0].memory
         else:
-            # The source permits an independent addition when no old record resolves.
+            # 计划中的旧记录均未解析到时，仍可按计划独立新增一条。
             if expected is not None or name in used or any(
                 entry.memory.name == name or dedupKey(entry.memory) == name for entry in current.values()
             ):
@@ -236,7 +236,7 @@ async def maybeConsolidate(
     store: MemoryStore, scope: Scope, *, today: str, now: int, options: StreamChatOptions, call: ModelCall,
     signal: Event | None = None, onAudit: Callable[[ConsolidationAudit], None] | None = None,
 ) -> None:
-    """Run one source-gated pass. An uncertain write ends this scope without a retry."""
+    """按来源条件执行一次合并。遇到结果不明的写入时停止当前作用域，保留待确认状态。"""
     if _cancelled(signal):
         return
     cfg = consolidationCfg(scope)

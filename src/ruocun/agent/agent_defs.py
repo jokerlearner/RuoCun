@@ -1,4 +1,4 @@
-"""Frozen agent_defs.ts frontmatter and D09 native/explicit-compatible discovery (MIT)."""
+"""读取代理定义及其元数据，为运行入口提供可用代理。发现范围由原生目录和显式启用的兼容目录共同决定。"""
 from __future__ import annotations
 
 import asyncio

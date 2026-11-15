@@ -1,16 +1,7 @@
-"""进程身份与 owner 存活判定（MM-597 / REC-09）。
+"""查询后台运行及数据库所有者的进程身份，供接管前核实。
 
-冻结来源：``src/session/process_identity.ts`` 与 ``process_identity.test.ts``。
-语义（不由 Python 实现倒推）：
-- ``ProcessIdentity(host, boot, pid, start)``；start 用进程创建时间，抵御 PID 重用。
-- 不同 host 明确抛错，不自动接管；boot 变化视为死 owner 可接管。
-- 进程查询 ``EPERM`` / 权限错误必须原样抛出，**不冒充死亡**；
-  kill(pid,0) 后进程退出（CIM 无匹配）才返回 None / False。
-- 无效 PID（<=0 / 非整数 / >0x7fffffff）在查询 OS 之前拒绝。
-
-Windows 的进程创建时间通过 kernel32 读取；系统启动身份沿用冻结来源的
-PowerShell/CIM LastBootUpTime。两者均不读取真实用户会话；
-``SyntheticIdentityProvider`` 供冻结测试风格的合成身份注入。
+用主机、系统启动时间、PID 和进程创建时间共同定位。这样进程号即使被操作系统重新分配，也不会把新进程当成原所有者。
+身份查询出错时明确抛出，调用方可以保留原有所有权及现场。
 """
 
 from __future__ import annotations
@@ -45,7 +36,7 @@ def _filetime_to_text(value: Any) -> str:
 
 
 def current_boot() -> str:
-    """从 Windows CIM 获取与冻结来源相同的可跨进程比较的启动时间。"""
+    """从 Windows CIM 获取本次系统启动时间，供不同进程比较。"""
     global _BOOT_CACHE
     if _BOOT_CACHE is not None:
         return _BOOT_CACHE
@@ -81,7 +72,7 @@ def current_boot() -> str:
 
 
 def process_identity(pid: int | None = None) -> ProcessIdentity | None:
-    """读取真实进程身份；进程不存在返回 None，查询错误抛 IdentityQueryError。"""
+    """查询进程创建时间与启动身份。已确认不存在才返回 None，查询失败时抛出 IdentityQueryError。"""
     target = os.getpid() if pid is None else pid
     if not isinstance(target, int) or isinstance(target, bool) or target <= 0 or target > _PID_MAX:
         raise IdentityQueryError("进程 ID 必须是正的 32 位整数。")
@@ -103,14 +94,14 @@ def process_identity(pid: int | None = None) -> ProcessIdentity | None:
     handle = kernel.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | 0x100000, False, target)
     if not handle:
         error = _C.get_last_error()
-        if error == 87:  # ERROR_INVALID_PARAMETER：进程不存在
+        if error == 87:  # ERROR_INVALID_PARAMETER 表示这个 PID 对应的进程已不存在。
             return None
         raise IdentityQueryError(
             f"进程 {target} 身份查询失败（Win32 error {error}）；不冒充进程已死亡。"
         )
     try:
         state = kernel.WaitForSingleObject(handle, 0)
-        if state == 0:  # A retained process object can outlive its process.
+        if state == 0:  # 打开了进程对象仍可能观察到进程已经退出，用返回的等待状态确认。
             return None
         if state != 258:
             raise IdentityQueryError("无法核实进程退出状态；不冒充进程已死亡。")
@@ -134,7 +125,7 @@ def process_identity(pid: int | None = None) -> ProcessIdentity | None:
 
 
 def identity_alive(identity: ProcessIdentity) -> bool:
-    """owner 是否存活；跨 host 抛错，查询错误传播，PID 重用不误认。"""
+    """用主机、启动标记和创建时间核对是否仍是同一个活进程。"""
     if identity.host != hostname():
         raise CrossHostError("会话来自另一台机器，不能自动接管。")
     if identity.boot != current_boot():
@@ -144,7 +135,7 @@ def identity_alive(identity: ProcessIdentity) -> bool:
 
 
 class RealIdentityProvider:
-    """真实进程身份提供方（demo 默认；owned child 的真实 PID/创建时间绑定）。"""
+    """在恢复和接管前向操作系统查询进程身份。"""
 
     def current(self) -> ProcessIdentity:
         identity = process_identity()
@@ -157,10 +148,9 @@ class RealIdentityProvider:
 
 
 class SyntheticIdentityProvider:
-    """冻结 durable_store.test.ts 风格的合成身份注入。
+    """用指定的进程身份和存活映射复现恢复边界。
 
-    ``alive_map`` 以 ``(boot, pid, start)`` 为键；缺省视为死亡。
-    ``alive_query_error=True`` 模拟身份查询失败（必须抛错，不返回 False）。
+    alive_map 以开机标记、PID 和创建时间为键。也可注入查询失败，校验上层不会误判为已退出。
     """
 
     def __init__(

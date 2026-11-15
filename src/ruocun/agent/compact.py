@@ -1,6 +1,6 @@
-"""DAO estimation with DeepSeek Harness recent-tail compaction adaptations (MIT).
+"""生成更短的模型上下文候选，并记录候选所引用的原消息位置。这里负责准备候选，由调用方发布原文归档并确认替换。
 
-Candidate preparation is pure. The controller owns durable archive publication.
+近期尾部保留策略改编自 DeepSeek Harness（MIT）。
 """
 
 from __future__ import annotations
@@ -18,12 +18,12 @@ from .compaction_policy import estimateRequestTokens
 
 
 def _jsLength(text: str) -> int:
-    """JavaScript String.length 统计 UTF-16 代码单元。"""
+    """按 UTF-16 代码单元计数，与 JavaScript 的 String.length 一致。"""
     return len(text.encode("utf-16-le", errors="surrogatepass")) // 2
 
 
 def estimateTokens(messages: list[ChatMessage]) -> int:
-    """按来源 chars/3 粗估，图片固定 100 字符；不是模型 tokenizer。"""
+    """按字符数除以三粗估 token，图片按固定一百字符计入。"""
     chars = 0
     for message in messages:
         content = message.get("content")
@@ -54,7 +54,7 @@ class CompactOptions(TypedDict):
 
 
 class CompactionError(RuntimeError):
-    """A replacement cannot safely and usefully reduce the current projection."""
+    """当前模型上下文无法安全压缩，或候选达不到有效缩减。"""
 
 
 @dataclass(frozen=True)
@@ -179,7 +179,7 @@ def _pruneTools(
 async def buildCompaction(
     messages: list[ChatMessage], opts: CompactOptions, pinned: str | None = None,
 ) -> CompactionCandidate:
-    """Build a smaller projection and exact source-index mapping without writing storage."""
+    """生成精简后的模型上下文和精确的原消息索引映射，由调用方负责持久化。"""
     tools = opts.get("tools", [])
     measure = opts.get("measureMessages")
 
@@ -243,8 +243,8 @@ async def buildCompaction(
         if "thresholdTokens" in opts and before >= opts["thresholdTokens"]:
             raise CompactionError("没有可安全压缩的旧区段，原上下文保留。")
         return unchanged()
-    # Replay the original contiguous prefix so provider caches can reuse it.
-    # Only the output projection uses pruning and relocated control anchors.
+    # 摘要请求沿用原始的连续前缀，让模型服务有机会命中缓存。
+    # 裁剪旧消息和移动控制锚点只应用到压缩后的模型上下文。
     summary_sources = tuple(range(cut))
     summary = (await opts["summarize"](copy.deepcopy(messages[:cut]))).strip()
     if not summary:
@@ -272,12 +272,12 @@ async def buildCompaction(
 async def compactMessages(
     messages: list[ChatMessage], opts: CompactOptions, pinned: str | None = None,
 ) -> list[ChatMessage]:
-    """Compatibility entry: prepare only; the caller confirms archive and replacement."""
+    """兼容入口只准备压缩候选。归档和上下文替换由调用方确认。"""
     return (await buildCompaction(messages, opts, pinned)).messages
 
 
 def stripImagesFromMessages(messages: list[ChatMessage]) -> list[ChatMessage]:
-    """压缩请求用 [image] 替代图片；纯文本消息沿用引用，不改原消息。"""
+    """摘要请求把图片替换为 [image]，纯文本沿用原对象，保留完整原消息供归档。"""
     result: list[ChatMessage] = []
     for message in messages:
         content = message.get("content")

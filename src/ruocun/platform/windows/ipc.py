@@ -1,4 +1,7 @@
-"""D18具名管道窄端口的产品适配。原生I/O仅在受监督helper角色运行。"""
+"""由受监督的辅助进程执行 Windows 具名管道 I/O。
+
+父进程通过私有标准流提供启动信息并验证实际对端。原生操作超时后需要确认已撤销或结束，缓冲区的生命周期至少覆盖该操作。
+"""
 
 from __future__ import annotations
 
@@ -64,12 +67,12 @@ class Overlapped(C.Structure):
 
 
 class PendingIoUnconfirmed(BaseException):
-    """Stop all further pipe work; ordinary timeout/disconnect handlers cannot catch it."""
+    """挂起的原生操作仍未确认结束。信号绕过普通的超时和断连处理，停止后续管道操作。"""
 
 
 def stop_pending_process() -> None:
     if PENDING_IO:
-        # Bypass interpreter shutdown, which would release ctypes memory too early.
+        # 跳过解释器清理流程，防止 ctypes 在原生操作仍持有指针时释放内存。
         K.TerminateProcess(K.GetCurrentProcess(), 96)
         os._exit(96)
 
@@ -104,8 +107,8 @@ def pipe_io(handle: Any, operation: str, data: bytes | int, deadline: float) -> 
             size = data if isinstance(data, int) else len(data)
             ok = function(handle, buffer, size, C.byref(count), C.byref(overlap))
         error = C.get_last_error() if not ok else 0
-        # Only a returned synchronous result can disarm pre-submission ownership.
-        # An interruption before this decision leaves the submission uncertain.
+        # 只有同步调用已返回，才转移提交前持有的资源责任。
+        # 如果此前被打断，操作是否进入系统仍不明确。
         if ok or error != 997:
             complete = True
         if operation == "connect" and error == 535:
@@ -121,14 +124,14 @@ def pipe_io(handle: Any, operation: str, data: bytes | int, deadline: float) -> 
                 cancel_error = C.get_last_error() if not cancelled else 0
                 if not cancelled and cancel_error != 1168:
                     raise C.WinError(cancel_error)
-                # Do not free OVERLAPPED/buffer until the actual pending operation is complete.
+                # 原生挂起操作真正结束后，才能释放 OVERLAPPED 和缓冲区。
                 completed = K.WaitForSingleObject(event, max(0, int((deadline - time.monotonic()) * 1000)))
                 if completed != 0:
                     raise RuntimeError("cancelled overlapped I/O did not complete before deadline")
                 result = K.GetOverlappedResult(handle, C.byref(overlap), C.byref(count), False)
                 result_error = C.get_last_error() if not result else 0
-                # Equivalent to the Windows SDK HasOverlappedIoCompleted macro;
-                # valid here only because submission returned ERROR_IO_PENDING.
+                # 此检查等价于 Windows SDK 的 HasOverlappedIoCompleted。
+                # 只有提交结果为 ERROR_IO_PENDING 时，这个检查才适用。
                 complete = overlap.internal != 0x103
                 if not complete:
                     raise RuntimeError("cancel result still pending")
@@ -212,11 +215,11 @@ bind(A, "ConvertSecurityDescriptorToStringSecurityDescriptorW",
 
 
 class IPCError(RuntimeError):
-    """传输失败，调用者保留执行状态并核对原run。"""
+    """管道传输失败。调用方应保留执行状态，沿原运行身份查询结果。"""
 
 
 class CleanupUnconfirmed(IPCError):
-    """helper真实退出尚未确认，保留句柄并禁止新建竞争transport。"""
+    """辅助进程尚未确认退出。保留句柄，防止新的传输与它争用端点。"""
 
 
 def descriptor(sddl: str) -> Any:
@@ -325,7 +328,7 @@ class PeerIdentity:
 
 def _peer(pid: int, owner: int) -> PeerIdentity:
     parent = _parent_pid(pid)
-    # Windows venv launcher有一层转发shim，最多仅接受这一层。
+    # 虚拟环境启动器可能转发一次，此处最多向上核验这一层。
     if parent != owner and _parent_pid(parent) != owner:
         raise IPCError("helper与控制进程身份不匹配")
     identity, owner_identity = _identity(pid), _identity(owner)
@@ -470,7 +473,7 @@ def helper_main() -> int:
         config = read_frame(sys.stdin.buffer)
         if config["host"] != socket.gethostname() or not isinstance(config["boot"], str):
             raise IPCError("helper启动身份缓存无效")
-        # 私有父子stdio复用父端已经OS核验的boot，不从具名管道请求取该信息。
+        # 由父进程把已核验的启动身份通过私有标准流传给子进程，管道请求不能自报该身份。
         _BOOT_HINT = (config["host"], config["boot"])
         _endpoint(config["endpoint"])
         peer = _peer(os.getpid(), config["owner_pid"])
@@ -635,7 +638,7 @@ class _Helper:
                 if K.WaitForSingleObject(self._handle, max(0, int((deadline - time.monotonic()) * 1000))) != 0:
                     raise CleanupUnconfirmed("IPC helper退出未确认")
             elif self.process.poll() is None:
-                # 未发配置前helper不能创建原生端点。关闭stdin令其bootstrap退出。
+                # 配置尚未发送时辅助进程还不能创建端点，关闭 stdin 可结束启动等待。
                 assert self.process.stdin is not None
                 self.process.stdin.close()
             self.process.wait(timeout=max(.001, deadline - time.monotonic()))

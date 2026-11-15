@@ -1,7 +1,6 @@
-"""Reference bash/ast.ts (MIT): explicit node allowlist and post-argv checks.
+"""把 Bash 语法树拆成可逐项核查的命令、参数和重定向。
 
-The tree producer lives in bash_parser.py. This walker never executes shell
-code; an unknown node shape is returned as too-complex for human approval.
+语法节点由 bash_parser.py 提供。本模块只分析原文，解析树超出支持范围时把命令标为过于复杂，交给人工审批。
 """
 from __future__ import annotations
 
@@ -371,7 +370,7 @@ def _walkFileRedirect(node: Node, commands: list[SimpleCommand], scope: dict[str
     fd: float | None = None
     for child in node.children:
         if child.type == "file_descriptor":
-            fd = float(child.text)  # Source Number(), including large descriptors.
+            fd = float(child.text)  # 用浮点数表达描述符，沿用 JavaScript Number 对超大整数的精度。
         elif child.type in _REDIRECT_OPS:
             op = child.type
         elif child.type in ("word", "number"):

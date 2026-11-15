@@ -1,4 +1,4 @@
-"""冻结tools/execute的审批边界；首版只顺序执行，不启用自动写权限。"""
+"""定义批执行器所需的注册表接口，并集中处理写入、命令执行的审批判断，以及命令失败识别。"""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ Approval = Callable[[str, dict[str, Any]], Awaitable[bool]]
 
 
 def looksFailed(content: str) -> bool:
-    """来源exec失败屏障；兼容实际Bash的[exit N,运行…]结果格式。"""
+    """识别 Bash 结果中的错误、非零退出、超时或中断，供批执行器阻止后续有副作用的工具。"""
     return content.startswith("Error") or bool(re.search(
         r"\[exit -?[1-9]\d*(?:\]|,)|\[超时|\[已中断(?:\]|,)", content,
     ))
@@ -26,5 +26,5 @@ class Registry(Protocol):
 
 
 async def permitted(tool: Tool, args: dict[str, Any], approve: Approval) -> bool:
-    # 普通文字审批覆盖来源复杂策略；写/exec即使来源auto也不能绕过。
+    # 写入和命令执行共用此审批入口，其他能力在此处直接放行。
     return tool.capability not in {"write", "exec"} or await approve(tool.name, args)

@@ -1,4 +1,7 @@
-"""Hook configuration and command protocol (MIT)."""
+"""读取 Hook 配置，按事件选择并执行相应命令。
+
+这里处理命令输入、输出和取消。journal 模块负责记录执行意图，并在结果不明时保留现场。
+"""
 
 from __future__ import annotations
 
@@ -153,7 +156,7 @@ def selectHooks(
         if spec.matcher:
             if not target:
                 continue
-            # JS RegExp's named captures and ASCII word/character classes.
+            # 把 JavaScript 正则的命名分组转换为 Python 写法，并沿用 ASCII 字符类。
             pattern = re.sub(r"\(\?<([A-Za-z_]\w*)>", r"(?P<\1>", spec.matcher)
             pattern = re.sub(r"\\k<([A-Za-z_]\w*)>", r"(?P=\1)", pattern)
             try:
@@ -230,7 +233,7 @@ class HookRuntime:
         try:
             await asyncio.to_thread(write)
         except (OSError, AtomicFileError):
-            pass  # An observation failure never changes the durable tool receipt.
+            pass  # Hook 的观察失败与工具执行结果分开记录，已持久化的工具收据仍可使用。
 
     async def _command(self, spec: HookSpec, event: str, ctx: RunCtx, signal: threading.Event) -> ForegroundResult:
         assert spec.command is not None

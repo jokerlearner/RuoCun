@@ -1,4 +1,7 @@
-"""Review tool calls for intelligent approval using a two-stage model request."""
+"""用近期对话、用户规则和本次调用组装智能审批请求。
+
+先请求短判断，未得到明确放行时再请求较完整的判断。最终仍无明确放行时，由审批层处理。
+"""
 from __future__ import annotations
 
 import json
@@ -6,6 +9,7 @@ import re
 from collections.abc import Awaitable, Callable
 from typing import Any, Literal
 
+from ..agent.runtime_context import isRuntimeContext
 from ..client.types import ChatMessage, StreamChatOptions
 from .classifier_model import ModelContext, createClassifierRunner
 from .gate import Classifier
@@ -100,6 +104,8 @@ def _trunc(text: str, limit: int = 500) -> str:
 def buildClassifierTranscript(messages: list[ChatMessage], maxEntries: int = 12) -> str:
     entries: list[str] = []
     for message in messages:
+        if isRuntimeContext(message):
+            continue
         content = message.get("content", "")
         if message.get("role") == "user":
             text = content if isinstance(content, str) else " ".join(part.get("text", "") for part in content if part.get("type") == "text")

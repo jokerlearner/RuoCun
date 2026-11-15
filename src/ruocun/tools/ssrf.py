@@ -1,4 +1,4 @@
-"""Frozen src/tools/ssrf.ts (MIT): hostname/literal checks, no DNS resolution."""
+"""规范化抓取 URL 并静态检查主机名或字面 IP，拦截不允许的目标。检查范围止于解析后的 URL，DNS 解析由网络层处理。"""
 
 from __future__ import annotations
 

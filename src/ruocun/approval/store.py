@@ -1,4 +1,7 @@
-"""Explicit approval store path and durable rules (MIT)."""
+"""从指定文件读取和追加长期允许的工具名。
+
+读取失败时按空集合处理。追加前重新核对文件，保留无法解析或格式有误的原始数据。
+"""
 import json
 from pathlib import Path
 
@@ -21,7 +24,7 @@ async def appendAlwaysApproved(file: str | Path, toolName: str) -> None:
         values = json.loads(path.read_text(encoding="utf-8"), parse_constant=_rejectConstant)
     except FileNotFoundError:
         values = []
-    # ADR-0013: a mutation must not silently discard an existing damaged list.
+    # 原文件已经存在时，只有合法的字符串列表才能继续写入，避免用新列表覆盖损坏记录。
     if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
         raise ValueError(f"{path}: 审批记录不是数组，保留原文件")
     current = list(dict.fromkeys(value for value in values if isinstance(value, str)))

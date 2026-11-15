@@ -1,4 +1,4 @@
-"""Frozen exec_shell_poll.ts (MIT): new output, recent tail, and idle throttling."""
+"""从受管 Shell 控制器读取新增输出或最近的日志。同一后台命令没有新输出时节流。"""
 from __future__ import annotations
 
 import json

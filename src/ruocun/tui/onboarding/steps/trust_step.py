@@ -1,4 +1,4 @@
-"""冻结 TrustStep.tsx (MIT) 的当前目录提示，说明 RuoCun 原生作用范围。"""
+"""生成当前目录的信任提示，说明信任决定允许加载的配置范围。"""
 
 from ....i18n.i18n import getLang, t
 from ...notifier import cleanNotificationText

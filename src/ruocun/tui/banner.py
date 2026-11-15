@@ -1,4 +1,4 @@
-"""The plain terminal banner. The interactive welcome card lives in welcome.py."""
+"""生成纯文本入口的欢迎横幅。交互会话的欢迎卡由 welcome 模块生成。"""
 
 from __future__ import annotations
 

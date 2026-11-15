@@ -1,4 +1,4 @@
-"""Frozen tools/task_send.ts (MIT)."""
+"""向运行中的子代理发送消息，或通过当前回合的恢复入口把消息交给可续接的任务。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""冻结 glob.ts / walk.ts 的匹配与文件遍历（MIT）。"""
+"""将 Glob 模式编译成路径匹配表达式，并提供内置文件搜索共用的目录遍历。遍历时跳过被忽略的目录和指向其他位置的目录链接。"""
 
 from __future__ import annotations
 
@@ -42,8 +42,8 @@ def walkFiles(root: str) -> Iterator[tuple[str, str]]:
         for entry in entries:
             try:
                 if entry.is_dir(follow_symlinks=False):
-                    # Python 3.11在Windows把junction仍视作目录；Node Dirent跳过链接。
-                    # 仅跳过递归遇到的reparse目录，显式root继续由外部访问审批处理。
+                    # Python 3.11 在 Windows 上可能把目录联接当作目录，递归时显式跳过重解析点。
+                    # 用户显式指定的根目录由调用方检查访问权限。
                     if os.name == "nt" and entry.stat(follow_symlinks=False).st_file_attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT:
                         continue
                     if entry.name not in _IGNORE:

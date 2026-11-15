@@ -1,4 +1,7 @@
-"""冻结App.tsx（MIT）的转录/live职责；由唯一ptk输入owner执行终端I/O。"""
+"""把会话事件整理为已完成的转录项和正在变化的实时区域。
+
+组件生成展示文本并通过注入的入口提交，终端读写由输入代理管理。
+"""
 
 from __future__ import annotations
 
@@ -31,7 +34,7 @@ _ECHO = {"Bash", "BashOutput", "Grep", "WebSearch", "WebFetch"}
 
 
 def clean_text(value: str) -> str:
-    """原文不允许注入VT；此后只有渲染器能生成SGR。"""
+    """清除原文中的终端控制序列，只有渲染器生成的样式可以控制终端。"""
     return "".join(char for char in _VT.sub("", normalizeSurrogates(value))
                    if char in "\n\t" or ord(char) >= 32 and ord(char) != 127)
 
@@ -117,7 +120,7 @@ def resultDetail(name: str, ok: bool, content: str) -> str:
 
 
 class App:
-    """只持展示状态，已完成项进scrollback；模型/调度/持久化仍归原模块。"""
+    """保存可重放的转录项和当前显示状态。转录项提交到终端滚动历史，模型执行、调度和持久化由各自的模块处理。"""
 
     def __init__(self, commit: Callable[[str], None], *, caps: Capabilities, background: str = "dark", verbose: bool = False,
                  commit_item: Callable[[TranscriptItem], None] | None = None) -> None:
@@ -218,7 +221,7 @@ class App:
             raise ValueError("未知终端事件")
 
     def flush_live(self) -> None:
-        # 未收到saved事件的取消/失败沿旧逐字输出保留已生成正文，只做一次边界。
+        # 取消或失败可能没有保存事件。保留已经逐字显示的内容，并把它提交为一个转录项。
         if self.live.reasoning.strip() or self.live.content.strip():
             self.assistantDone({"content": self.live.content})
         self.live = LiveState()
@@ -321,6 +324,7 @@ class App:
     def replace_history(self, messages: Sequence[Mapping[str, Any]]) -> None:
         self.items.clear()
         self.live = LiveState()
+        # 重建内部展示记录时暂时关闭终端提交，由调用方决定何时重绘。
         commit, commit_item = self._commit, self._commit_item
         self._commit = lambda _text: None
         self._commit_item = None
@@ -331,7 +335,7 @@ class App:
 
 
 class HistoryPanel:
-    """A transient view of the user turns already present in App's transcript."""
+    """临时展示转录中已有的用户回合，供用户浏览或选择。"""
 
     def __init__(self, view: App) -> None:
         self.view = view

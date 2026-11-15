@@ -1,4 +1,4 @@
-"""Frozen tools/task_create.ts (MIT)."""
+"""通过当前任务管理器登记手工任务，返回供后续查询和更新使用的任务编号。"""
 
 from __future__ import annotations
 

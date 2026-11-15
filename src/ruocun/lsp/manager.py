@@ -1,4 +1,4 @@
-"""Frozen lsp/manager.ts extension routing and shared clients (MIT)."""
+"""根据文件类型选择语言服务器，并在会话内复用同一配置对应的客户端。"""
 
 from collections.abc import Mapping
 from typing import Any

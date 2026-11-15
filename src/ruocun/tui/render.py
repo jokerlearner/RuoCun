@@ -1,4 +1,4 @@
-"""冻结tui/render.ts（MIT）：语义回合事件与纯文本适配分离。"""
+"""定义回合事件的展示接口，把流式文本转成展示事件，并提供纯文本的终端实现。"""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ class PlainEvents:
         self._write("\n")
 
     def toolResult(self, call: dict[str, Any], message: dict[str, Any]) -> None:
-        pass  # 冻结plain适配不展示工具结果。
+        pass  # 纯文本入口省略工具结果的单独展示。
 
     def notice(self, text: str) -> None:
         self._write(text)
@@ -70,7 +70,7 @@ def plainEvents(write: Callable[[str], None]) -> PlainEvents:
 
 
 async def consumeStream(gen: AsyncIterator[dict[str, Any]], events: TurnEvents, message: dict[str, Any]) -> dict[str, Any]:
-    # Python async generator没有JS的return value，以显式最终message保持同一语义。
+    # 异步生成器只传递增量。调用方另传最终消息，用于完成展示和返回。
     async for delta in gen:
         if delta["kind"] == "reasoning":
             events.reasoning(delta["text"])

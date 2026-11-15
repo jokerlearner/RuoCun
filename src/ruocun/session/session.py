@@ -1,7 +1,6 @@
-"""内存会话：冻结 ``src/session/session.ts`` 的 Python 迁移（MIT）。
+"""维护当前进程内的模型上下文、对话配置和 token 用量。
 
-本模块仅保留来源 Session 职责；持久化仍由任务 07 的 StoragePort 承担。
-分模型费用及完整会话恢复的接线属于任务 28 剩余范围。
+运行时通过 Session 读取并更新对话，检查点由会话存储层提交。
 """
 
 from __future__ import annotations
@@ -121,7 +120,7 @@ class Session:
         self.model = model
 
     def setSystemPrompt(self, prompt: str) -> None:
-        """组合入口恢复当前能力前缀，保留对话投影和输入账本。"""
+        """恢复当前能力所需的系统提示，同时保留已有对话和输入账本。"""
         self._systemPrompt = prompt
         if self.messages and self.messages[0].get("role") == "system":
             self.messages[0] = {"role": "system", "content": prompt}

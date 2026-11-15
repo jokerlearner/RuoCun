@@ -1,4 +1,7 @@
-"""Native settings mutations: preserve malformed input and publish privately."""
+"""读写设置文件中的点号路径。
+
+写入在同一文件锁内读取、更新对象并发布，已有配置无法解析或中间路径不是对象时保留原文件。
+"""
 
 from __future__ import annotations
 

@@ -1,4 +1,7 @@
-"""解析显式账户配置并通过原生系统端口保存凭据。"""
+"""解析原生账户的凭据，选择系统凭据库或配置文件保存密钥。
+
+系统凭据库确认写入后，配置只记录引用及来源。写入结果不明时交给调用方核实，避免在可能已存入系统的情况下再保存一份明文。
+"""
 
 from __future__ import annotations
 
@@ -33,7 +36,7 @@ class SecretStoreResult:
 
 
 class CredentialWriteUnconfirmed(RuntimeError):
-    """系统写入尚未确认，调用者不得将其视为失败或自动重复写入。"""
+    """系统凭据写入结果未确认，调用方须先核实原操作。"""
 
 
 class KeychainPort(Protocol):
@@ -46,7 +49,7 @@ class KeychainPort(Protocol):
 
 @dataclass
 class MemoryKeychain:
-    """合成内存钥匙串：仅测试/演示用；不接系统后端、不读真实密钥。"""
+    """供合成运行使用的内存凭据库。"""
 
     secrets: dict[tuple[str, str], str] = field(default_factory=dict, repr=False)
     calls: list[tuple[str, str, str]] = field(default_factory=list)
@@ -84,7 +87,7 @@ class MemoryKeychain:
 
 @dataclass
 class UnavailableKeychain:
-    """系统凭据后端不可用（本票不实现）：明确 not-found / file fallback。"""
+    """用确定的失败结果表示系统凭据后端不可用。"""
 
     def get(self, service: str, account: str) -> SecretLookup:
         return SecretLookup("not-found")
@@ -105,7 +108,7 @@ _FAILURE_TEXT: dict[str, str] = {
 
 
 def describeFailure(lookup: SecretLookup) -> str:
-    """准确显示失败状态，绝不回显任何 secret 值。"""
+    """整理安全的凭据失败说明。"""
     return _FAILURE_TEXT.get(lookup.status, "")
 
 
@@ -171,13 +174,14 @@ def persistKey(
     *,
     prefer_keychain: bool,
 ) -> tuple[ProfilesConfig, StoredKind]:
-    """系统保存成功后只写引用与来源；明确失败时写入原生配置文件。"""
+    """按系统凭据写入结果构造账户配置。"""
     account = account_for(name)
     key_ref = key_ref_for(name)
     if prefer_keychain:
-        # 使用与最终新增相同的重名检查，在可能覆盖系统凭据之前拒绝无效请求。
+        # 先验证名称可新增，再写入系统凭据，以免覆盖同名账户的密钥。
         new_cfg = addProfile(cfg, name, {**meta, "keyRef": key_ref})
         result = kc.set(NEW_KEYCHAIN_SERVICE, account, key)
+        # 系统写入可能已经成功。只有明确知道未写入时才允许落到文件中。
         if result.status in ("timeout-unconfirmed", "error-unconfirmed"):
             raise CredentialWriteUnconfirmed(
                 f"系统凭据写入结果未知（{result.status}），请确认后再操作")

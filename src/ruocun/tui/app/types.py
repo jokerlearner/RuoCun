@@ -1,4 +1,4 @@
-"""冻结tui/app/types.ts（MIT）的转录与动态展示状态。"""
+"""定义终端转录条目、实时展示状态和账户面板使用的操作接口。"""
 
 from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, field

@@ -1,4 +1,7 @@
-"""冻结permissions/rules.ts的规则方言与优先级（MIT）。"""
+"""解析权限规则写法，并依次匹配拒绝、询问和允许规则。
+
+对 Bash 逐个检查子命令，任何一项命中拒绝都能拦住整条调用。已知语法过于复杂时交给人工审批。
+"""
 
 from __future__ import annotations
 

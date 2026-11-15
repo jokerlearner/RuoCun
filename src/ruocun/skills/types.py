@@ -1,4 +1,4 @@
-"""冻结skills/skills.ts的共享Skill记录（MIT），保持原协议字段名。"""
+"""定义加载、展示和执行技能时共用的记录字段。"""
 
 from typing import TypedDict
 

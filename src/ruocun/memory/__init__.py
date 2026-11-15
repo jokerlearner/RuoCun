@@ -1,1 +1,1 @@
-"""Cross-session Markdown memory, separate from conversation storage."""
+"""若存的跨会话 Markdown 记忆。记忆的检索和维护与会话历史存储各自管理。"""

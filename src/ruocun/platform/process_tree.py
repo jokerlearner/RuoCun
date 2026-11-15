@@ -1,4 +1,7 @@
-"""Shell方言选择、环境脱敏与前台进程树执行。"""
+"""选择 Shell 方言，过滤子进程环境中的敏感项，并监督前台进程树。
+
+Windows 用 Job 管理整棵树，POSIX 用独立进程组。取消和超限的回收在这里统一处理。
+"""
 
 from __future__ import annotations
 
@@ -58,7 +61,7 @@ def _write_process_input(stream: BinaryIO, payload: bytes, errors: list[BaseExce
                     raise OSError("进程输入未完整发送。")
                 remaining = remaining[count:]
     except BrokenPipeError:
-        pass  # Hooks may choose to close stdin without reading it.
+        pass  # Hook 可能不读输入就关闭 stdin，此时发送端结束写入即可。
     except BaseException as error:
         errors.append(error)
 
@@ -72,7 +75,7 @@ def _run_posix(
         argv, cwd=cwd, env=env, stdin=subprocess.DEVNULL if stdinData is None else subprocess.PIPE,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
     )
-    # 此分支保留POSIX进程组设计，Linux/macOS实机验收后续进行。
+    # 以独立进程组启动，后续可一次终止 Shell 和同组子进程。
     signals = importlib.import_module("signal")
     killpg = getattr(os, "killpg")
     output = [bytearray(), bytearray()]
@@ -119,7 +122,7 @@ def _run_posix(
                 break
             time.sleep(.02)
         code = process.wait()
-        stop_group()  # Shell退出后仍占用输出管道的孙进程也要结束。
+        stop_group()  # 即使 Shell 本身退出，持有输出管道的子孙仍会让读端等待，需要一并回收。
         for reader in readers:
             reader.join(10)
             if reader.is_alive():
@@ -145,7 +148,7 @@ def run_foreground_argv(
     decodeClixml: bool = False, onRawOutput: ChunkCallback | None = None, captureOutput: bool = True,
     onLogOutput: OutputCallback | None = None, stdinData: bytes | None = None, outputLimit: int | None = None,
 ) -> ForegroundResult:
-    """用同一受控前台进程树运行已解析的绝对可执行文件与参数。"""
+    """用已解析的可执行文件绝对路径和参数启动受控前台进程树。"""
     start = time.monotonic()
     if signal.is_set():
         return ForegroundResult("", "", 1, True, 0)

@@ -1,4 +1,4 @@
-"""Frozen reflect_cadence.ts adaptive turn cadence (MIT)."""
+"""按近期反思结果调整下一次反思间隔，供轮末调度决定何时再次触发。"""
 
 import math
 from typing import TypedDict

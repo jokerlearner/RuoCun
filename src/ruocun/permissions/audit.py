@@ -1,4 +1,4 @@
-"""Frozen permissions/audit.ts (MIT), best-effort native workspace audit."""
+"""把工作区权限判断追加到本地审计文件，记录失败时继续原审批流程。"""
 from __future__ import annotations
 
 import json

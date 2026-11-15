@@ -1,4 +1,4 @@
-"""Reference bash_safety.ts (MIT): destructive-command heuristics and readonly list."""
+"""通过已知模式识别危险命令和只读命令，供权限引擎处理需要额外确认的操作。"""
 from __future__ import annotations
 
 import re

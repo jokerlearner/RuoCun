@@ -1,4 +1,7 @@
-"""冻结 loop.ts 批末 Read 图片注入（MIT），投递标记仅属于 checkpoint 投影。"""
+"""在一批工具调用结束后，把 Read 得到的图片加入模型上下文。
+
+已投递标记归属上下文检查点，工具账本中的可信结果仍按原样保留。
+"""
 
 from __future__ import annotations
 
@@ -8,7 +11,7 @@ from ..client.types import ChatMessage, ContentPart
 
 
 def isValidToolResult(result: object, call_id: str) -> bool:
-    """旧文字结果或身份匹配的完整ToolMessage；投递标记不属于journal。"""
+    """检查旧文本结果或工具调用身份匹配的完整结果消息。"""
     if isinstance(result, str):
         return True
     if not isinstance(result, dict):
@@ -25,7 +28,7 @@ def isValidToolResult(result: object, call_id: str) -> bool:
 
 
 def flushReadImages(messages: list[ChatMessage]) -> list[ChatMessage]:
-    """生成图片批末投影；不改输入，不从已压缩掉的工具journal重新注入。"""
+    """从当前上下文生成批末图片消息。已从上下文移除的工具结果不会从账本再次投递。"""
     pending = [index for index, message in enumerate(messages)
                if message.get("role") == "tool" and message.get("imageData")
                and not message.get("imageDelivered")]

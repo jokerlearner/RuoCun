@@ -1,4 +1,4 @@
-"""冻结tui/tips.ts（MIT）。"""
+"""从当前终端语言的提示库中选择一条快捷用法。"""
 
 import random
 

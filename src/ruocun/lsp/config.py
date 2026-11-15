@@ -1,4 +1,4 @@
-"""Frozen lsp/config.ts whole-server ordered overrides (MIT)."""
+"""按配置读取顺序合并语言服务器定义，再按文件选择匹配的服务器。"""
 
 from __future__ import annotations
 

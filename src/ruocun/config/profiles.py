@@ -1,8 +1,6 @@
-"""账户/模型目录（来源冻结 ``src/config/profiles.ts``，MIT）。
+"""定义账户配置格式，并查询账户所属提供商的模型能力。
 
-按 R-06 / D09：provider 为冻结的 6 种定义；模型目录中的 ID、contextWindow、
-vision、maxOutputTokens 与每 provider 默认端点/模型都是冻结数据，不以新目录替换基线。
-``ProfilesConfig`` 用宽松映射保留来源的未知顶层字段宽容边界（R-12）。
+模型目录提供上下文窗口、图像能力和输出上限。账户配置保存本地选择并兼容读取旧结构，系统凭据引用交由 credential 解析。
 """
 
 from __future__ import annotations
@@ -19,7 +17,7 @@ class ModelInfo(TypedDict, total=False):
     maxOutputTokens: int
 
 
-# 一个 profile = provider + baseUrl + model + (key | keyRef)；保留未知/迁移字段。
+# 账户由提供商、端点、模型和凭据组成，也允许保存扩展字段。
 Profile = dict[str, Any]
 ProfilesConfig = dict[str, Any]
 
@@ -106,7 +104,7 @@ MODELS_BY_PROVIDER: dict[Provider, list[ModelInfo]] = {
     ],
 }
 
-# 自定义网关的兼容属性，独立于官方渠道当前公布的窗口（不加入 /model 选择项）。
+# 自定义网关借用已知模型的上下文窗口估算，模型选项仍由网关提供。
 LEGACY_MODELS: list[ModelInfo] = [
     {"id": "glm-5.2", "contextWindow": 200_000},
     {"id": "glm-5.1", "contextWindow": 1_000_000},
@@ -132,7 +130,7 @@ VISION_MODELS: frozenset[str] = frozenset(VISION_MODEL_IDS)
 
 
 def supportsVision(model: str) -> bool:
-    """不在索引中的模型一律视为不支持（冻结 profiles.ts:130-132）。"""
+    """仅对模型目录明确标注支持图像的模型返回真。"""
     info = MODEL_INDEX.get(model.lower())
     return info is not None and info.get("vision") is True
 
@@ -164,7 +162,7 @@ def contextWindowFor(
 
 
 def outputLimitFor(model: str, requested: int, baseUrl: str | None = None) -> int:
-    """限制已知模型输出天花板，避免长输出重试发送超过服务端上限的预算。"""
+    """读取已知模型的输出上限，供请求预算使用。"""
     info = modelInfoFor(model, None, baseUrl)
     cap = info.get("maxOutputTokens") if info is not None else None
     return min(requested, cap) if cap is not None else requested
@@ -175,7 +173,7 @@ def _is_v2(raw: object) -> TypeGuard[ProfilesConfig]:
 
 
 def migrateConfig(raw: object) -> ProfilesConfig:
-    """旧版 ``{apiKey,baseUrl?,model?}`` 或 v2 → 规范化 v2；null/损坏 → 空档案。"""
+    """将旧账户结构整理为 v2，现有 v2 数据按原结构读取。"""
     if _is_v2(raw):
         return dict(raw)
     legacy: dict[Any, Any] = raw if isinstance(raw, dict) else {}
@@ -201,11 +199,7 @@ def migrateConfig(raw: object) -> ProfilesConfig:
 
 
 def resolveActive(cfg: ProfilesConfig) -> ResolvedCredential | None:
-    """只看激活 profile 的内联 key；不读环境变量，缺 key → None。
-
-    冻结 profiles.ts:196-211：交互模式只有 profile 一条路径，headless 通过
-    ``--api-key`` CLI 参数传入；不从 OPENAI_API_KEY 等通用环境变量自动挑账户。
-    """
+    """从激活账户中解析内联密钥。没有有效值时交由调用方处理。"""
     active = cfg.get("activeProfile")
     profiles_map = cfg.get("profiles")
     if not isinstance(active, str) or not isinstance(profiles_map, dict):

@@ -139,7 +139,7 @@ def test_seven_tools_approval_and_normal_reopen(tmp_path):
                 delta = {"role": "assistant", "tool_calls": calls}
             else:
                 delta = {"content": "first complete" if len(captured) == 3 else "reopen complete"}
-            if not body.get("tools"):
+            if "输出两个块：先在 <分析>" in last and "<摘要>" in last:
                 delta = {"content": "<摘要>synthetic-compacted-summary</摘要>"}
             self.respond(delta, "tool_calls" if len(captured) in (1, 2) else "stop")
 
@@ -301,8 +301,9 @@ def test_seven_tools_approval_and_normal_reopen(tmp_path):
         assert captured[5]["messages"][-1]["content"] == "交互第二轮"
         assert any(m.get("content") == early_input for m in captured[5]["messages"])
         assert captured[6]["messages"][-1]["content"] == "synthetic-private-skill-body"
-        assert not captured[7].get("tools")
-        assert "reasoning_effort" not in captured[7]
+        # Same-model compaction preserves the current tools and effort contract.
+        assert captured[7]["tools"] == captured[6]["tools"]
+        assert captured[7]["reasoning_effort"] == "low"
         assert captured[8]["messages"][-1]["content"] == "压缩后继续"
         assert any("synthetic-compacted-summary" in str(m.get("content", ""))
                    for m in captured[8]["messages"])

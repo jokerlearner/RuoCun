@@ -30,11 +30,12 @@ class MemoryJournal:
     async def save(self, session):
         self.saved.append(copy.deepcopy((session.messages, session.usage)))
 
-    async def replace_context(self, session, messages):
+    async def replace_context(self, session, messages, *, reset_prompt=True):
         self.saved.append(copy.deepcopy((messages, session.usage)))
         session.messages = copy.deepcopy(messages)
-        session.lastPromptTokens = None
-        session.lastSentLength = 0
+        if reset_prompt:
+            session.lastPromptTokens = None
+            session.lastSentLength = 0
 
 
 def _manager(env=None, request=None, **options):

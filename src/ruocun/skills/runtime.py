@@ -1,4 +1,7 @@
-"""冻结index.ts的启动Skills装配（MIT），目录身份沿D09显式source map。"""
+"""组装本次会话可见的内置、用户级和项目级技能。
+
+启动时先筛掉停用项和不应立即显示的技能，其余路径条件交由会话内发现器处理。
+"""
 
 from __future__ import annotations
 
@@ -62,7 +65,7 @@ async def loadRuntimeSkills(
     controls: SkillControls | None = None,
     discovery: SkillDiscovery | None = None,
 ) -> list[Skill]:
-    """装配启动可见Skills，将尚未匹配的条件技能交给可选会话发现池。"""
+    """加载启动时可见的技能，并装配会话内的路径发现器。"""
     if disabled:
         if discovery is not None:
             discovery.disable_disk()
@@ -138,7 +141,7 @@ async def loadRuntimeSkills(
 
 
 async def loadInstalledSkills(directory: Path, active: list[Skill], disabled: AbstractSet[str]) -> list[Skill]:
-    """为已确认安装的原生目录提案；入口保存目录后才扩活列表。"""
+    """重新读取技能目录，供安装后的会话确认本次新增内容。"""
     try:
         physical = await asyncio.to_thread(directory.resolve, strict=True)
         if physical != directory.absolute():

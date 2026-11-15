@@ -1,4 +1,4 @@
-"""Frozen tools/task_update.ts (MIT)."""
+"""通过任务管理器修改当前任务的描述或状态，保留管理器负责的状态约束。"""
 
 from __future__ import annotations
 

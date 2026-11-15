@@ -1,4 +1,4 @@
-"""Frozen LSP bilingual descriptions, product path adapted (MIT)."""
+"""集中存放 LSP 操作的中英文说明，供工具注册使用。"""
 
 DESCRIPTION = (
     "用配置好的语言服务器定位符号。goToDefinition 查定义，findReferences 查引用，hover 查看类型，goToImplementation "

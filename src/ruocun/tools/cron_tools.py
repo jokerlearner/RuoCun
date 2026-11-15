@@ -1,4 +1,4 @@
-"""Frozen src/tools/cron_tools.ts (MIT), W3 capability text and native paths."""
+"""把周期任务的创建、查询和删除请求交给同一个计划服务，显示列表中可供删除使用的序号。"""
 from __future__ import annotations
 
 from typing import Any

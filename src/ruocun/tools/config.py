@@ -1,4 +1,4 @@
-"""Frozen tools/config.ts (MIT); only native user settings are writable."""
+"""读取项目和用户的设置，修改仅写入原生用户设置。项目设置的覆盖关系由同一读取顺序决定。"""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def makeConfigTool(user_root: Path, *, user_files: Sequence[Path] = (),
     async def handler(args: dict[str, Any], ctx: ToolContext) -> str:
         setting = args["setting"]
         if "value" not in args:
-            # Frozen implementation is project ?? user; prose priority is not the loader.
+            # 优先读取项目设置。项目未给出可用值时，再读取用户设置。
             for tier, targets in enumerate((
                 [*project_files, Path(ctx.workspaceRoot) / ".ruocun/settings.json"],
                 [*user_files, user_root / "settings.json"],

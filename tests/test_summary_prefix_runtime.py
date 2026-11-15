@@ -26,7 +26,7 @@ class Journal:
     async def save(self, session):
         self.saved.append(copy.deepcopy(session.messages))
 
-    async def replace_context(self, session, messages):
+    async def replace_context(self, session, messages, *, reset_prompt=True):
         self.saved.append(copy.deepcopy(messages))
         session.messages = copy.deepcopy(messages)
 

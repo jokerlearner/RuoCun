@@ -1,7 +1,6 @@
-"""D10 immutable execution snapshot and actual-dialect inspection.
+"""在审批前固定 Shell 可执行文件、命令原文、工作目录和环境。
 
-Command strings are kept verbatim. Unknown syntax remains a human decision;
-only an actual Bash child is sent to the migrated Bash parser.
+按真正使用的解释器检查命令，未知语法交给人工确认。只有识别为 Bash 的命令内容才交给 Bash 解析器。
 """
 from __future__ import annotations
 
@@ -18,6 +17,7 @@ from typing import Literal
 
 from ..permissions.sanitize import hasSuspiciousUnicode
 from .process_tree import scrubbed_env
+from .sandbox_policy import SandboxPolicy
 
 Dialect = Literal["cmd", "bash", "sh", "powershell", "pwsh"]
 
@@ -41,6 +41,7 @@ class ShellExecutionPlan:
     dialect: Dialect
     codec: str
     analysis: ShellAnalysis
+    sandbox: SandboxPolicy | None = None
 
     def summary(self) -> str:
         wrappers = "\n".join(self.analysis.wrappers)
@@ -91,7 +92,7 @@ def _resolve(program: str, cwd: str, env: dict[str, str]) -> Path | None:
     path = Path(program)
     if path.is_absolute():
         return path.resolve() if path.is_file() else None
-    # cmd searches the current directory before PATH. Inspect the same first hit.
+    # cmd 会先搜索当前目录，再查 PATH。审批分析也检查实际会选中的第一个文件。
     directories = [cwd] if "/" in program or "\\" in program else [cwd, *env.get("PATH", "").split(os.pathsep)]
     for directory in directories:
         base = Path(directory) if Path(directory).is_absolute() else Path(cwd) / directory
@@ -129,7 +130,7 @@ def _powershell(command: str, engine: Path, cwd: str, env: dict[str, str], depth
         return ShellAnalysis(False, (command,), reason="PowerShell parser unavailable")
     commands = tuple(str(item.get("text", "")) for item in data["commands"] if isinstance(item, dict))
     known = not data.get("errors") and not data.get("dynamic") and bool(commands)
-    # Aliases, functions and unqualified commands cannot prove cmdlet/native identity.
+    # 别名、函数和未限定的命令名无法证明调用的是哪个 cmdlet 或本机程序。
     wrappers = [f"{engine} {data.get('version', '?')}\n{command}"]
     for item in data["commands"]:
         name = item.get("name") if isinstance(item, dict) else None
@@ -138,7 +139,7 @@ def _powershell(command: str, engine: Path, cwd: str, env: dict[str, str], depth
         if isinstance(name, str) and Path(name).name.lower() in {"cmd", "cmd.exe", "powershell", "powershell.exe", "pwsh", "pwsh.exe", "bash", "bash.exe"}:
             tokens = item.get("words")
             nested = _wrapper(str(item["text"]), cwd, env, depth + 1, tokens=tokens) if isinstance(tokens, list) and all(isinstance(token, str) for token in tokens) else ShellAnalysis(False, (str(item["text"]),), reason="dynamic nested arguments")
-            # Native argument marshalling differs across PS5.1/pwsh, retain human approval.
+            # Windows PowerShell 5.1 和 pwsh 传递本机参数的方式不同，此处交给人工确认。
             nested = replace(nested, known=False, reason="nested PowerShell native arguments")
             known = known and nested.known
             commands += nested.commands
@@ -179,7 +180,7 @@ def _wrapper(command: str, cwd: str, env: dict[str, str], depth: int, *, tokens:
     elif name in {"bash", "bash.exe"}:
         if engine.parent == (Path(env.get("SYSTEMROOT", r"C:\Windows")) / "System32").resolve():
             return ShellAnalysis(False, (command,), reason="WSL interpreter requires explicit environment analysis")
-        # PermissionRuntime consumes actual Bash payload with the migrated AST.
+        # 权限层把实际传给 Bash 的内容交给 Bash 语法解析器核对。
         if "-c" not in flags and "-lc" not in flags:
             return ShellAnalysis(False, (command,), reason="unknown Bash invocation")
         index = next(i for i, flag in enumerate(flags, 1) if flag in {"-c", "-lc"})

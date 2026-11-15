@@ -1,4 +1,7 @@
-"""Retire a session only after its durable store has fenced future claims."""
+"""清理旧会话时先在数据库封存会话，阻止后续接管。
+
+目录移入私有封存区后逐项比对路径身份和数据库封存标记。无法确认时停止删除并保留现场。
+"""
 
 from __future__ import annotations
 

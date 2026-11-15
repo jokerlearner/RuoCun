@@ -1,4 +1,4 @@
-"""Frozen index.ts /audit composition, confined to the selected native session root."""
+"""根据会话和审计类别读取记录，再汇总并脱敏展示。"""
 
 from __future__ import annotations
 

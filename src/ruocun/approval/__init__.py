@@ -1,1 +1,1 @@
-"""Approval protocol, record store, and terminal prompts (MIT)."""
+"""定义审批请求和结果，收集终端确认，并保存长期允许的规则。"""

@@ -1,4 +1,4 @@
-"""冻结 LanguageStep.tsx (MIT) 的语言选项与默认值。"""
+"""提供首次引导的语言选项及其默认选择。"""
 
 from ....i18n.i18n import t
 from ..select import SelectItem

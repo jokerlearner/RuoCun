@@ -1,1 +1,1 @@
-"""Narrow LSP protocol client (MIT)."""
+"""语言服务器的配置、进程管理与 LSP 请求。"""

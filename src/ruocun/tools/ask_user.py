@@ -1,4 +1,4 @@
-"""冻结src/tools/ask_user.ts的Python迁移（MIT）。"""
+"""逐项向用户收集选择或自由回答，再汇总交还模型。请求通过当前回合的交互入口展示。"""
 
 from __future__ import annotations
 

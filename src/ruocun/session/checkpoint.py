@@ -1,4 +1,7 @@
-"""Frozen session/checkpoint.ts (MIT): private Git snapshots of workspace files."""
+"""使用独立的 Git 索引为工作区文件创建私有快照，供用户回退代码。
+
+恢复前检查当前工作区和快照记录，遇到快照外文件时保留现场，避免回退覆盖用户另行创建的内容。
+"""
 
 from __future__ import annotations
 
@@ -191,7 +194,7 @@ class Checkpointer:
             return None
         except GitMutationUnknown:
             self._too_slow = True
-            return None  # 自动快照可降级，操作锁保留以禁止不明写入后的重复提交。
+            return None  # 自动快照失败时主流程可继续，操作锁保留以防对结果未确认的写入再次提交。
 
     def _entries(self, ref: str) -> dict[tuple[str, ...], bytes]:
         values: dict[tuple[str, ...], bytes] = {}
@@ -232,8 +235,8 @@ class Checkpointer:
                     raise GitBoundaryError("回退路径包含链接或重解析点。")
                 if stat.S_ISDIR(info.st_mode):
                     if prefix == parts and parts in target:
-                        # A target file can replace only a directory whose every
-                        # existing entry belongs to the current shadow snapshot.
+                        # 目标文件将替换同名目录时，先核查目录下的每一项。
+                        # 只有所有内容都属于当前影子快照，才允许继续替换。
                         self._check_replaced_directory(path, parts, current)
                 elif not stat.S_ISREG(info.st_mode) or prefix not in current:
                     raise GitBoundaryError("回退会覆盖未纳入检查点的现有文件。")
@@ -258,8 +261,8 @@ class Checkpointer:
                 self._run("merge-base", "--is-ancestor", ref, "HEAD")
                 before = self._snapshot(PRE_RESTORE_LABEL)
                 self._restore_guard(self._entries(before), target)
-                # Two-tree update checks the current index and workspace; keep HEAD
-                # at the pre-restore snapshot so its data stays directly listable.
+                # 用双树更新同时检查当前索引与工作区。
+                # HEAD 留在恢复前的快照，用户仍可列出该快照。
                 self._run("read-tree", "-m", "-u", before, ref, mutation=True)
                 try:
                     self._run("diff", "--quiet", "--no-ext-diff", "--no-textconv")
@@ -296,7 +299,7 @@ def createCheckpointer(workspaceRoot: str | Path, *, enabled: bool | None = None
         root = Path(workspaceRoot).resolve(strict=True)
         directory = root / ".ruocun" / "shadow.git"
         if os.path.lexists(directory) and not os.path.lexists(directory / "ruocun-root"):
-            return Checkpointer()  # Preserve unknown pre-existing directories.
+            return Checkpointer()  # 保留快照之外的已有目录，其中可能有用户自己的文件。
         if git.run(root, ["ls-files", "-z", "--", str(directory)], allow=(0, 128)).stdout:
             return Checkpointer()
         directory = private_git_directory(root, "shadow.git")

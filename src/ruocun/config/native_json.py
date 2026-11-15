@@ -1,4 +1,7 @@
-"""Native JSON object protection and scoped private publication."""
+"""为账户、设置和 MCP 等配置提供受保护的 JSON 读取和发布。
+
+读入现有文件时检查对象结构，在 Windows 上还核对文件权限。发布时由上下文管理器维持目标目录的保护，直至写入完成。
+"""
 
 from __future__ import annotations
 
@@ -19,7 +22,7 @@ from ..tools.paths import atomicWrite
 
 
 def readNativeObjectForWrite(path: Path) -> dict[str, Any]:
-    """Reject malformed existing objects before any caller replaces their data."""
+    """读取待修改的配置对象，拒绝覆盖已损坏的配置。"""
     try:
         if sys.platform == "win32" and path.exists():
             verify_private_file(path)
@@ -33,7 +36,7 @@ def readNativeObjectForWrite(path: Path) -> dict[str, Any]:
 
 @contextmanager
 def nativeJsonWriter(path: Path) -> Iterator[Callable[[str], None]]:
-    """Keep directory protection alive across validation and publication."""
+    """在私有目录保护期间提供配置发布函数。"""
     root = path.parent
     if os.name == "nt":
         root.parent.mkdir(parents=True, exist_ok=True)

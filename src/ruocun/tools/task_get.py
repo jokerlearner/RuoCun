@@ -1,4 +1,4 @@
-"""Frozen tools/task_get.ts (MIT)."""
+"""从当前子代理任务管理器读取指定任务的状态和描述，并将时间转换为可显示的格式。"""
 
 from __future__ import annotations
 

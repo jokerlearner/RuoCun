@@ -1,4 +1,4 @@
-"""冻结identity.ts：工具身份及remember规则（MIT）。"""
+"""把工具及其参数转换为权限规则使用的身份，供规则比较和记住批准时复用。"""
 
 import json
 import re

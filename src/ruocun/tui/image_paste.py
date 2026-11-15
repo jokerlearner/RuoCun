@@ -1,4 +1,4 @@
-"""冻结imagePaste.ts/App图片路径语义（MIT）与D10/D17 Windows有界转换。"""
+"""把剪贴板图片或粘贴的绝对路径转换为可提交的图片内容。先检查文件大小、实际格式和像素规模，再按当前模型的能力决定如何提交。"""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from ..session.inputs import Content
 from ..tools.paths import classifyPath, detectImageFormat, isImagePath
 
 MAX_BYTES = 5 * 1024 * 1024
-MAX_PIXELS = 20_000_000  # D17既有合成设计，不从失败的系统写测外推通过。
+MAX_PIXELS = 20_000_000  # 在解码和转换前限制像素数，小文件也可能展开成大图。
 
 
 def _dimensions(data: bytes, mime: str) -> tuple[int, int] | None:
@@ -247,6 +247,7 @@ async def prepareImageInput(content: Content, *, model: str, cwd: Path | None,
             if notice:
                 notice(f"图片 {path} 路径无法解析，已保留原文。")
             continue
+        # 图片路径引用随消息一起提交，自动读取仅限当前工作目录范围。
         if classified.external:
             if notice:
                 notice(f"图片 {path} 在工作区外，已跳过。")

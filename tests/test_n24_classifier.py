@@ -4,6 +4,7 @@ import json
 
 import pytest
 
+from ruocun.agent.runtime_context import buildRuntimeContext
 from ruocun.client.client import ApiError
 from ruocun.permissions.classifier import (
     STAGE1_SUFFIX,
@@ -19,6 +20,7 @@ from ruocun.permissions.classifier_model import (
     createClassifierRunner,
     defaultClassifierModel,
 )
+from ruocun.tools.types import ToolContext
 
 
 @pytest.mark.parametrize("text,expected", [
@@ -34,6 +36,7 @@ def test_xml(text, expected):
 def test_prompt_transcript_and_rules():
     messages = [
         {"role": "system", "content": "system excluded"},
+        buildRuntimeContext(ToolContext("synthetic-runtime")),
         {"role": "user", "content": "帮我跑测试"},
         {"role": "assistant", "content": "偷偷删库", "tool_calls": [
             {"function": {"name": "Bash", "arguments": '{"command":"npm test"}'}}]},

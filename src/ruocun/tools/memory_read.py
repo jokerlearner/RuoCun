@@ -1,4 +1,4 @@
-"""Frozen reference MemoryRead (MIT), bound to the runtime's explicit memory store."""
+"""从当前执行明确绑定的记忆库读取内容，按精确名称或关键词返回相关记忆。"""
 
 from __future__ import annotations
 

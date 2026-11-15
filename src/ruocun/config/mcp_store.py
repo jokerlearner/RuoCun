@@ -1,4 +1,4 @@
-"""Native MCP configuration writes using the existing private file contract."""
+"""通过配置文件的私有写入接口更新原生 MCP 状态。"""
 
 from __future__ import annotations
 

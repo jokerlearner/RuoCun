@@ -1,1 +1,1 @@
-"""Configured command Hooks."""
+"""项目配置的命令钩子及其执行记录。"""

@@ -1,4 +1,4 @@
-"""Frozen agent/cleanup.ts (MIT), with durable session and attachment protection."""
+"""清理孤立的分支和旧运行产物。清理前收集仍可被会话引用的记录和附件，保留有归属或正在变化的对象。"""
 
 from __future__ import annotations
 
@@ -76,7 +76,7 @@ def _reclaim_worktrees(workspace: Path, cutoff: int, env: Mapping[str, str], pro
             git.run(workspace, ["worktree", "remove", "--", str(tree)], allow=(0, 128))
             if tree.exists():
                 continue
-            # A concurrent ref update preserves the branch instead of deleting the new head.
+            # 分支头若在核对后又被更新，应保留新的分支头。
             if git.read(workspace, "rev-parse", "--verify", branch) == head:
                 git.run(workspace, ["update-ref", "-d", branch, head], allow=(0, 1))
             reclaimed += 1
@@ -131,8 +131,8 @@ def cleanup(workspaceRoot: Path, days: float, now: int, *, sessions_dir: Path,
                 protected.update(dependencies[directory])
                 for run in view["runs"]:
                     collect_worktrees(run.get("snapshot", {}))
-                # Spill pointers are display strings in legacy paired transcripts. Protect
-                # their exact files too, even if that old producer had no attachment ledger.
+                # 旧版成对转录只在展示文字里保存外溢指针。
+                # 即使旧记录没有附件账本，也要保护指针引用的具体文件。
                 transcript = str(view["checkpoint"].get("messages", []))
                 for private_name in ("spill", "subagents"):
                     private_dir = workspace / ".ruocun" / private_name

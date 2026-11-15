@@ -1,4 +1,7 @@
-"""冻结 src/skills/skills.ts 的静态加载子集（MIT）。目录由组合根显式传入。"""
+"""解析 SKILL.md，并合并多个目录中的技能记录。
+
+技能目录只携带供模型选择的元信息，正文等到调用时才读取。同名原生技能依加载顺序覆盖。
+"""
 
 from __future__ import annotations
 
@@ -22,7 +25,7 @@ def findUserInvocableSkill(skills: list[Skill], name: str) -> Skill | None:
 
 
 def skillCatalogLines(skills: list[Skill]) -> str:
-    """启动只列元信息，不把正文放入常驻提示。"""
+    """把技能元信息编排成供模型查看的目录。"""
     lines: list[str] = []
     for skill in skills:
         if skill.get("modelInvokable") is False:
@@ -33,7 +36,7 @@ def skillCatalogLines(skills: list[Skill]) -> str:
         callName = namespace + skill.get("slug", name)
         call = f"(调用名 {callName})" if callName.lower() != name.lower() else ""
         detail = (skill["description"] + trigger).encode("utf-16-le", errors="surrogatepass")
-        # JS String.slice(0, 220) 计 UTF-16 code unit，不能按 Python Unicode 字符截断。
+        # 按 UTF-16 单元折叠描述，保持与既有提示预算算法一致。
         detailText = detail[:440].decode("utf-16-le", errors="surrogatepass")
         lines.append(f"- {name}{call}:{detailText}")
     return "\n".join(lines)
@@ -121,7 +124,7 @@ async def loadSkills(
     *dirs: str | Path, loaded_by_directory: list[list[Skill]] | None = None,
     allowed_roots: tuple[Path, ...] | None = None,
 ) -> list[Skill]:
-    """低优先级目录先传；后者覆盖。可选输出容器追加本次各目录的原对象列表。"""
+    """合并多个原生技能目录，并在需要时生成外部技能候选。"""
     loaded = await asyncio.gather(*(asyncio.to_thread(_loadFrom, item, allowed_roots) for item in dirs))
     if loaded_by_directory is not None:
         loaded_by_directory.extend(loaded)

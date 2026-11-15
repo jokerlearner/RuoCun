@@ -1,4 +1,7 @@
-"""冻结 skills/discover.ts（MIT）的会话内发现与条件激活。"""
+"""根据会话访问的文件发现附近技能，并激活路径条件命中的候选。
+
+prepare 先生成候选目录和提示，调用方确认提示已能随会话使用后，confirm 再写入扫描记录与激活状态。
+"""
 
 from __future__ import annotations
 
@@ -37,7 +40,7 @@ def _fileKeys(skills: Iterable[Skill]) -> set[Path]:
 
 
 class SkillDiscovery:
-    """由普通会话持有。先提案，确认尾部目录后由业务循环发布。"""
+    """维护会话内待激活技能和已确认扫描的目录。"""
 
     def __init__(self, cwd: Path, *, disk_enabled: bool) -> None:
         self.cwd = cwd.resolve()
@@ -86,7 +89,7 @@ class SkillDiscovery:
                         if physical.is_dir() and physical.is_relative_to(self.cwd):
                             found[native] = physical
                     except (OSError, RuntimeError):
-                        pass  # 不缓存不存在的目录。
+                        pass  # 缺失目录仍可在后续访问时重新发现。
                 parent = parent.parent
         directories = tuple(sorted(found, key=lambda item: -len(item.parts)))
         return directories, tuple(found.values()), relative_paths
@@ -99,7 +102,7 @@ class SkillDiscovery:
         access = tuple(paths)
         if not access:
             return DiscoveryCandidate()
-        # 文件系统工作只能使用快照。放弃提案时既不消耗待激活项，也不留下正缓存。
+        # 先用状态快照做文件扫描，调用方确认候选后才更新待激活项和目录记录。
         snapshot = tuple(active)
         pending = tuple(self._pending.items())
         blocked = frozenset(disabled)
@@ -111,14 +114,14 @@ class SkillDiscovery:
         if directories:
             try:
                 known_files = await asyncio.to_thread(_fileKeys, (*snapshot, *(item[0] for _, item in pending)))
-                # 冻结发现顺序为从深到浅。loadSkills后者覆盖前者，保留真实同名胜者。
+                # 扫描顺序从深到浅。合并时后加载的目录覆盖前面的同名项。
                 for skill in await loadSkills(*directories, allowed_roots=roots):
                     name = skill["name"]
                     if name in blocked or name.lower() in names or Path(skill["file"]) in known_files:
                         continue
                     discovered.append(skill)
             except (OSError, RuntimeError):
-                discovered.clear()  # 目录读取失败时仍评估独立的条件池。
+                discovered.clear()  # 一批目录读取失败后，路径条件匹配仍可独立完成。
         activated: list[Skill] = []
         for name, (skill, patterns) in pending:
             if name in blocked:
@@ -135,7 +138,7 @@ class SkillDiscovery:
         return DiscoveryCandidate(directories, tuple(discovered), tuple(activated), tuple(messages))
 
     def confirm(self, candidate: DiscoveryCandidate, active: list[Skill]) -> None:
-        """入口确认已保存尾部目录后调用一次。无目录文本的候选在安全边界确认。"""
+        """在调用方确认候选生效后，记下目录并激活匹配的技能。"""
         self._checked_dirs.update(candidate.directories)
         for skill in candidate.activated:
             self._pending.pop(skill["name"], None)

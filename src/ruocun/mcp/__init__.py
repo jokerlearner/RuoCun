@@ -1,1 +1,1 @@
-"""Model Context Protocol integration."""
+"""MCP 服务连接、能力发现和调用。"""

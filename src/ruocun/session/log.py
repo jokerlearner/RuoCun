@@ -1,4 +1,7 @@
-"""Frozen session/log.ts (MIT), reading the native durable SQLite authority."""
+"""从会话 SQLite 读取可恢复会话，生成列表和导出内容。
+
+列表根据当前的模型上下文和未决工作判断可恢复性。只剩摘要的会话也可以继续。
+"""
 
 from __future__ import annotations
 
@@ -10,6 +13,8 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any, TypedDict
 
+from ..agent.compact import _isSummary
+from ..agent.runtime_context import isRuntimeContext
 from ..platform.windows.durable_file import atomic_publish, ensure_private_dir
 from .contract import RuntimeRecord, StoreError
 from .durable_store import inspect_durable_session
@@ -23,6 +28,7 @@ class SessionMeta(TypedDict, total=False):
     done: bool
     messageCount: int
     userMessageCount: int
+    hasSummary: bool
     summary: str
     ownerAlive: bool
     protected: bool
@@ -31,7 +37,7 @@ class SessionMeta(TypedDict, total=False):
 def firstUserExcerpt(messages: Sequence[Mapping[str, Any]]) -> str | None:
     for message in messages:
         content = message.get("content")
-        if message.get("role") == "user" and isinstance(content, str) and content.strip():
+        if message.get("role") == "user" and not isRuntimeContext(message) and isinstance(content, str) and content.strip():
             flattened = re.sub(r"\s+", " ", content).strip()
             return flattened[:60] + "…" if len(flattened) > 60 else flattened
     return None
@@ -78,7 +84,9 @@ def loadMeta(baseDir: Path, id: str, *, runtime: RuntimeRecord) -> SessionMeta |
     result: SessionMeta = {
         "id": state["id"], "cwd": state["cwd"], "title": state["title"], "updatedAt": state["updatedAt"],
         "done": state["done"], "messageCount": len(messages), "ownerAlive": state["ownerAlive"],
-        "userMessageCount": sum(message.get("role") == "user" for message in messages), "protected": state["protected"],
+        "userMessageCount": sum(message.get("role") == "user" and not isRuntimeContext(message)
+                                for message in messages), "hasSummary": any(_isSummary(message) for message in messages),
+        "protected": state["protected"],
     }
     if summary := state.get("taskTitle"):
         result["summary"] = summary
@@ -100,7 +108,7 @@ def listSessions(baseDir: Path, cwd: str | None = None, *, runtime: RuntimeRecor
         try:
             meta = loadMeta(baseDir, child.name, runtime=runtime)
         except (StoreError, OSError):
-            continue  # An invalid candidate stays untouched and cannot be selected implicitly.
+            continue  # 损坏或无法确认的会话继续保留，但自动恢复不能选择它。
         if meta is not None and (want is None or _canonical(meta["cwd"]) == want):
             found.append(meta)
     return sorted(found, key=lambda meta: meta["updatedAt"], reverse=True)
@@ -108,7 +116,9 @@ def listSessions(baseDir: Path, cwd: str | None = None, *, runtime: RuntimeRecor
 
 def findResumable(baseDir: Path, cwd: str, *, runtime: RuntimeRecord) -> dict[str, Any] | None:
     for meta in listSessions(baseDir, cwd, runtime=runtime):
-        if not meta["done"] and not meta["ownerAlive"] and meta["userMessageCount"]:
+        # 只剩摘要的任务也仍可恢复。
+        # 标题和已接纳输入会在回退或清空后留下，不能用它们代替当前上下文。
+        if not meta["done"] and not meta["ownerAlive"] and (meta["userMessageCount"] or meta.get("hasSummary")):
             return loadState(baseDir, meta["id"], runtime=runtime)
     return None
 
@@ -146,7 +156,7 @@ def writeSessionExport(workspaceRoot: Path, state: Mapping[str, Any], *, json_fo
 
 def writeArchiveExport(workspaceRoot: Path, session_id: str, scopes: list[str],
                        page: Callable[[str, int], dict[str, Any]], *, json_format: bool = False) -> Path:
-    """Consume bounded archive pages into the same private, atomic file publisher."""
+    """分页读取归档，再通过同一个私有文件发布接口原子写出。"""
     import uuid
     from datetime import datetime, timezone
 

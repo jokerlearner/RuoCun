@@ -1,4 +1,4 @@
-"""Frozen reference permissions/secrets.ts (MIT), used before writing durable memory."""
+"""识别并脱敏可能的凭据，用于持久记忆写入前的安全处理。"""
 
 import re
 

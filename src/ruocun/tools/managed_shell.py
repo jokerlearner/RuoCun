@@ -1,4 +1,8 @@
-"""D08 independent Shell controller, adapted from frozen managed_shell.ts (MIT)."""
+"""控制器管理命令的启动、转后台和取消。
+
+运行记录保存执行意图、控制权和用户决定。runner 执行实际命令、保存输出，
+并发布签名状态和终态收据供控制器核实。
+"""
 from __future__ import annotations
 
 import asyncio
@@ -97,7 +101,7 @@ class ManagedShellManager:
 
     @asynccontextmanager
     async def recovery_decision_scope(self) -> AsyncIterator[None]:
-        """Fence the observer while committing a user's attestation; never forge a receipt."""
+        """用户确认恢复决定时，阻止同一运行的观察者并发更新。确认记录与执行进程签发的终态收据各自独立。"""
         entries = tuple(self._runs.values())
         acquired: list[_Run] = []
         try:
@@ -132,7 +136,7 @@ class ManagedShellManager:
         return await asyncio.shield(task)
 
     async def _commit(self, entry: _Run, *, status: str | None = None, **snapshot: Any) -> None:
-        # Update before await: an accepted DB operation may outlive cancellation.
+        # 先推进内存中的运行记录。已接收的数据库写入可能在协程取消后完成。
         entry.record = replace(entry.record, status=status or entry.record.status,
                                snapshot={**entry.record.snapshot, **snapshot})
         await self.store.commit(entry.record)
@@ -196,7 +200,7 @@ class ManagedShellManager:
 
     async def _rpc(self, entry: _Run, action: str) -> dict[str, Any]:
         from ..platform.windows.ipc import request
-        await self.store.commit(entry.record)  # Fence a stale DB owner before control.
+        await self.store.commit(entry.record)  # 发出控制请求前，先在数据库确认自己仍有控制权。
         snapshot = entry.record.snapshot
         helper = identity(snapshot["server_helper_identity"])
         if not identity_alive(helper):
@@ -236,6 +240,32 @@ class ManagedShellManager:
                                detached=bool(reply.get("detached", False)))
         return reply
 
+    async def _confirm_start(self, entry: _Run, signal: threading.Event) -> None:
+        """发出启动请求。回包无法确认时，只核实原运行的状态。"""
+        try:
+            response = await self._rpc(entry, "start")
+            if response.get("started") is not True:
+                raise RuntimeError("runner未确认启动认领，不重复执行。")
+            if response.get("status") != "running":
+                raise RuntimeError("runner启动后状态需要核验。")
+        except (OSError, ValueError, RuntimeError):
+            # 短命令可能已经结束并写出收据。先检查原运行的签名收据。
+            receipt = await self._port(self._terminal, entry)
+            if receipt is not None:
+                await self._accept_terminal(entry, receipt)
+                return
+            if signal.is_set():
+                # 已收到取消且没有查到收据，交由外层启动流程继续收尾。
+                raise
+            # 没有终态收据，还可以通过认证通道核实原 runner 的身份和状态。
+            # 重连会记录确认后的状态，或在进程刚结束时接收终态收据。
+            response = await self._connect(entry)
+            if entry.terminal is not None or (response.get("started") is True and response.get("status") == "running"):
+                return  # 核实结果已经由 _connect 持久化。
+            # 原运行仍无法确认已开始或已结束，由外层保留未确认状态。
+            raise
+        await self._commit(entry, status="running", phase="started")
+
     def _create_files(self, entry: _Run) -> None:
         runs = self.directory / "runs"
         ensure_private_dir(runs)
@@ -252,7 +282,8 @@ class ManagedShellManager:
                 return subprocess.Popen(
                     [*self.runner_command, str(entry.directory)], cwd=entry.manifest["plan"]["cwd"],
                     env=scrubbed_env(), stdin=subprocess.DEVNULL, stdout=log, stderr=log,
-                    close_fds=True, creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+                    # 用无窗口标志启动执行进程，也避免 Windows 虚拟环境启动器为子进程弹出控制台。
+                    close_fds=True, creationflags=subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP,
                 )
 
         task = asyncio.create_task(asyncio.to_thread(spawn))
@@ -317,10 +348,7 @@ class ManagedShellManager:
                 "control_epoch": entry.record.snapshot["control_epoch"],
             }
             await self._port(write_signed, run_dir / "grant.json", grant, entry.capability)
-            response = await self._rpc(entry, "start")
-            if response.get("started") is not True:
-                raise RuntimeError("runner未确认启动认领，不重复执行。")
-            await self._commit(entry, status="running", phase="started")
+            await self._confirm_start(entry, signal)
             return entry
         except BaseException as error:
             if isinstance(error, asyncio.CancelledError):
@@ -426,7 +454,13 @@ class ManagedShellManager:
                     last_error = error
                     await asyncio.sleep(.05 * (attempt + 1))
             if last_error is not None:
-                await self._unknown(entry, last_error)
+                # 执行进程正常收尾时先发布终态收据，再退出。
+                # 先再查一次收据，避免把先前尚未写出的终态判成未知。
+                receipt = await self._port(self._terminal, entry)
+                if receipt is not None:
+                    await self._accept_terminal(entry, receipt)
+                else:
+                    await self._unknown(entry, last_error)
 
     async def _poll(self, run_id: str, *, incremental: bool = False) -> dict[str, Any]:
         entry = self._runs.get(run_id)
@@ -540,7 +574,7 @@ class ManagedShellManager:
             await self._accept_terminal(entry, receipt)
             await self._commit(entry, detached=True, detach_requested=True)
             return {"id": run_id, "status": entry.record.status, "detached": True}
-        # A durable decision precedes loss of foreground cancellation ownership.
+        # 先持久保存转后台的决定，再交出前台取消责任。
         await self._commit(entry, detach_requested=True)
         try:
             result = await self._rpc(entry, "detach")
@@ -580,7 +614,7 @@ class ManagedShellManager:
             return True
 
     def _authenticated_control_state(self, entry: _Run) -> dict[str, Any]:
-        # Unknown recovery may carry only a DB record, never control credentials.
+        # 恢复未知执行时可能只有数据库记录。控制还需要该运行原有的认证材料。
         if not entry.manifest or len(entry.capability) != 32:
             raise ValueError("未知执行缺少已认证控制材料。")
         verify_private_file(entry.directory / "capability")
@@ -699,7 +733,7 @@ class ManagedShellManager:
                     if text:
                         emit(name, text)
                 if view["status"] in TERMINAL:
-                    # Drain the bounded log reader before finalising.
+                    # 进入终态后继续读取剩余日志，确认展示游标到达两个输出文件的末尾。
                     if entry.ui_stdout < (entry.directory / "stdout.txt").stat().st_size or entry.ui_stderr < (entry.directory / "stderr.txt").stat().st_size:
                         continue
                     emit("stdout", "")
@@ -734,7 +768,7 @@ class ManagedShellManager:
             if record.snapshot.get("storage_link_version") != 1:
                 continue
             if record.snapshot.get("resolved_by_user") or (record.status in TERMINAL and record.snapshot.get("recovery_material_accepted")):
-                # Explicit human disposition is not a verified runner receipt; do not reconnect/control.
+                # 已人工处置的运行和已验收恢复材料的终态都可跳过重连。人工证据仍单独保存。
                 continue
             directory = local_path(Path(record.snapshot["run_dir"]))
             if record.status == "failed-before-grant":
@@ -799,7 +833,7 @@ class ManagedShellManager:
         return tuple(entry.record for entry in self._runs.values())
 
     async def _close_bootstrap(self, entry: _Run, launcher: subprocess.Popen[bytes]) -> None:
-        # Retain and settle even a bootstrap which reported ready after its caller stopped waiting.
+        # 上层停止等待后，启动器仍可能报告就绪。继续跟踪它并确认结果。
         deadline = time.monotonic() + 35
         cancel_sent = False
         while launcher.poll() is None and time.monotonic() < deadline:

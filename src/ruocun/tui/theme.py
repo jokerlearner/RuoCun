@@ -1,4 +1,4 @@
-"""RuoCun terminal colors for dark and light backgrounds."""
+"""定义亮色和暗色终端的语义颜色，并按终端颜色能力生成样式。"""
 
 from collections.abc import Mapping
 

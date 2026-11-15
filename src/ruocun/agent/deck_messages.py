@@ -1,4 +1,4 @@
-"""冻结参考 deck_messages.ts（MIT）：对外消息投影、窗口和修订号。"""
+"""把会话消息转换成本地客户端可读的视图，维护消息窗口与修订号，供客户端增量追踪。"""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 from ..client.types import ChatMessage
+from .runtime_context import isRuntimeContext
 
 
 def utf16_length(text: str) -> int:
@@ -104,7 +105,7 @@ def normalizeMessage(
 
 def messageRevision(messages: Sequence[ChatMessage], *, redact: Callable[[str], str] | None = None) -> str:
     prefix = []
-    for message in [row for row in messages if row.get("role") != "system"][:3]:
+    for message in [row for row in messages if row.get("role") != "system" and not isRuntimeContext(row)][:3]:
         text = contentText(message.get("content"))
         calls = _tool_calls(message)
         call_ids = [[call.get("id"), call.get("name")] for call in calls] if calls is not None else None
@@ -122,7 +123,7 @@ def messagePage(
     all_messages: Sequence[ChatMessage], before: int | None = None, limit: int = 100,
     *, redact: Callable[[str], str] | None = None,
 ) -> dict[str, Any]:
-    messages = [message for message in all_messages if message.get("role") != "system"]
+    messages = [message for message in all_messages if message.get("role") != "system" and not isRuntimeContext(message)]
     total = len(messages)
     end = total if before is None else min(total, max(0, before))
     start = end

@@ -1,4 +1,4 @@
-"""冻结src/tools/types.ts的首版声明子集（MIT）；运行取消用Event适配。"""
+"""定义工具、执行上下文和派发接口。工具通过上下文使用当前回合绑定的目录、权限、取消状态和服务。"""
 
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from ..hooks.hooks import HookRuntime
     from ..lsp.manager import LspManager
     from ..memory.memory_audit import MemoryAuditSink
+    from ..platform.sandbox_policy import SandboxPolicy
     from ..platform.shell_plan import ShellExecutionPlan
     from ..session.cache_audit import CacheAuditSink
     from .agent import AgentRequest
@@ -34,7 +35,7 @@ class ReadMeta(TypedDict):
 
 
 class ToolRejected(ValueError):
-    """可证明发生在副作用之前的前置拒绝；模型可修正参数后继续。"""
+    """工具在产生副作用前明确拒绝了调用，模型可按原因修正再试。"""
 
 
 class ChoicePrompt(Protocol):
@@ -90,6 +91,9 @@ class ToolContext:
     rollbackTaskWait: Callable[[], None] | None = None
     onShellOutput: Callable[[Literal["stdout", "stderr"], str], None] | None = None
     getShellPlan: Callable[[str, str], ShellExecutionPlan] | None = None
+    sandboxPolicy: SandboxPolicy | None = None
+    authorizeSandboxShell: Callable[[ShellExecutionPlan, list[str]], Awaitable[ShellExecutionPlan]] | None = None
+    approveSandboxWrite: Callable[[str], Awaitable[bool]] | None = None
     searchTools: Callable[[str], str] | None = None
     onFileAccessed: Callable[[str], None] | None = None
     onSkillsInstalled: Callable[[Literal["user", "project"]], None] | None = None
@@ -111,7 +115,7 @@ class Tool:
     apiParameters: dict[str, Any] | None = None
     checkPermissions: Callable[[str], Literal["deny", "ask"] | None] | None = None
     shouldDefer: bool = False
-    persistentEffect: bool = False  # 独占并记持久意图，不改变来源能力标签。
+    persistentEffect: bool = False  # 需要独占执行并持久记录意图，原有能力标签仍用于权限判断。
 
 
 class ToolDispatcher(Protocol):

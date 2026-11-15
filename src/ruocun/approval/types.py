@@ -1,4 +1,4 @@
-"""Approval protocol interfaces (MIT)."""
+"""定义审批请求、审批结果和提供审批能力的接口。"""
 from __future__ import annotations
 
 from typing import Awaitable, Callable, Literal, NotRequired, Protocol, TypedDict

@@ -1,8 +1,6 @@
-"""dotenv 简化方言（来源冻结 ``src/config/env_file.ts``，MIT）。
+"""读取调用方指定的 .env 文件，用其中的默认值补充环境变量。
 
-CFG-05 / D09:134：只加载 cwd 的 ``.env``；已有 process env（含空串）优先；
-只支持简化 ``KEY=VALUE`` / 配对引号 / 注释方言，不引入 export、变量插值、
-跨品牌扫描。``applyDotenv`` 的 ``environ`` 可注入合成映射，便于隔离测试。
+显式环境变量优先。解析接受简单的 KEY=VALUE、引号和注释。调用方也可以传入独立的环境映射，用于合成运行和检查。
 """
 
 from __future__ import annotations
@@ -43,7 +41,7 @@ def loadDotenv(file: str | Path) -> dict[str, str]:
 def applyDotenv(
     file: str | Path, environ: MutableMapping[str, str] | None = None,
 ) -> list[str]:
-    """把 .env 的键补进 environ，仅当该键尚未存在；返回实际补入的键名。"""
+    """用 .env 补齐环境中缺失的值，返回实际补入的键名。"""
     target: MutableMapping[str, str] = os.environ if environ is None else environ
     applied: list[str] = []
     for key, value in loadDotenv(file).items():

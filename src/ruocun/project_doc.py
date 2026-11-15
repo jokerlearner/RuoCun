@@ -1,4 +1,7 @@
-"""冻结project_doc.ts（MIT）的RUOCUN原生名称及D09显式只读兼容适配。"""
+"""收集用户和项目的 RUOCUN.md 指令，供会话构建模型上下文。
+
+先读取用户级指令，再从仓库根目录走到当前工作目录。显式配置的兼容文件按所属层级插入，内容相同的指令只保留首次出现的一份。
+"""
 
 import os
 from pathlib import Path
@@ -57,7 +60,7 @@ def loadProjectInstructions(
                     or Path(source.workspace).resolve() != root.resolve()):
                 continue
             parent = Path(os.path.abspath(source.path)).parent
-            # 同链文件归实际层；显式链外文件绑定声明的当前workspace层。
+            # 位于项目链上的兼容文件跟随实际目录层级，链外文件按声明归入当前工作目录。
             level = parent if parent in chain else root
             if level == directory:
                 read(f"兼容项目级({source.id}: {source.path}) @ {rel}", Path(source.path), source.id)

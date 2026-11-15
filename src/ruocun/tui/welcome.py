@@ -1,4 +1,4 @@
-"""冻结 Welcome.tsx (MIT) 卡片/图像留白布局；终端I/O仍由InputBroker持有。"""
+"""根据终端可用行列计算交互欢迎卡和吉祥物占位。只生成布局与文本，实际终端读写由输入代理持有。"""
 
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ def getWelcomeLayout(columns: float, mascot: WelcomeMascotLayout | None = None, 
     valid = mascot is not None and all(math.isfinite(mascot[k]) and mascot[k] > 0 for k in ("columns", "rows"))
     image_columns = math.ceil(mascot["columns"]) if valid and mascot else 0
     image_rows = max(13, math.ceil(mascot["rows"])) if valid and mascot else 0
-    # The live card can use a shorter text column, reserving five rows for input/status.
+    # 实时欢迎卡可以使用较窄的文字栏，为输入区和状态栏预留五行。
     beside = (valid and card >= image_columns + (79 if terminalRows is None else 46)
               and (terminalRows is None or terminalRows >= image_rows + 9))
     rows = image_rows if beside else 0
@@ -69,7 +69,7 @@ def Welcome(info: Mapping[str, str], caps: Capabilities, bg: str = "dark", *,
     picture: list[str] = []
     if caps.isTTY and terminalRows is not None and terminalRows >= 22:
         if native_beside and mascot is not None:
-            # Keep the still within full cells of the Sixel image that may replace it.
+            # 静态图只占用后续 Sixel 图像覆盖范围内的完整终端字符格。
             picture_columns, picture = renderStaticMascot(box["imageColumns"] - 1, math.ceil(mascot["rows"]) - 1, caps.tier)
         elif compact_beside:
             picture_columns, picture = renderStaticMascot(width - 39, terminalRows - 9, caps.tier)

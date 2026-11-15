@@ -1,4 +1,4 @@
-"""冻结 grep_files.ts 的纯 Python Grep（MIT）；正则使用Python标准库。"""
+"""遍历已批准访问的目录，用 Python 正则匹配文件内容，并按请求输出路径、匹配片段或计数。"""
 
 from __future__ import annotations
 

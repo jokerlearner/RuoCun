@@ -1,4 +1,4 @@
-"""Lazy native Python bindings replace only frozen loader/wasm-assets (MIT)."""
+"""首次遇到某种语言时加载对应的 Tree-sitter 解析语法。"""
 
 from functools import lru_cache
 from importlib import import_module

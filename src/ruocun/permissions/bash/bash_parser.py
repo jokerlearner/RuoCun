@@ -1,6 +1,6 @@
-"""冻结bash_parser.ts的纯Python迁移（MIT），产出tree-sitter-bash兼容节点。
+"""将 Bash 文本解析为供权限分析使用的语法树。
 
-游标使用Python代码点；节点位置始终为UTF-8字节。命令UTF-16长度门由wrapper掌管。
+词法游标按 Python 字符移动，节点位置换算为 UTF-8 字节偏移。输入长度限制由解析入口按 UTF-16 单元处理。
 """
 
 from __future__ import annotations

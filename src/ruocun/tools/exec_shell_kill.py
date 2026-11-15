@@ -1,4 +1,4 @@
-"""Frozen exec_shell_kill.ts (MIT): cancellation request is not process closure."""
+"""通过受管 Shell 控制器请求取消后台命令。发出取消后，实际终态仍由控制器确认。"""
 from __future__ import annotations
 
 import json

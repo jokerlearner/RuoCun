@@ -12,9 +12,11 @@ import ruocun
 
 
 def test_source_task_output_cursor_and_task_stop_channel():
+    from ruocun.agent.runtime_context import buildRuntimeContext
     from ruocun.agent.tasks import BgTask
     from ruocun.tools.task_output import taskOutputTool
     from ruocun.tools.task_stop import taskStopTool
+    from ruocun.tools.types import ToolContext
 
     async def scenario():
         task = BgTask("agent-1", "run-1", "agent", "synthetic", "running")
@@ -29,12 +31,14 @@ def test_source_task_output_cursor_and_task_stop_channel():
 
         ctx = SimpleNamespace(workspaceRoot="/synthetic", taskManager=SimpleNamespace(get=tasks.get, cancel=cancel))
         task.messages.extend([
+            buildRuntimeContext(ToolContext("synthetic-runtime")),
             {"role": "assistant", "content": "开始探索代码库"},
             {"role": "assistant", "tool_calls": [{"function": {"name": "Grep", "arguments": '{"pattern":"foo"}'}}]},
         ])
         args = {"id": task.id}
         first = await taskOutputTool.handler(args, ctx)
         assert "开始探索" in first and "Grep" in first
+        assert "<ruocun-runtime-context>" not in first
         assert "没有新消息" in await taskOutputTool.handler(args, ctx)
         task.messages.append({"role": "tool", "content": "match: foo.ts:12"})
         third = await taskOutputTool.handler(args, ctx)
@@ -205,6 +209,7 @@ from ruocun.agent.background_types import ExecutionSnapshot
 from ruocun.agent.resume_agent import agentRecoveryMaterial,continuationMessages,validatePreparedContinuation
 from ruocun.session.contract import RunRecord
 from ruocun.session.recovery import RecoveryController
+from ruocun.agent.runtime_context import isRuntimeContext
 
 async def scenario():
     session=Session('parent system','synthetic',env={})
@@ -269,7 +274,8 @@ async def scenario():
         task=manager.get(old.task_id)
         assert task.runId!=old.run_id and len(requests)==2
         assert any(m.get('content')=='known old result' for m in requests[0])
-        assert requests[0][-1]=={'role':'user','content':'continue explicitly'}
+        assert [m for m in requests[0] if not isRuntimeContext(m)][-1]=={'role':'user','content':'continue explicitly'}
+        assert isRuntimeContext(requests[0][-1])
         assert (root/'new.txt').read_text()=='new once' and (root/'old.txt').read_text()=='preserved'
         await controller.command('/recovery continue agent-old continue explicitly')
         assert len(requests)==2

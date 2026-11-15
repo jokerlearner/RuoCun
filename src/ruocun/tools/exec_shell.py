@@ -1,4 +1,7 @@
-"""冻结参考 src/tools/exec_shell.ts 的首版前台子集（MIT）。"""
+"""把 Bash 工具请求转换为 Shell 执行计划，应用批准的沙箱边界后交给执行后端。
+
+本模块还负责整理输出、创建备份和保存超长输出。宿主程序执行这些写入时也要核对路径策略。
+"""
 
 from __future__ import annotations
 
@@ -13,8 +16,10 @@ from typing import Any, Literal
 
 from ..platform.process_tree import run_foreground_plan
 from ..platform.sandbox import SandboxUnavailable, sandboxExecutionPlan
+from ..platform.sandbox_policy import SandboxPolicy
 from ..platform.shell_plan import buildShellPlan
 from .paths import classifyPath
+from .sandbox import prepareSandboxPlan
 from .types import Tool, ToolContext, ToolRejected
 
 _PYTHON_INLINE = re.compile(r"(?:^|[\s;&|])python3?\s+-c\b")
@@ -32,7 +37,7 @@ _pythonInlineNudged = False
 
 
 def _references(command: str, extensions: str) -> list[str]:
-    # 来源以常见后缀粗识别；补齐Windows盘符/反斜杠/引号内空格。
+    # 按后缀提取可能出现在命令里的路径，匹配 Windows 盘符和带引号的空格路径。
     pattern = re.compile(
         rf"(['\"])([^'\"\r\n]+\.(?:{extensions})(?!\w))\1|"
         rf"((?:[A-Za-z]:[\\/]|[.\w/\\])[\w./\\:-]*\.(?:{extensions})(?!\w))", re.I
@@ -40,7 +45,7 @@ def _references(command: str, extensions: str) -> list[str]:
     return [match.group(2) or match.group(3) for match in pattern.finditer(command)]
 
 
-def _backup_databases(command: str, cwd: str, *, workspace_only: bool = False) -> str | None:
+def _backup_databases(command: str, cwd: str, *, workspace_only: bool = False, policy: SandboxPolicy | None = None) -> str | None:
     targets: dict[Path, str] = {}
     for name in _references(command, _DB_EXT):
         for suffix in ("", "-wal", "-shm", "-journal"):
@@ -50,10 +55,12 @@ def _backup_databases(command: str, cwd: str, *, workspace_only: bool = False) -
     for path, name in targets.items():
         backup = Path(str(path) + _DB_BACKUP_SUFFIX)
         try:
+            if policy is not None and not policy.allowsWrite(str(backup.absolute())):
+                continue
             if workspace_only and any(classifyPath(cwd, str(candidate)).external for candidate in (path, backup)):
                 continue
             if path.is_file() and not backup.exists():
-                # 不覆盖已有最早版本。来源备份失败不阻断原命令。
+                # 只在备份尚不存在时创建一份，保留最早的备份。
                 with path.open("rb") as source, backup.open("xb") as dest:
                     shutil.copyfileobj(source, dest)
                 backed.append(name)
@@ -69,21 +76,22 @@ def _backup_databases(command: str, cwd: str, *, workspace_only: bool = False) -
 
 
 async def cleanupDbBackups(workspaceRoot: str) -> int:
-    """首版保留备份：仅靠路径无法证明当前文件仍归本进程所有。
+    """保留已创建的数据库备份。
 
-    与来源递归扫删的可见差异由M02记录；提示已在创建回执展示。
-    不删除预存备份，也不冒险删除创建后被用户替换的同名文件。
+    仅凭路径无法确认同名文件仍属于这次运行，自动清理会误删用户后来放入的文件。
+    创建回执会给出备份位置。
     """
     return 0
 
 
-def _spill_output(content: str, cwd: str, *, workspace_only: bool = False) -> str:
+def _spill_output(content: str, cwd: str, *, workspace_only: bool = False, policy: SandboxPolicy | None = None) -> str:
     if len(content) <= 16000:
         return content
     pointer = ""
     try:
         path = Path(cwd) / ".ruocun" / "spill" / (uuid.uuid4().hex + ".txt")
-        if not workspace_only or not classifyPath(cwd, str(path)).external:
+        if ((not workspace_only or not classifyPath(cwd, str(path)).external)
+                and (policy is None or policy.allowsWrite(str(path.absolute())))):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding="utf-8")
             pointer = f"\n[完整输出 {len(content)} 字符已落盘:{path}；需要完整内容时用Read读取]"
@@ -106,7 +114,7 @@ def _check(raw: str) -> Literal["ask"] | None:
 async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
     global _pythonInlineStreak, _pythonInlineNudged
     background = bool(args.get("background"))
-    unsupported = set(args) - {"command", "description", "background", "dangerouslyDisableSandbox"}
+    unsupported = set(args) - {"command", "description", "background", "dangerouslyDisableSandbox", "additionalWriteDirectories"}
     if unsupported:
         return "首版不支持这些Bash参数；命令未执行：" + ", ".join(sorted(unsupported))
     command = args["command"]
@@ -136,7 +144,10 @@ async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
     else:
         _pythonInlineStreak, _pythonInlineNudged = 0, False
     plan = ctx.getShellPlan(command, cwd) if ctx.getShellPlan is not None else buildShellPlan(command, cwd, analyze=False)
-    # The per-call bypass only applies to the foreground path.
+    plan = await prepareSandboxPlan(plan, ctx, args.get("additionalWriteDirectories"))
+    if plan.sandbox is not None and args.get("dangerouslyDisableSandbox") is True:
+        raise ToolRejected("Windows 沙箱已开启，不能整次绕过；请请求本次额外可写目录。")
+    # 单次绕过仅限前台命令，后台继续按既定执行边界运行。
     disable_sandbox = not background and args.get("dangerouslyDisableSandbox") is True
     try:
         execution_plan = sandboxExecutionPlan(plan, disable_sandbox)
@@ -147,8 +158,8 @@ async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
     if background and os.name != "nt":
         raise ToolRejected("当前环境未提供可恢复Shell执行后端，命令未执行。")
     sandboxed = execution_plan is not plan
-    # These application-level writes run outside the child sandbox.
-    backup_notice = _backup_databases(command, plan.cwd, workspace_only=sandboxed)
+    # 备份由宿主程序写入，子进程沙箱的路径限制在此处也需显式检查。
+    backup_notice = _backup_databases(command, plan.cwd, workspace_only=sandboxed, policy=plan.sandbox)
     output_callback = ctx.onShellOutput
     if ctx.managedShell is not None and (os.name == "nt" or background):
         managed = await ctx.managedShell.execute(plan, execution_signal, background=background,
@@ -180,7 +191,7 @@ async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
             result = await asyncio.shield(execution)
         except asyncio.CancelledError:
             execution_signal.set()
-            await execution  # 取消异步等待也必须先回收真实进程树。
+            await execution  # 等待真正的进程树退出后，再结束本地等待。
             raise
         except FileNotFoundError as error:
             if execution_plan is plan:
@@ -210,9 +221,9 @@ async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
             "简单搜索优先用Grep，通读文件用Read；复杂解析请用Write保存为.py文件后执行。"
         )
     if result.aborted and re.search(r"(?:^|[\s;&|])(apt-get|apt|dpkg|aptitude)(?=\s|$|;|&|\|)", command):
-        # 首版所有Shell副作用均须显式审批，不能在取消后暗自发起未审批恢复。
+        # 恢复包管理器会再次写入系统，先提示用户单独批准恢复命令。
         parts.append("[需恢复] 包管理器命令被中断；继续前请审批并执行 dpkg --configure -a 检查修复状态。")
-    return _spill_output("\n".join(parts), plan.cwd, workspace_only=sandboxed)
+    return _spill_output("\n".join(parts), plan.cwd, workspace_only=sandboxed, policy=plan.sandbox)
 
 
 execShellTool = Tool(
@@ -222,8 +233,8 @@ execShellTool = Tool(
         "PowerShell/pwsh/Bash须显式调用，按实际方言审批；非Windows使用/bin/sh。"
         "没有超时，Ctrl+C停止当前前台受管树；已绑定可恢复后端时支持background=true及同run转后台。"
         "Shell退出后遗留的受管子孙也会停止。查询内容用Grep、查路径用Glob、读文件用Read。"
-        "系统沙箱默认关闭；RUOCUN_SANDBOX=1 时仅macOS/Linux有可选后端。"
-        "dangerouslyDisableSandbox=true 仅用于已确认沙箱导致失败的单次前台命令，会强制审批。"
+        "系统沙箱默认关闭；RUOCUN_SANDBOX=1 时Windows使用固定独立Codex CLI/MXC，macOS/Linux沿用原生后端。"
+        "Windows开启后失败即报错且不能整次绕过；additionalWriteDirectories仅请求本次目录，仍需用户明确批准。"
     ),
     schema={
         "type": "object",
@@ -231,7 +242,9 @@ execShellTool = Tool(
             "command": {"type": "string", "description": "要执行的Shell命令；Windows默认cmd，其他解释器显式调用"},
             "description": {"type": "string", "description": "命令的语义描述（用于审计日志）"},
             "background": {"type": "boolean", "description": "true启动为可重连后台Shell，默认false"},
-            "dangerouslyDisableSandbox": {"type": "boolean", "description": "仅本次前台绕过沙箱，会强制审批"},
+            "dangerouslyDisableSandbox": {"type": "boolean", "description": "Windows沙箱开启时禁止；其它后端仅本次前台绕过并强制审批"},
+            "additionalWriteDirectories": {"type": "array", "items": {"type": "string", "minLength": 1}, "maxItems": 8,
+                                           "description": "请求本次额外可写的绝对目录；需逐次用户批准，不代表已获授权"},
         },
         "required": ["command"],
         "additionalProperties": False,

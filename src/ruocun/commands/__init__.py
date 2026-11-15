@@ -1,1 +1,1 @@
-"""Built-in command prompt expansion."""
+"""内置斜杠命令的识别、提示展开和审计入口。"""

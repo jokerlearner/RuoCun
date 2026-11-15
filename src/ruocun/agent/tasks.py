@@ -1,4 +1,4 @@
-"""Frozen tasks.ts (MIT), backed by the existing durable run and event stream."""
+"""组织后台代理的运行、停止、等待和结果交付，复用持久运行记录与事件流。恢复阶段先绑定已有记录，再由正常调度决定后续动作。"""
 
 from __future__ import annotations
 
@@ -120,11 +120,11 @@ class _MonitorExecution:
 
 
 class _AgentStopped(RuntimeError):
-    """The admitted run reached a cancellation boundary before another tool."""
+    """已准入的任务在派发下一次工具调用前到达取消边界。"""
 
 
 class _StartHookNotAdmitted(_AgentStopped):
-    """Cancellation observed before recording the start hook's intent."""
+    """启动钩子的意图尚未记录时，已经观察到取消。"""
 
 
 class _Journal:
@@ -196,7 +196,7 @@ class TaskManager:
                                  progress=task.summary if summary is None else summary)
 
     async def bind(self) -> None:
-        """Read recovered records without restarting anything."""
+        """绑定恢复出来的记录。执行仍由后续调度决定。"""
         async with self._lock:
             view = await self.conversation.background_view()
             latest: dict[str, RunRecord] = {}
@@ -369,7 +369,7 @@ class TaskManager:
         finally:
             for entry, future in requests:
                 if not entry.claimed and not future.done():
-                    future.set_result(False)  # The tool/model never reached an available boundary.
+                    future.set_result(False)  # 工具或模型还没有到达可交回控制权的边界。
         return sum(await asyncio.gather(*(asyncio.shield(future) for _, future in requests)))
 
     async def _persist_task(self, record: RunRecord) -> None:
@@ -846,8 +846,8 @@ class TaskManager:
                 except HookOutcomeUnknown as error:
                     self.conversation.blocked = True
                     status, result = "unknown", str(error)
-            # Last child checkpoint and Stop have finished; MCP servers must release
-            # their cwd before a clean isolated worktree can be removed on Windows.
+            # 子代理检查点和停止钩子均已完成。
+            # Windows 上要先释放 MCP 服务的工作目录，再移除干净的隔离工作树。
             await closePreparedAgentMcp(prepared)
             async with self._lock:
                 if self._runs.get(task.runId) is execution:

@@ -1,4 +1,4 @@
-"""A terminal-size taiji emblem for the text banner."""
+"""生成适合终端列宽的太极标识，供纯文本欢迎横幅使用。"""
 
 from itertools import groupby
 

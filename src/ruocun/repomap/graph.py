@@ -1,4 +1,7 @@
-"""Frozen repomap/graph.ts relative imports, name edges and 30-step PageRank (MIT)."""
+"""把文件之间的相对引用和符号引用转换成图，再为地图计算文件排序。
+
+排序用于优先展示可能被其他位置依赖的文件。
+"""
 
 import posixpath
 import threading

@@ -1,4 +1,7 @@
-"""User archive queries stay inside the current database; model tools bind their own scope."""
+"""处理用户的 /archive 查询，通过当前会话的存储线程分页读归档。
+
+用户命令可显式选择范围；模型工具由其调用入口绑定可读范围。
+"""
 
 from __future__ import annotations
 

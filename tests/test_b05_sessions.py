@@ -7,12 +7,16 @@ from pathlib import Path
 import pytest
 
 import ruocun
+from ruocun.agent.runtime_context import isRuntimeContext
 
 
 def test_source_first_user_excerpt_and_export_keep_unicode():
+    from ruocun.agent.runtime_context import buildRuntimeContext
     from ruocun.session.log import exportSessionMarkdown, firstUserExcerpt
+    from ruocun.tools.types import ToolContext
 
-    messages = [{"role": "system", "content": "system"}, {"role": "user", "content": [{"type": "text", "text": "image"}]},
+    messages = [{"role": "system", "content": "system"}, buildRuntimeContext(ToolContext("synthetic-runtime")),
+                {"role": "user", "content": [{"type": "text", "text": "image"}]},
                 {"role": "user", "content": "  任务🙂\n 继续  "}, {"role": "assistant", "content": "回答🙂"}]
     assert firstUserExcerpt(messages) == "任务🙂 继续"
     assert firstUserExcerpt([{"role": "user", "content": "x" * 61}]) == "x" * 60 + "…"
@@ -42,19 +46,31 @@ _SESSIONS = r'''
 import asyncio,sys,time
 from pathlib import Path
 sys.path.insert(0,sys.argv[3])
-from ruocun.session.log import findResumable,listSessions,loadState
+from ruocun.session.log import findResumable,listSessions,loadMeta,loadState
+from ruocun.agent.runtime_context import buildRuntimeContext,isRuntimeContext
+from ruocun.tools.types import ToolContext
 from ruocun.session.prune import prune_durable_session
 from ruocun.session.conversation import Conversation
 from ruocun.session.runtime import verify_controlled_runtime,verify_official_archive
 from ruocun.session.session import Session
 root=Path(sys.argv[1]);runtime=verify_controlled_runtime(verify_official_archive(Path(sys.argv[2]),root/'dll'))
 
-async def save(id,cwd,text,closed=False):
+async def save(id,cwd,text,closed=False,compacted=False,rewound=False):
     session=Session('system','synthetic',env={})
     store=await Conversation.open(root/'sessions'/id,id,cwd,runtime,session,'synthetic-key',resume=False)
     try:
         if text:
             await store.accept_user(session,text)
+            user=session.messages[-1]
+            await store.replace_context(session,[*session.messages,buildRuntimeContext(ToolContext(str(cwd)))],reset_prompt=False)
+            assert session.messages[-2] is user  # In-process code-rewind checkpoints use this identity.
+        if compacted:
+            await store.replace_context(session,[session.messages[0],{'role':'system','content':'[早期对话摘要]\nverified work'},
+                                                 buildRuntimeContext(ToolContext(str(cwd)))])
+        elif rewound:
+            await store.replace_context(session,session.messages[:1])
+        elif not text:
+            await store.replace_context(session,[*session.messages,buildRuntimeContext(ToolContext(str(cwd)))],reset_prompt=False)
         await store.set_foreground_state(session,'closed' if closed else 'paused')
     finally:await store.close()
 
@@ -70,8 +86,24 @@ async def scenario():
     assert set(meta['id'] for meta in metas)=={'old','new','done','empty'}
     state=findResumable(root/'sessions',str(root),runtime=runtime)
     assert state['id']=='new'
-    assert loadState(root/'sessions','new',runtime=runtime)['messages'][-1]['content']=='newer question'
+    assert [m for m in loadState(root/'sessions','new',runtime=runtime)['messages'] if not isRuntimeContext(m)][-1]['content']=='newer question'
     assert loadState(root/'sessions','../new',runtime=runtime) is None
+    await save('compacted',root,'single long task',compacted=True)
+    meta=loadMeta(root/'sessions','compacted',runtime=runtime)
+    assert meta['userMessageCount']==0 and meta['summary']=='single long task'
+    assert findResumable(root/'sessions',str(root),runtime=runtime)['id']=='compacted'
+    compacted=Session('system','synthetic',env={})
+    compacted_store=await Conversation.open(root/'sessions'/'compacted','compacted',root,runtime,compacted,'synthetic-key',resume=True)
+    try:await compacted_store.clear(compacted)
+    finally:await compacted_store.close()
+    assert findResumable(root/'sessions',str(root),runtime=runtime)['id']=='new'
+    await save('rewound',root,'rewound task',rewound=True)
+    assert loadState(root/'sessions','rewound',runtime=runtime)['taskTitle']=='rewound task'
+    assert findResumable(root/'sessions',str(root),runtime=runtime)['id']=='new'
+    await save('image-compacted',root,[{'type':'image_url','image_url':{'url':'https://example.invalid/synthetic.png'}}],compacted=True)
+    meta=loadMeta(root/'sessions','image-compacted',runtime=runtime)
+    assert meta['userMessageCount']==0 and 'summary' not in meta
+    assert findResumable(root/'sessions',str(root),runtime=runtime)['id']=='image-compacted'
     current=Session('system','synthetic',env={})
     store=await Conversation.open(root/'sessions'/'new','new',root,runtime,current,'synthetic-key',resume=True)
     try:
@@ -89,11 +121,15 @@ async def scenario():
         attachment=root/'synthetic-attachment.bin';attachment.write_bytes(b'synthetic-image-bytes')
         digest=hashlib.sha256(attachment.read_bytes()).hexdigest()
         await store.register_background_attachment(str(attachment),digest)
+        await store.replace_context(current,[current.messages[0],{'role':'system','content':'[早期对话摘要]\nbranch work'},
+                                             buildRuntimeContext(ToolContext(str(root)))])
         branch_id=await store.branch(current,root/'sessions',runtime,root,title='branch title')
         branch=inspect_durable_session(root/'sessions'/branch_id,runtime)
         assert branch['checkpoint']['title']=='branch title'
         assert branch['checkpoint']['task_title']=='next task'
         assert branch['checkpoint']['accepted_inputs']==[] and not branch['runs'] and not branch['tools'] and not branch['pending_events']
+        assert loadMeta(root/'sessions',branch_id,runtime=runtime)['userMessageCount']==0
+        assert findResumable(root/'sessions',str(root),runtime=runtime)['id']==branch_id
         # B branches carry only attachments reachable from the visible transcript.
         assert not branch['attachments']
     finally:await store.close()
@@ -172,7 +208,9 @@ def test_source_session_commands_switch_branch_and_continue_through_normal_entry
             context_exports = list((workspace / ".ruocun" / "exports").glob("*.json"))
             assert len(context_exports) == 1
             context = json.loads(context_exports[0].read_text("utf-8"))
-            assert [m["content"] for m in context["messages"] if m["role"] == "user"] == ["second task"]
+            assert [m["content"] for m in context["messages"]
+                    if m["role"] == "user" and not isRuntimeContext(m)] == ["second task"]
+            assert sum(isRuntimeContext(m) for m in context["messages"]) == 1
             assert '"next_offset": 1' in first.stdout
             archive_id = re.search(r'"id": "([A-Za-z0-9_-]+)"', first.stdout)[1]
             resumed = subprocess.run(command, input=f"/resume {branch_id}\nresumed task\n/session\n/exit\n",
@@ -193,7 +231,8 @@ def test_source_session_commands_switch_branch_and_continue_through_normal_entry
             server.shutdown()
             serving.join(timeout=5)
     assert len(requests) == 3
-    assert [message["content"] for message in requests[-1]["messages"] if message["role"] == "user"] == ["first task", "resumed task"]
+    assert [message["content"] for message in requests[-1]["messages"]
+            if message["role"] == "user" and not isRuntimeContext(message)] == ["first task", "resumed task"]
 
 
 def test_cleanup_retains_clean_owned_worktree_named_by_retained_agent(tmp_path, monkeypatch):

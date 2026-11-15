@@ -1,7 +1,7 @@
-"""Immutable transcript segments inside the existing SQLite transaction.
+"""在会话已有的 SQLite 事务中追加不可变的原文片段，并记录当前上下文如何引用它们。
 
-The projection/raw distinction is informed by DeepSeek Harness (MIT), fixed at
-e8f7b93a344964de3dca1ace9e72b6e4d6de87cb. No second connection or file authority.
+模型继续使用压缩后的上下文，回查和分支可按引用读取原文。压缩结果和原文归档同事务保存，避免只留下摘要却丢掉回查入口。
+原文与模型投影的区分参考 DeepSeek Harness（MIT，提交 e8f7b93a344964de3dca1ace9e72b6e4d6de87cb）。
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def digest(value: Any) -> str:
 
 def archiveIdForRange(messages: list[dict[str, Any]], start: int, end: int, kind: str,
                       namespace: str = "") -> str:
-    """Program-generated short reference; callers supply their candidate identity."""
+    """用命名范围、片段种类、位置和消息内容生成可供回查的短引用。"""
     return "d-" + digest([namespace, kind, start, end, messages])[:40]
 
 
@@ -184,7 +184,7 @@ def _append(con: "sqlite3.Connection", session: str, scope: str, state: dict[str
 
 
 def _message_attachments(con: "sqlite3.Connection", message: dict[str, Any]) -> dict[str, str]:
-    """Only the existing tool spill format and exact private workspace roots."""
+    """只收录已有的工具落盘格式和确切的私有工作区路径。"""
     aliases = _read(con, "archive:attachment_aliases") or {}
     registered = _read(con, "attachments") or {}
     serialized = canonical(message)
@@ -217,7 +217,7 @@ def _message_attachments(con: "sqlite3.Connection", message: dict[str, Any]) -> 
 def save_projection(con: "sqlite3.Connection", session: str, scope: str,
                     messages: list[dict[str, Any]], rewrite: ArchiveRewrite | None = None,
                     imported: ArchiveImport | None = None, *, legacy_gap: bool = False) -> None:
-    """Called only inside the checkpoint/run transaction after owner fencing."""
+    """持久化层先在写事务内核对所有者，再保存会话视图及其对应归档。"""
     current = manifest(con, session)
     if scope not in current["scopes"]:
         current.setdefault("scope_order", list(current["scopes"])).append(scope)
@@ -286,7 +286,7 @@ def save_projection(con: "sqlite3.Connection", session: str, scope: str,
 
 def validate_projection(con: "sqlite3.Connection", session: str, scope: str,
                         messages: list[dict[str, Any]]) -> None:
-    """Validate the active view and short reference graph without loading old bodies."""
+    """核验活动视图及其短引用关系，跳过历史片段的正文。"""
     current = manifest(con, session)
     if scope not in current["scopes"]:
         raise StoreError("会话缺少归档范围清单。")
@@ -361,9 +361,9 @@ def read_archive(con: "sqlite3.Connection", scope: str, identity: str, *,
                 expand(child, trail | {source})
     if value["kind"] in {"summary", "prune"}:
         expand(identity)
-        # A retained Hook can precede an older summary in the current projection.
-        # Read raw chronology, not traversal order; branches preserve raw_seq and
-        # allocate their new messages after the imported maximum.
+        # 当前模型上下文里，最近保留的 Hook 可能排在较早产生的摘要之前。
+        # 导入分支时按原文序号读取，并保留原有 raw_seq。
+        # 新消息从导入后的最大序号继续分配。
         parts = sorted(originals.values(), key=lambda item: item["raw_seq"])
         total = 2 + max(0, len(parts) - 1) + sum(item["display_length"] for item in parts)
         text_parts = []
@@ -485,7 +485,7 @@ def branch_archive(con: "sqlite3.Connection", session: str, scope: str = "main",
     attachments: dict[str, str] = {}
     for saved in kept.values():
         attachments.update(saved.get("attachments", {}))
-    # Existing registered background/image files can also be named by a raw message.
+    # 原文也可能指向已登记的后台日志或图像文件，追踪这些引用可避免误删。
     registered = _read(con, "attachments") or {}
     raw_text = canonical([saved.get("message") for saved in kept.values()])
     aliases = _read(con, "archive:attachment_aliases") or {}

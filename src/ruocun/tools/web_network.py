@@ -1,4 +1,4 @@
-"""Async counterpart of the frozen ToolContext.fetchImpl injection port."""
+"""为网页工具提供异步 HTTP 读取入口，按整次请求控制超时。"""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ class FetchImpl(Protocol):
 
 async def fetchWeb(url: str, *, headers: Mapping[str, str] | None = None,
                    signal: threading.Event | None = None) -> httpx.Response:
-    """One owned GET and response body; 30-second whole-request deadline."""
+    """发出一次 GET 请求并读取响应正文，整个请求最多等待 30 秒。"""
     async def request() -> httpx.Response:
         async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
             return await client.get(normalizeHttpUrl(url), headers=headers)

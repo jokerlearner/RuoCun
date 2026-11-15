@@ -1,4 +1,7 @@
-"""已确认输入的原文与模型投影；沿用AcceptedInput.payload，无新DB字段。"""
+"""在 AcceptedInput.payload 中保存用户原文和模型投影。
+
+用户可见历史读取原文。发送模型请求时可使用处理后的内容，旧格式仍可以作为原文读取。
+"""
 
 from __future__ import annotations
 

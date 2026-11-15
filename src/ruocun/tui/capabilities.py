@@ -1,4 +1,4 @@
-"""冻结tui/capabilities.ts（MIT）的颜色能力检测，无启动时环境快照。"""
+"""根据传入环境与终端状态判断可用的颜色级别，供渲染时选择样式。"""
 
 import re
 from collections.abc import Mapping

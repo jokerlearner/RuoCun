@@ -472,7 +472,9 @@ else:
             env={},is_async=True,signal=threading.Event())
         ready=threading.Event()
         def background_request(opts,control):
-            assert opts['messages'][-1]['content']=='[hook 注入的上下文]\nsource SubagentStart'
+            from ruocun.agent.runtime_context import isRuntimeContext
+            assert [m for m in opts['messages'] if not isRuntimeContext(m)][-1]['content']=='[hook 注入的上下文]\nsource SubagentStart'
+            assert isRuntimeContext(opts['messages'][-1])
             ready.set()
             deadline=time.monotonic()+5
             while not control.cancel() and time.monotonic()<deadline:time.sleep(.01)

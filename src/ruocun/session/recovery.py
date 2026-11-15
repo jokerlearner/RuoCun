@@ -1,8 +1,6 @@
-"""Frozen session/recovery.ts and index.ts recovery commands (MIT).
+"""恢复已中断会话，补齐已知工具结果并接受用户提供的恢复证据。
 
-Human evidence is recorded as such. No function here replays a previous tool or
-Shell command. Ordinary agent dispatch is injectable; absent product wiring is
-reported explicitly instead of pretending an interrupted run resumed.
+Shell 管理器先核实仍可接管的 runner，之后本模块装载后台状态。旧操作的结果仍未知时保留未决，用户授权继续代理时才派发新运行。
 """
 from __future__ import annotations
 
@@ -42,7 +40,7 @@ def repairToolPairs(
     messages: Sequence[dict[str, Any]], records: Sequence[ToolRecord] | None = None,
     scope: str = 'main',
 ) -> list[dict[str, Any]]:
-    """Preserve assistant/known results; synthesize explicit non-replay placeholders."""
+    """保留助手消息及已知结果，为缺失结果补一条说明，并标明原操作未自动重放。"""
     by_id = {record.tool_ref.tool_call_id: record for record in records or () if record.tool_ref.scope == scope}
     output: list[dict[str, Any]] = []
     index = 0
@@ -106,7 +104,7 @@ class RecoveryController:
         self.activate_continuation = activate_continuation
 
     async def recover(self) -> None:
-        """Call once after the existing Shell manager recovered its authenticated runners."""
+        """等 Shell 管理器核实原 runner 后，再整理恢复状态并绑定后台会话。"""
         await self.conversation.worker.enqueue_prepare_recovery(
             self.shell_manager.recovery_errors if self.shell_manager is not None else None).wait()
         await self.background.bind()
@@ -177,8 +175,8 @@ class RecoveryController:
         except StoreError as error:
             raise ValueError(str(error)) from error
         if continuation is not None and not receipt.replayed:
-            # Authorization is durable before dispatch. Never retry on any error,
-            # including cancellation/unknown completion after the dispatcher ran.
+            # 继续执行的许可要先提交到数据库，再派发新的运行。
+            # 派发后即便取消或结果未知，也用原身份核查，避免同一许可启动两次。
             self.conversation.blocked = True
             assert self.continue_agent is not None
             result = await self.continue_agent(continuation)

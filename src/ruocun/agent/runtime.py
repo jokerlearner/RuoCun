@@ -1,9 +1,13 @@
-"""文字前台组合入口：配置、工具、Skills、上下文和耐久会话。"""
+"""文字前台的组装入口。它加载启动配置、工具与 Skills，接上终端输入及持久会话，最后把输入交给调度器和回合引擎。
+
+恢复时先确定可信历史和排队输入，再启动消费。工具授权、上下文压缩和存储细节由对应组件负责。
+"""
 
 from __future__ import annotations
 
 import argparse
 import asyncio
+import copy
 import hashlib
 import json
 import math
@@ -59,12 +63,13 @@ from ..i18n.i18n import (
 from ..memory.command import isMutatingMemoryCommand, memoryCommand
 from ..memory.consolidate import maybeConsolidate
 from ..memory.gc import MemoryPruneUnconfirmed, gcMemories
-from ..memory.inject import buildStartupMemory
+from ..memory.inject import StartupMemorySnapshot, buildStartupMemorySnapshot
 from ..memory.memory_audit import (
     ConsolidationAudit,
     RecallCounts,
     createMemoryAuditSink,
 )
+from ..memory.retrieval import buildMemoryChecks, buildTaskMemory
 from ..memory.store import MemoryStore
 from ..memory.types import Scope
 from ..obs.backend import (
@@ -148,6 +153,11 @@ from .background_runtime import BackgroundRuntime, wait_scope
 from .bundled_agents import agentCatalog
 from .cleanup import maybeCleanup
 from .context_runtime import CompactionFailed, ContextManager
+from .controlled_learning import (
+    applyControlledResult,
+    observeLearningSources,
+    reflectControlled,
+)
 from .deck_bridge import DeckBridge, DeckOptions, deck_managed
 from .files import filesReport
 from .input_broker import InputBroker
@@ -155,7 +165,7 @@ from .loop import TurnResult, run_turn, sanitizeHistoryForResume
 from .reflect_persist import applyReflectResult
 from .reflect_prompts import CHALLENGER_PROMPT, REFOCUSER_PROMPT
 from .reflect_result import ReflectResult
-from .reflection_runtime import ReflectionRuntime
+from .reflection_runtime import ControlledLearningSignal, ReflectionRuntime
 from .resume_agent import (
     continuationMessages,
     continuationToolPolicy,
@@ -170,6 +180,7 @@ from .run_agent import (
     prepareAgentDispatch,
     prepareAgentRun,
 )
+from .runtime_context import isRuntimeContext
 from .session_scheduler import Content, SessionScheduler
 from .tasks import TaskManager
 from .unified_reflect import reflect as unifiedReflect
@@ -185,12 +196,12 @@ BrokerFactory = Callable[[Callable[[], Awaitable[None]]], InputBroker]
 _GC_SCOPES: tuple[Scope, ...] = ("project", "user", "knowledge")
 _CONSOLIDATION_SCOPES: tuple[Scope, ...] = ("user", "knowledge", "project")
 _SESSION_START_MARKER = "[[ruocun:session-start-hook]]"
-# Recognize the marker written by previous releases when reopening a session.
+# 会话恢复时兼容旧版本写入的标记。
 _PREVIOUS_SESSION_START_MARKER = "[[dao:session-start-hook]]"
 
 
 class CliError(ValueError):
-    """只承载本模块编写的非敏感用户提示。"""
+    """保存本模块可直接展示的非敏感错误提示。"""
 
 
 def _copy_to_clipboard(text: str) -> None:
@@ -206,7 +217,7 @@ def _copy_to_clipboard(text: str) -> None:
 
 
 def _registry(*, web: bool = True) -> ToolRegistry:
-    # 延迟导入，--version/--help及现有demo不初始化原生运行库。
+    # 延迟初始化原生运行库，便于独立执行 --version、--help 和演示入口。
     from ..tools.agent import agentTool
     from ..tools.ask_user import askUserTool
     from ..tools.edit_file import editFileTool
@@ -269,12 +280,14 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--continue", "-c", dest="resume", nargs="?", const="latest")
     parser.add_argument("--upgrade-session", help="停止旧进程后显式备份并离线升级会话")
     parser.add_argument("--no-memory", action="store_true")
+    parser.add_argument("--memory-strategy", choices=("startup", "task"), default="startup")
     parser.add_argument("--no-skills", action="store_true")
     parser.add_argument("--no-hooks", action="store_true")
     parser.add_argument("--no-mcp", action="store_true")
     parser.add_argument("--no-web", action="store_true")
     parser.add_argument("--no-project-instructions", action="store_true")
     parser.add_argument("--reflect-memory", action="store_true")
+    parser.add_argument("--memory-learning", choices=("off", "controlled"), default="off")
     parser.add_argument("--reflect-challenger", action="store_true")
     parser.add_argument("--obs", action="store_true")
     parser.add_argument("--verbose", "--debug", action="store_true")
@@ -288,10 +301,9 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def _parse_cli(arguments: Sequence[str]) -> argparse.Namespace:
-    """Frozen index.ts token oracle, including its global Set value filtering.
+    """按命令行原有规则分出选项和提示文本。已识别的选项值会全局从提示文本中过滤。
 
-    --config/--cwd are existing RuoCun-native paths; they consume one position.
-    Unknown source tokens remain prompt text rather than becoming parse errors.
+    原生的 --config 和 --cwd 各消费一个参数。未知参数沿用为提示文本。
     """
     parser = _parser()
     args = parser.parse_args([])
@@ -321,6 +333,17 @@ def _parse_cli(arguments: Sequence[str]) -> argparse.Namespace:
         flags.add(resume)
     extension_positions: set[int] = set()
     for position, token in enumerate(raw):
+        if token == "--memory-learning":
+            if position + 1 >= len(raw) or raw[position + 1] not in {"off", "controlled"}:
+                parser.error("--memory-learning 需要 off 或 controlled")
+            args.memory_learning = raw[position + 1]
+            extension_positions.update((position, position + 1))
+        elif token.startswith("--memory-learning="):
+            args.memory_learning = token.partition("=")[2]
+            if args.memory_learning not in {"off", "controlled"}:
+                parser.error("--memory-learning 需要 off 或 controlled")
+            extension_positions.add(position)
+    for position, token in enumerate(raw):
         if token == "--upgrade-session":
             if position + 1 >= len(raw) or raw[position + 1].startswith("-"):
                 parser.error("--upgrade-session 需要会话ID")
@@ -328,6 +351,17 @@ def _parse_cli(arguments: Sequence[str]) -> argparse.Namespace:
             extension_positions.update((position, position + 1))
         elif token.startswith("--upgrade-session="):
             args.upgrade_session = token.partition("=")[2]
+            extension_positions.add(position)
+        elif token == "--memory-strategy":
+            if position + 1 >= len(raw) or raw[position + 1] not in {"startup", "task"}:
+                parser.error("--memory-strategy 需要 startup 或 task")
+            args.memory_strategy = raw[position + 1]
+            extension_positions.update((position, position + 1))
+        elif token.startswith("--memory-strategy="):
+            selected_strategy = token.partition("=")[2]
+            if selected_strategy not in {"startup", "task"}:
+                parser.error("--memory-strategy 需要 startup 或 task")
+            args.memory_strategy = selected_strategy
             extension_positions.add(position)
     for position, token in enumerate(raw):
         if token.startswith("--continue="):
@@ -339,8 +373,8 @@ def _parse_cli(arguments: Sequence[str]) -> argparse.Namespace:
         setattr(args, name.replace("-", "_"), "--" + name in raw)
     args.goal = any(flag in raw for flag in ("--goal", "--task", "--coordinator"))
     args.verbose = "--verbose" in raw or "--debug" in raw
-    # The first credential wins, but later credential values are
-    # still credentials and must never be sent as prompt text.
+    # 首个凭据决定配置，其余凭据值仍属于敏感数据。
+    # 把它们也从候选提示参数中去除，避免发给模型。
     flags.update(raw[index + 1] for index, token in enumerate(raw[:-1]) if token == "--api-key")
     for flag, attribute in (("--config", "config"), ("--cwd", "cwd")):
         for position, token in enumerate(raw):
@@ -373,7 +407,7 @@ def _session_id(root: Path, resume: str | None) -> str:
 
 
 def _display(text: str) -> str:
-    # 工具参数可能包含终端控制字符；审批展示不可隐藏实际命令。
+    # 工具参数可能带终端控制字符。审批画面须如实呈现实际命令。
     return "".join(ch if ch in "\n\t" or ord(ch) >= 32 and ord(ch) != 127
                    else f"\\u{ord(ch):04x}" for ch in text)
 
@@ -387,6 +421,7 @@ def _git_branch(cwd: Path) -> str:
 
 
 async def _run(args: argparse.Namespace, *, broker_factory: BrokerFactory | None = None) -> int:
+    args._controlled_learning_budget = {"analyses": 0}
     if args.eval:
         args.no_memory = args.no_mcp = args.no_project_instructions = args.no_web = True
     while True:
@@ -427,10 +462,10 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         return 0
     config_file = args.config.resolve() if args.config else user_root / "config.json"
     env = dict(os.environ)
-    # Only the launcher can grant ownership of terminal scrollback.
+    # 只有启动器可授予终端回滚区的所有权。
     owned_viewport = compat.resolve_env("OWNED_TERMINAL", env) == "1"
     if os.name == "nt":
-        # 先绑定父环境/源默认；项目.env只能填未设键，不能改最高managed层位置。
+        # 先绑定父环境和默认值。项目 .env 只补空缺，受管层位置优先。
         env["ProgramData"] = env.get("PROGRAMDATA", "C:/ProgramData")
     env_file.applyDotenv(cwd / ".env", env)
     extension_sources = compat.DEFAULT_COMPATIBILITY
@@ -537,8 +572,8 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
     agent_definitions = await loadAgentDefinitions(cwd, user_root, extension_sources, env=env, disabled=no_disk_skills)
     skills = await loadRuntimeSkills(cwd, user_root, extension_sources, disabled=args.no_skills,
                                      controls=skill_controls, discovery=skill_discovery)
-    disabled_skills = frozenset(skill_controls.disabled)  # 本进程仍沿启动时的开关快照。
-    # 用户可手工创建配置根；用量由程序在独立原生子目录安全发布。
+    disabled_skills = frozenset(skill_controls.disabled)  # 当前进程仍使用启动时记录的开关值。
+    # 用户可手工创建配置根目录，用量数据写入程序管理的独立子目录。
     skill_state_root = user_root / "skill-state"
     skill_usage: UsageMap = {} if args.no_skills else await loadUsage(skill_state_root)
     skill_day = datetime.now(UTC).date().isoformat()
@@ -547,7 +582,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
     project_text = "" if args.no_project_instructions else loadProjectInstructions(cwd, userRoot=user_root)
     memory_today = memory_store.today()
     try:
-        # Read this setting from the process environment, before applying workspace overrides.
+        # 这个开关只认进程启动环境，先于工作区覆盖读取。
         provisional_days = float(compat.resolve_env("PROVISIONAL_DAYS", os.environ) or "7")
     except ValueError:
         provisional_days = 7.0
@@ -561,13 +596,15 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
             stopped_gc_scopes[memory_scope] = len(exc.pruned)
         except Exception:
             stopped_gc_scopes[memory_scope] = None
-    # Each process takes one startup snapshot; the recovered history keeps its trusted tool pairs.
+    # 每个进程在启动时固定一份快照。会话恢复沿用可信的工具消息配对。
     recall_counts: RecallCounts = {"injected": 0, "stale": 0, "changed": 0, "types": {}}
-    memory_text = "" if args.no_memory else await buildStartupMemory(memory_store, onRecall=recall_counts.update)
+    startup_snapshot = (StartupMemorySnapshot() if args.no_memory else
+                        await buildStartupMemorySnapshot(memory_store, onRecall=recall_counts.update))
+    memory_text = startup_snapshot.text
 
     def system_prompt(selected_model: str) -> str:
         text = buildSystemPrompt({
-            "modelId": selected_model, "toolSummaries": tool_summaries, "cwd": str(cwd),
+            "modelId": selected_model, "toolSummaries": tool_summaries,
             "platform": sys.platform, "interactive": not bool(args.prompt),
             "projectInstructions": project_text, "memories": memory_text,
         })
@@ -601,15 +638,15 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         session.onCacheBust(lambda info: print(
             f"[cache] 前缀缓存命中率骤降 {info['from']:.0%}→{info['to']:.0%}"
             f"(本回合输入 {info['promptTokens']} tok) · 变化维度 {'/'.join(info['changed']) or '未变'}", file=sys.stderr))
-    # 每工作目录隔离普通会话，避免latest误选另一个项目。
+    # 按工作目录隔离普通会话，避免 latest 选到其他项目。
     scope = hashlib.sha256(os.path.normcase(str(cwd)).encode("utf-8")).hexdigest()[:20]
     sessions_root = user_root / "sessions" / scope
     archive = files("ruocun").joinpath("resources/runtime/sqlite-dll-win-x64-3540100.zip")
     with as_file(archive) as archive_path:
         dll = verify_official_archive(archive_path, user_root / "runtime" / "sqlite-3.54.1")
     runtime = verify_controlled_runtime(dll)
-    # StoragePort只负责最终会话目录，先由组合根创建它所需的两层私密父目录。
-    # 对既有目录只核验、不改ACL；不能放宽07门禁来掩盖初始化遗漏。
+    # StoragePort 只创建最终会话目录，所需的两层私密父目录由启动入口建立。
+    # 对已有目录校验访问控制，保持它原有的 ACL。
     ensure_private_dir(user_root / "sessions")
     ensure_private_dir(sessions_root)
     if args.resume == "latest":
@@ -656,7 +693,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         messages = [{"role": "system", "content": prompt}, *history[1:]]
         await conversation.replace_context(session, messages, reset_prompt=False)
         session.setSystemPrompt(prompt)
-    # 清单来源于已提交的成功工具配对；不把失败/未执行的TodoWrite当已接受。
+    # 清单只采用已提交、成功配对的 TodoWrite，避免展示尚未生效的待办状态。
     tool_results = {m.get("tool_call_id"): m.get("content", "") for m in session.messages
                     if m.get("role") == "tool"}
     for message in session.messages:
@@ -693,7 +730,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
     event_loop = asyncio.get_running_loop()
 
     def cancel_approval() -> None:
-        # 仅结束同一owner的审批Future；不取消模型/工具/调度Task，不启动新reader。
+        # 只结束当前输入所有者的审批等待，其他任务和输入读取者保持原有调度。
         if deck is not None:
             deck.cancel_prompts()
         for task in tuple(approval_waiters):
@@ -796,7 +833,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 clear_attention()
 
     async def confirm(name: str, parameters: dict[str, Any]) -> bool:
-        # 实际运行一律传authorize；旧run_turn必填接口若误回退则明确拒绝。
+        # 实际运行必须提供 authorize，回退到需要旧授权接口时明确拒绝。
         return False
 
     async def choice(question: str, options: list[str], multi: bool = False) -> str:
@@ -830,7 +867,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 return ", ".join(choices[index] for index in indices)
         return answer
 
-    # 冻结index.ts:865/1118仅在真正交互式会话下注入选择，headless保持工具原降级。
+    # 只有交互式会话才加入选择界面，无头会话沿用工具自身的处理方式。
     ctx.askChoice = choice if interactive else None
     ctx.ask = ask if interactive else None
     def notify_user(text: str) -> None:
@@ -868,7 +905,18 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
             update_terminal_status()
             broker.emit_event("assistant_done", message=render_value(message))
 
+    controlled_sources: dict[str, dict[str, str]] = {}
+
     def tool_saved(call: dict[str, Any], message: dict[str, Any]) -> None:
+        if (getattr(args, "memory_learning", "off") == "controlled" and not args.no_memory
+                and "__tracking_failed__" not in controlled_sources):
+            try:
+                observeLearningSources(session.messages, cwd, controlled_sources)
+            except (OSError, ValueError, TypeError):
+                # 主工具既已确认，附带观察失败时仍应交付原结果。
+                # 本轮因此没有可接受的技术证据。
+                controlled_sources.clear()
+                controlled_sources["__tracking_failed__"] = {}
         if deck_events is not None:
             deck_events.toolResult(render_value(call), render_value(message))
         if broker is not None:
@@ -1064,7 +1112,19 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         "tools": registry.toApiTools(),
     }
 
+    controlled_learning = (getattr(args, "memory_learning", "off") == "controlled"
+                           and not args.no_memory and not args.eval and not args.prompt)
+    controlled_signal: threading.Event = memory_stop
+
     async def analyze_reflection(messages: list[dict[str, Any]]) -> dict[str, Any]:
+        if controlled_learning:
+            entries = sorted((entry.memory for entry in await memory_store.load() if entry.memory.title),
+                             key=lambda memory: memory.importance, reverse=True)[:30]
+            learned = await reflectControlled(messages,
+                options={**options, "model": session.model}, call=call_reflection, cwd=cwd,
+                existing=[{"title": memory.title or "", "text": memory.text} for memory in entries],
+                signal=controlled_signal, validation_sources=copy.deepcopy(controlled_sources))
+            return cast(dict[str, Any], conversation._safe(learned))
         fork = compat.resolve_env("DISTILL_FORK", env) != "0"
         current_options: StreamChatOptions = {**options, "model": session.model, "tools": api_tools()}
         if not fork:
@@ -1074,12 +1134,14 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                          key=lambda memory: memory.importance, reverse=True)[:200]
         result = await unifiedReflect(messages, options=current_options, call=call_reflection,
             existing=[{"title": memory.title or "", "text": memory.text} for memory in entries],
-            fork=fork, reasoningEffort=compat.reasoning_effort(env), signal=memory_stop)
+            fork=fork, reasoningEffort=compat.reasoning_effort(env), signal=memory_stop,
+            taskAware=getattr(args, "memory_strategy", "startup") == "task")
         return cast(dict[str, Any], conversation._safe(result))
 
     async def call_reflection(opts: StreamChatOptions) -> str | None:
+        reflection_signal = controlled_signal if controlled_learning else memory_stop
         with observationScope(identity="distill", depth=0):
-            response = await asyncio.to_thread(request, opts, ResilientContext(cancel=memory_stop.is_set))
+            response = await asyncio.to_thread(request, opts, ResilientContext(cancel=reflection_signal.is_set))
         if response.usage:
             session.addUsage(cast(Usage, response.usage), opts["model"])
             if cache_sink:
@@ -1088,23 +1150,29 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     "usage": cast(Usage, response.usage), "sys": conversation.redact(str(messages[0].get("content", ""))) if messages else "",
                     "tools": conversation.redact(json.dumps(opts.get("tools", []), ensure_ascii=False)), "tail": "",
                     "msgs": conversation.redact(json.dumps(messages, ensure_ascii=False))})
-        if memory_stop.is_set() or response.cancelled:
+        if reflection_signal.is_set() or response.cancelled:
             raise InterruptedError("反思已取消。")
+        if controlled_learning and not response.usage:
+            raise RuntimeError("自动学习用量未确认，暂停后续自动学习。")
         if response.status != "complete":
             raise RuntimeError("反思模型未完成，记忆未写入。")
         content = response.message.get("content")
         return content if isinstance(content, str) else None
 
     async def apply_reflection(result: dict[str, Any]) -> dict[str, Any]:
-        applied = await applyReflectResult(cast(ReflectResult, result), memory_store,
-                                          today=memory_today, signal=memory_stop)
+        if controlled_learning:
+            applied = await applyControlledResult(result, memory_store, today=memory_today, signal=controlled_signal)
+        else:
+            applied = await applyReflectResult(cast(ReflectResult, result), memory_store,
+                                              today=memory_today, signal=memory_stop)
         for correction in applied["corrections"]:
             memory_audit.corrected(correction)
         return cast(dict[str, Any], applied)
 
     reflector = ReflectionRuntime(conversation, session,
-        enabled=args.reflect_memory and not args.no_memory and not args.prompt,
-        analyze=analyze_reflection, apply=apply_reflection, audit=memory_audit.reflected, notice=output, env=env)
+        enabled=(args.reflect_memory or controlled_learning) and not args.no_memory and not args.prompt,
+        analyze=analyze_reflection, apply=apply_reflection, audit=memory_audit.reflected, notice=output, env=env,
+        controlled=controlled_learning, controlled_budget=getattr(args, "_controlled_learning_budget", None))
     current_input_id = ""
 
     async def challenge(kind: str) -> str | None:
@@ -1178,7 +1246,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
             {"type": "text", "text": body}, *[part for part in content if part.get("type") != "text"]]
 
     async def queue_user(content: Content) -> AcceptedInput:
-        # 原命令与此刻正文在同一个queued确认中保存；恢复时不再读取Skill。
+        # 原命令和当时展开的正文一起确认入队，恢复时使用同一份正文。
         return await conversation.queue_user(session, content, model_content=projected_input(content))
 
     async def queue_deck_user(content: Content) -> AcceptedInput:
@@ -1192,8 +1260,8 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         if no_disk_skills:
             saved = modelInput(item.payload)
             if saved != original and projected_input(original, allow_skills=False) is None:
-                # Older accepted input can contain a disk skill expansion. The
-                # current startup policy governs any new request, including recovery.
+                # 旧版已接收的输入可能带有从磁盘展开的 Skill。
+                # 恢复后的新请求也必须按本次启动的权限和加载策略判断。
                 projection = projected_input(original)
                 if projection is None:
                     await conversation.consume_user(session, input_id, rejected=True)
@@ -1216,8 +1284,24 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 output(str(exc))
                 raise
         hook_context = outcome.additional_context.strip()
+        contexts = [f"[hook 注入的上下文]\n{hook_context}"] if hook_context else []
+        task_memory = None
+        if (not outcome.block and not args.no_memory
+                and (controlled_learning or getattr(args, "memory_strategy", "startup") == "task")):
+            current = modelInput(item.payload) if projection is None else projection
+            query = current if isinstance(current, str) else "\n".join(
+                str(part.get("text", "")) for part in current if part.get("type") == "text")
+            if controlled_learning:
+                task_memory = await buildMemoryChecks(memory_store, query, startup=startup_snapshot)
+            else:
+                task_memory = await buildTaskMemory(memory_store, query, excludeFullText=startup_snapshot.full_ids,
+                                                   maxItems=2, maxChars=2400)
+            if task_memory.text:
+                contexts.append(task_memory.text)
         accepted = await conversation.consume_user(session, input_id, model_content=projection, rejected=outcome.block,
-                                                   hook_context=f"[hook 注入的上下文]\n{hook_context}" if hook_context else "")
+                                                   hook_context="\n\n".join(contexts))
+        if accepted and task_memory is not None:
+            memory_audit.task_recalled(task_memory.ids, task_memory.statistics)
         if deck is not None:
             deck.input(input_id, accepted)
         prompt_rejected = outcome.block
@@ -1251,7 +1335,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
     from ..tui.wakelock import acquireWakeLock
 
     try:
-        startup.pop_all()  # The normal session finally block now owns the same broker.
+        startup.pop_all()  # 现在由普通会话的退出清理接管同一个输入代理。
         on_session_pause = pause
         signal.signal(signal.SIGINT, interrupt)
         if managed_deck:
@@ -1314,7 +1398,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     if notice and not repo_stop.is_set() and not closing:
                         environment_notices.append(notice)
                 except Exception:
-                    pass  # Source startup enrichment is optional and never replaces history.
+                    pass  # 启动仓库摘要只是额外上下文。生成失败时继续沿用会话历史。
 
             repo_task = asyncio.create_task(build_startup_map())
 
@@ -1463,6 +1547,9 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         ctx.setMode = permissions.setMode
         ctx.approveExternalRead, ctx.approveExternalWrite = permissions.approveExternalRead, permissions.approveExternalWrite
         ctx.getShellPlan = permissions.getShellPlan
+        ctx.sandboxPolicy = permissions.sandboxPolicy
+        ctx.authorizeSandboxShell = permissions.authorizeSandboxShell
+        ctx.approveSandboxWrite = permissions.approveSandboxWrite
         handoff = createAgentHandoff(classifier_context, call_classifier, output)
         ctx.runAgent = createAgentRunner(
             session, ctx, registry, permissions, conversation, options, env=env, project_instructions=project_text,
@@ -1598,7 +1685,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     return t("ui.modePlan")
 
                 async def change_mode() -> None:
-                    # Both modes use the same persisted normal session; the override is process-local.
+                    # 两种模式复用同一份持久会话，覆盖值仅在当前进程内生效。
                     await conversation.save(session)
                     mode = "bypassPermissions" if previous_mode == "auto" else "auto"
                     await permissions.command("/mode " + mode)
@@ -1800,6 +1887,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                         raise RuntimeError("Shell停止未确认，保留原运行记录。")
 
         async def run(signal_event: threading.Event, boundary: Callable[[], Awaitable[None]], generation: int) -> TurnResult:
+            nonlocal controlled_signal
             nonlocal active, cancelled, streamed, last_result, exit_code, preserve_pause, prompt_language
             assert scheduler is not None
             current_scheduler = scheduler
@@ -1810,12 +1898,13 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 await refresh_system_prompt()
                 prompt_language = language
             cancelled = ctx.signal = signal_event
+            controlled_sources.clear()
             preserve_pause = False
             active, streamed = True, False
             accessed: list[str] = []
             installed_scopes: list[InstallScope] = []
             used_skills: list[str] = []
-            # Eval keeps packaged skills but never adds disk skills after Read or SkillInstall.
+            # 评估运行保留内置 Skills，读取或安装后跳过磁盘 Skills 发现。
             ctx.onFileAccessed = None if no_disk_skills else accessed.append
             ctx.onSkillsInstalled = None if no_disk_skills else installed_scopes.append
             shell_pending = {"stdout": "", "stderr": ""}
@@ -1837,7 +1926,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                             break
                 boundary = len(tail) - keep
                 if text and boundary and tail[boundary - 1] == "\r":
-                    boundary -= 1  # A Windows newline can span two runner log reads.
+                    boundary -= 1  # Windows 换行的两个字节可能分属两次日志读取。
                 ready += tail[:boundary]
                 shell_pending[stream] = tail[boundary:]
                 if ready:
@@ -1863,7 +1952,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 if await saveUsage(skill_state_root, candidate) == "saved":
                     skill_usage = candidate
                 else:
-                    usage_writable = False  # 原记录保留或结果未确认；本进程停止自动写入。
+                    usage_writable = False  # 若旧记录仍在或写入结果未确认，本进程停止自动记忆写入。
 
             async def publish_skills() -> None:
                 assert scheduler is not None
@@ -1877,7 +1966,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 try:
                     candidate = await skill_discovery.prepare(paths, skills, disabled=disabled_skills)
                 except OSError:
-                    candidate = DiscoveryCandidate()  # 发现失败不影响已确认安装或文件结果。
+                    candidate = DiscoveryCandidate()  # 后续发现失败时仍保留已确认的安装或文件结果。
                 available = [*skills, *candidate.discovered, *candidate.activated]
                 installed = []
                 catalog_texts = list(candidate.catalog_messages)
@@ -1896,7 +1985,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 if catalog_texts:
                     catalog = [{"role": "system", "content": text} for text in catalog_texts]
                     await conversation.replace_context(session, [*session.messages, *catalog], reset_prompt=False)
-                # 若保存期间收到pause，仍需发布已确认目录对应的同一候选。
+                # 保存期间即使收到暂停，也须发布已确认工作目录对应的同一候选。
                 skill_discovery.confirm(candidate, skills)
                 skills.extend(installed)
 
@@ -1923,7 +2012,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                         request=request, journal=conversation, on_delta=delta, on_boundary=model_boundary,
                         wait_control=control, on_tool_result=tool_result,
                         on_assistant_saved=assistant_saved if broker is not None or deck is not None else None,
-                        on_tool_message=tool_saved if broker is not None or deck is not None else None,
+                        on_tool_message=tool_saved if broker is not None or deck is not None or controlled_learning else None,
                         on_tool_boundary=None if args.no_skills else publish_skills,
                         accepts_delta=lambda: scheduler is not None and scheduler.is_current(generation),
                         compact=context_manager.recover_overflow, request_preflight=context_manager.before_request,
@@ -1941,8 +2030,12 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                         has_running_background=lambda: bool(background.running() or task_manager.running()),
                     )
                 if result.status == "complete" and scheduler.is_current(generation):
+                    if controlled_learning:
+                        controlled_signal = ControlledLearningSignal(memory_stop, signal_event,
+                            lambda: current_scheduler.is_current(generation))
                     await reflector.after_turn(current_input_id, provider=account["provider"],
-                                               compaction_imminent=at_context_threshold())
+                                               compaction_imminent=at_context_threshold(),
+                                               cancelled=controlled_signal.is_set if controlled_learning else None)
                 if result.status == "complete" and at_context_threshold() and scheduler.is_current(generation):
                     try:
                         await context_manager.compact()
@@ -1996,7 +2089,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         if broker is not None:
             terminal = broker
             scheduler.subscribe(lambda status: terminal.set_status(status.state, status.queued))
-        # 先恢复可信历史/前缀，再允许调度器消费已确认queued；blocked在上面已拒绝。
+        # 先恢复可信历史和前缀，再让调度器处理已确认的排队输入。
         await refresh_system_prompt(sanitize=True)
         await persist_goal_mode(long_task)
         await maybeCleanup(cwd, sessions_dir=sessions_root, runtime=runtime, environ=env,
@@ -2013,7 +2106,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
             await conversation.replace_context(session, messages, reset_prompt=False)
         lifecycle_ready = True
         if broker is not None:
-            broker.restore_history(render_value(session.messages))
+            broker.restore_history(render_value([message for message in session.messages if not isRuntimeContext(message)]))
             await broker.drain_render()
 
         def deck_tasks() -> list[dict[str, Any]]:
@@ -2046,6 +2139,8 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
             scheduler.subscribe(lambda _status: deck_stop.set() if conversation.blocked else None)
         await scheduler.recover(conversation.foreground_state)
         output(f"RuoCun · {session.model}\n会话：{selected}\n目录：{cwd}")
+        if controlled_learning:
+            output("受控自动积累已开启：有本轮依据才提炼，最多6次分析/本次启动，每次最多2条项目经验。")
         if conversation.historical_usage:
             output("已恢复历史消息和token；费用只统计本次进程，历史费用不完整。")
         for memory_scope in _GC_SCOPES:
@@ -2079,7 +2174,8 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 return False
 
         async def rewind(args_text: list[str]) -> int:
-            user_indexes = [index for index, item in enumerate(session.messages) if item.get("role") == "user"]
+            user_indexes = [index for index, item in enumerate(session.messages)
+                            if item.get("role") == "user" and not isRuntimeContext(item)]
             if not user_indexes:
                 output("本会话还没有可回退的节点。")
                 return 0
@@ -2116,11 +2212,11 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 if len(args_text) == 2:
                     output("该节点没有本进程确认的工作区快照，已回退对话。")
             turn_checkpoints.clear()
-            for index, ref in retained_refs:  # replace_context copies the retained messages.
+            for index, ref in retained_refs:  # replace_context 会复制保留的消息。
                 message = session.messages[index]
                 turn_checkpoints[id(message)] = (message, ref)
             if broker is not None:
-                await broker.replace_history(render_value(session.messages))
+                await broker.replace_history(render_value([message for message in session.messages if not isRuntimeContext(message)]))
             output(f"已回退到第 {args_text[0]} 条用户消息之前。")
             return 0
 
@@ -2257,7 +2353,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     await conversation.clear(session)
                     ctx.todos.clear()
                     if broker is not None:
-                        await broker.replace_history(render_value(session.messages))
+                        await broker.replace_history(render_value([message for message in session.messages if not isRuntimeContext(message)]))
                     output("已清空当前上下文；已接纳输入账本和执行记录保留。")
                 return True, 0
             if name == "archive":
@@ -2334,7 +2430,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     return True, 2
                 digits = match[1].lstrip("0")
                 seconds = int(digits) * {"s": 1, "m": 60, "h": 3600}[match[2]] if 0 < len(digits) <= 7 else 0
-                # Keep the frozen setInterval normalization at the timer bounds.
+                # 在定时器取值边界沿用原有 setInterval 归一化规则。
                 await scheduler.start_loop(seconds if 0 < seconds <= 2_147_483 else .001, prompt)
                 output(t("ui.loop.started", interval, prompt[:40]))
                 return True, 0
@@ -2476,7 +2572,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     try:
                         parseContextWindow(args_text[0])
                     except ValueError:
-                        pass  # 仅反馈参数错误，不丢弃已确认的排队输入。
+                        pass  # 参数错误只影响本次反馈，已确认的排队输入继续保留。
                     else:
                         mutating = True
                 try:
@@ -2553,7 +2649,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
             await deck_stop.wait()
             return 74 if conversation.blocked else exit_code
         if broker is None and not first:
-            # 恢复idle下的已确认队列时，也先完成可信轮次，再进行顺序stdin读取。
+            # 恢复空闲会话的已确认队列时，先处理已获信的回合，再顺序读取 stdin。
             await scheduler.finished()
         text: Content | None
         while not exit_code:
@@ -2568,7 +2664,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                             return 74
                         raise
                 elif deck is not None or task_manager.running() or memory_task is not None and not memory_task.done():
-                    # Keep the loop available to Deck and background tasks while the pipe is idle.
+                    # 管道暂时无输入时，让事件循环继续服务 Deck 和后台任务。
                     text = await asyncio.to_thread(input, "\n你 > ")
                 else:
                     text = input("\n你 > ")
@@ -2624,7 +2720,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
         repo_stop.set()
         memory_stop.set()
         preserve_pause = preserve_pause or active or last_result.status != "complete"
-        # 先失效本轮并唤醒同owner审批，再等可信run保存；不能先settled卡住审批。
+        # 先撤销本轮资格并唤醒同一所有者的审批，再等待本轮完成保存。
         stopping = asyncio.create_task(scheduler.close()) if scheduler is not None else None
         try:
             if deck is not None:
@@ -2638,7 +2734,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                 except Exception:
                     if not conversation.blocked:
                         raise
-                    # blocked已有明确停止结果；关闭时也不能绕过它再提交discard。
+                    # 持久状态已进入明确停止状态，退出时仍须遵守这次停止结果。
             await drain_output()
         finally:
             try:
@@ -2657,7 +2753,7 @@ async def _run_session(args: argparse.Namespace, startup: AsyncExitStack, broker
                     finally:
                         if shell_manager is not None:
                             for notice in await shell_manager.close(keep_background=keep_background_exit):
-                                # Input ownership has already ended and the broker is closed.
+                                # 输入所有权已经结束，此时输入代理也已关闭。
                                 print(_display(conversation.redact(notice)), flush=True)
             finally:
                 try:
@@ -2707,7 +2803,7 @@ def run_cli(arguments: Sequence[str]) -> int:
         print(f"RuoCun：{exc}", file=sys.stderr)
         return 74
     except Exception as exc:
-        # 不回显供应商异常、配置值或含明文凭据的参数。
+        # 用户提示仅采用本模块的安全信息，避免供应商异常或配置参数泄漏凭据。
         if isinstance(exc, CliError):
             print(f"RuoCun：{exc}", file=sys.stderr)
         else:

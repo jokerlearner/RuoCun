@@ -1,4 +1,4 @@
-"""冻结 write_file.ts 的原子 Write 工具（MIT）。"""
+"""检查写入权限与读取基线，再通过原子替换写入文本。覆写已有文件时先校验读过的版本，以免覆盖后来修改。"""
 
 from __future__ import annotations
 
@@ -32,6 +32,7 @@ def _write_text(absolute: str, args: dict[str, Any], ctx: ToolContext) -> str:
         if os.path.exists(absolute):
             if absolute not in ctx.readFiles:
                 raise ToolRejected(f"覆盖已存在文件前请先用 Read 读过它:{args['path']}")
+            # 已有改动等待命令验证时，先拦截整篇覆写，保留模型做局部 Edit 的路径。
             if absolute in ctx.pendingUnverifiedWrites:
                 raise ToolRejected(
                     f"拒绝写入：{args['path']} 的现有改动还未经命令验证。"

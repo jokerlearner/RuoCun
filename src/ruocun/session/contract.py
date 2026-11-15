@@ -1,14 +1,6 @@
-"""StoragePort v1 唯一声明模块（任务 07）。
+"""定义会话持久化共用的数据类型、失败状态和存储接口。
 
-唯一契约来源：``.scratch/ruocun-discovery/research/09-storage-extension-route.md``
-的 ``# StoragePort v1``、``# 三类epoch``、``# SQLite及文件路线``、
-``# 原生路径、兼容source map与写回``，以及 ``08-python-runtime-route.md``
-与 ADR-0005。冻结行为参照为只读解包副本
-``src/session/{durable_store,sqlite,recovery,process_identity,log}.ts``
-及 ``durable_store.test.ts`` / ``process_identity.test.ts``。
-
-本模块只声明共享类型、常量与端口签名；实际编码从这一处导入，不维护第二套类型，
-不从 Python 当前实现倒推契约。三类 epoch 的职责严格分离，见下方注释。
+前台会话和后台运行用这些记录交换已接受输入、工具结果、检查点及恢复决策。存储层按统一契约控制写入权和提交边界，调用方可区分明确失败与结果未知。
 """
 
 from __future__ import annotations
@@ -25,7 +17,7 @@ from ..platform.file_contract import (
 )
 
 # ---------------------------------------------------------------------------
-# 品牌 / 数据身份（09 报告「SQLite及文件路线」+ 任务 07 票）
+# 产品标记与会话格式版本。打开数据库时用这些值辨认数据归属和兼容性。
 # ---------------------------------------------------------------------------
 PRODUCT = "ruocun"
 FORMAT = "ruocun-session"
@@ -34,63 +26,63 @@ USER_VERSION = 1
 LEGACY_SESSION_USER_VERSION = 2
 
 # ---------------------------------------------------------------------------
-# 三类 epoch（09 报告 ``# 三类epoch``），职责不得混用
+# 数据库写入权、模型流与 runner 各有独立的代次。
 # ---------------------------------------------------------------------------
-# owner_epoch       : SQLite 会话所有权；死 owner 接管时递增，每个写事务内 fencing。
-# stream_generation : D08 每个模型流/当前轮的内存代次；本票不实现（后续票）。
-# control_epoch     : D08 runner 控制租约；本票不实现（后续票）。
-# 本票只实现 owner_epoch，且只用于 DB 所有权，绝不用于模型流或 runner 控制。
-# 任务15的control_epoch位于RunRecord.snapshot，由独立runner控制协议与存储校验。
+# owner_epoch 随数据库所有者接管递增，写事务据此识别旧写入者。
+# stream_generation 由模型流维护，用于区分当前与已过期的流。
+# control_epoch 是单次 runner 控制租约的代次。
+# 这里的 DbOwner 只描述数据库写入权。
+# runner 的 control_epoch 随 RunRecord.snapshot 保存，供控制协议和存储层核验。
 
 # ---------------------------------------------------------------------------
-# 异常：失败保留真实错误，不以 placeholders 伪造成功
+# 存储失败类型，用于把明确的拒绝与尚待确认的结果传给调用方。
 # ---------------------------------------------------------------------------
 class StoreError(RuntimeError):
-    """存储层明确失败基类。"""
+    """可以向上报告的会话存储错误。"""
 
 
 class OwnerConflictError(StoreError):
-    """活 owner / 会话身份不符 / 跨 host 自动接管被拒。"""
+    """现有所有者仍存活，或会话身份不匹配，无法接管。"""
 
 
 class OwnerFencedError(StoreError):
-    """旧 writer 或错误 epoch 的写事务被 fence。"""
+    """写入者身份或代次已过期，写事务被拒绝。"""
 
 
 class VersionRejectError(StoreError):
-    """旧版、未来版本、非空版本 0 等不接受为 RuoCun 自有会话。"""
+    """数据库版本与当前支持的若存会话格式不兼容。"""
 
 
 class CorruptDatabaseError(StoreError):
-    """损坏数据库，拒绝恢复为空会话。"""
+    """数据库损坏，恢复流程保留已有数据并明确失败。"""
 
 
 class MissingCheckpointError(StoreError):
-    """缺少可信 checkpoint，不静默创建空会话。"""
+    """找不到可信的会话检查点，无法恢复。"""
 
 
 class RuntimeGateError(StoreError):
-    """受控 SQLite 运行库门禁未达，明确拒绝启用耐久恢复。"""
+    """实际 SQLite 运行库未通过核验，拒绝开启持久化或恢复。"""
 
 
 class IdentityQueryError(StoreError):
-    """进程身份查询错误；不得冒充进程已死亡。"""
+    """进程是否存活无法确认。上层保留已有所有权。"""
 
 
 class CrossHostError(OwnerConflictError):
-    """会话来自另一台机器，不自动接管。"""
+    """会话来自另一台机器，不能自动接管。"""
 
 
 class UnknownOutcomeBlockedError(StoreError):
-    """存在结果未知的操作，阻挡新副作用。"""
+    """尚有结果未确认的操作，需要先核实才能引入新副作用。"""
 
 
 # ---------------------------------------------------------------------------
-# 数据记录（09 报告 ``# StoragePort v1`` 最小必须信息及不变量）
+# 跨前台会话、后台运行和存储接口交换的数据记录。
 # ---------------------------------------------------------------------------
 @dataclass(frozen=True)
 class ProcessIdentity:
-    """进程身份：host / boot / pid / start（冻结 process_identity.ts）。"""
+    """用主机、开机标记、PID 和创建时间共同标识一个进程。"""
 
     host: str
     boot: str
@@ -100,7 +92,7 @@ class ProcessIdentity:
 
 @dataclass(frozen=True)
 class DbOwner:
-    """DB 所有权记录；每个写事务内校验当前 owner。"""
+    """记录数据库的当前所有者和持有代次，供写事务校验。"""
 
     session_id: str
     canonical_cwd: str
@@ -111,7 +103,7 @@ class DbOwner:
 
 @dataclass(frozen=True)
 class RunRef:
-    """task_id / run_id 分层；续跑同 task 产生新 run。"""
+    """任务引用区分长期任务与一次执行。继续同一任务使用新的 run_id。"""
 
     task_id: str
     run_id: str
@@ -119,7 +111,7 @@ class RunRef:
 
 @dataclass(frozen=True)
 class ToolRef:
-    """scope / tool_call_id；与 session 关联。"""
+    """工具引用由执行范围和工具调用 ID 组成，归属指定会话。"""
 
     scope: str
     tool_call_id: str
@@ -127,9 +119,9 @@ class ToolRef:
 
 @dataclass(frozen=True)
 class Intent:
-    """副作用许可前的执行意图；不持久化明文凭据。
+    """在调用副作用工具前保存已批准的执行意图。
 
-    ``args`` 是最终参数（或脱敏引用），``args_digest`` 固定同一操作身份。
+    记录脱敏的最终参数并附摘要，后续可确认恢复的仍是同一次操作。
     """
 
     tool_ref: ToolRef
@@ -150,7 +142,7 @@ ToolResult = str | dict[str, Any]
 
 @dataclass(frozen=True)
 class ToolRecord:
-    """started / result_committed / outcome_unknown；未知结果不是已知终态。"""
+    """保留工具调用的执行状态。结果未知时继续留作待核实。"""
 
     tool_ref: ToolRef
     name: str
@@ -163,7 +155,7 @@ class ToolRecord:
 
 @dataclass(frozen=True)
 class RunRecord:
-    """执行类别/状态；kind 区分 shell/agent/fork/monitor/manual。"""
+    """保留单次 Shell、代理或其它后台执行的状态和快照。"""
 
     run_ref: RunRef
     kind: Literal["shell", "agent", "fork", "monitor", "manual"]
@@ -178,7 +170,7 @@ def task_inbox_messages(inbox: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 @dataclass(frozen=True)
 class OutboxEvent:
-    """唯一 event_id、DB 分配单调 seq、delivered_revision。"""
+    """为待投递事件保存稳定身份、数据库分配的序号和投递确认版本。"""
 
     event_id: str
     session_id: str
@@ -192,7 +184,7 @@ class OutboxEvent:
 
 @dataclass(frozen=True)
 class AcceptedInput:
-    """已接受输入：queued / consumed / discarded；显示「已保存」须在提交后。"""
+    """记录输入排队、消费或丢弃的状态。持久化确认后才向用户显示已保存。"""
 
     input_id: str
     seq: int
@@ -203,10 +195,9 @@ class AcceptedInput:
 
 @dataclass(frozen=True)
 class Checkpoint:
-    """消息/工具配对、模型/模式、revision、accepted 输入、pending、用量。
+    """保存恢复会话所需的消息、运行设置、已接纳输入、未投递事件和用量。
 
-    最小可恢复信息按 09 报告；完整 agent checkpoint / 分模型费用桶 / fork 材料
-    属后续票，本票不缩减「已接受且已确认保存的输入不能丢失」这一不变量。
+    有些消息会从模型上下文移除，独立的输入记录仍让已确认的用户消息可以找回。
     """
 
     session_id: str
@@ -227,7 +218,7 @@ class Checkpoint:
 
 @dataclass(frozen=True)
 class ArchiveDerivation:
-    """A program-owned replacement; indices address ArchiveRewrite.expected_messages."""
+    """记录程序生成的归档替换，索引指向 ArchiveRewrite.expected_messages。"""
 
     id: str
     kind: Literal["summary", "prune"]
@@ -280,7 +271,7 @@ def checkpoint_request_digest(
     expected_revision: int, checkpoint: Checkpoint, consumed_event_ids: tuple[str, ...], *,
     archive_rewrite: ArchiveRewrite | None = None, archive_import: ArchiveImport | None = None,
 ) -> str:
-    """Versioned canonical digest; session identity is part of the checkpoint."""
+    """按固定版本和序列化口径为检查点请求计算摘要，会话身份也是摘要输入。"""
     request = {
         "version": 1,
         "expected_revision": expected_revision,
@@ -340,7 +331,7 @@ class RecoveryReceipt:
 
 @dataclass(frozen=True)
 class RecoveryView:
-    """从同一一致视图读出的恢复快照；不触发副作用。"""
+    """从同一一致视图读取可恢复的检查点、执行和待处理信息。"""
 
     owner: DbOwner
     checkpoint: Checkpoint | None
@@ -353,7 +344,7 @@ class RecoveryView:
 
 @dataclass(frozen=True)
 class RuntimeRecord:
-    """产品实际使用的 SQLite 运行库清单（REC-15）。"""
+    """描述当前进程实际加载的 SQLite 运行库。"""
 
     version: str
     source_id: str
@@ -372,30 +363,33 @@ class RuntimeRecord:
 
 
 # ---------------------------------------------------------------------------
-# 身份提供方 seam（冻结 durable_store.test.ts 注入 identities 的做法）
+# 抽象进程身份查询，允许持久化流程使用真实或合成提供方。
 # ---------------------------------------------------------------------------
 class IdentityProvider(Protocol):
     def current(self) -> ProcessIdentity:
-        """当前进程身份。"""
+        """读取当前进程身份。"""
         ...
 
     def alive(self, identity: ProcessIdentity) -> bool:
-        """owner 是否仍存活；查询错误必须抛错，不返回 False 冒充死亡。"""
+        """确认所有者是否仍存活。查询失败必须抛出，避免把错误当作死亡。"""
         ...
 
 
 # ---------------------------------------------------------------------------
-# StoragePort v1（09 报告方法/事务契约；本票实现最小子集，见交付交接）
+# 由 SQLite 存储实现、供会话存储线程调用的事务接口。
 # ---------------------------------------------------------------------------
 class StoragePort(Protocol):
-    """业务持久端口；连接由专属单线程创建/使用/关闭，事务内 owner fencing。"""
+    """保存会话状态的接口，数据库连接在同一个专属线程创建、使用和关闭。
+
+    实现应在每个写事务校验所有权，避免旧所有者覆盖接管后的数据。
+    """
 
     def open_or_claim(self, identity: ProcessIdentity) -> tuple[DbOwner, RecoveryView]:
-        """拒活 owner / 身份不符；死 owner 接管递增 epoch；返回可信恢复视图。"""
+        """所有者仍活跃时拒绝接管。确认原所有者退出后递增代次，并返回恢复视图。"""
         ...
 
     def commit_intent(self, owner: DbOwner, intent: Intent) -> ToolResult | None:
-        """副作用获许可前提交；同 ToolRef 已知结果返回复用结果。"""
+        """执行副作用前先提交意图。相同 ToolRef 已有可信结果时返回该结果。"""
         ...
 
     def commit_result_and_event(
@@ -408,7 +402,7 @@ class StoragePort(Protocol):
         *, operation_id: str | None = None, archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> None:
-        """结果、关联 run 状态与 outbox 事件同一 DB 事务。"""
+        """在同一事务内提交工具结果、关联运行状态和待投递事件。"""
         ...
 
     def commit_run_event(
@@ -416,17 +410,17 @@ class StoragePort(Protocol):
         operation_id: str | None = None, archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> OutboxEvent | None:
-        """无工具结果的后台进展；有 event 时 run+event 原子。"""
+        """无需提交工具结果时，可单独保存后台进展和关联事件。"""
         ...
 
     def prepare_shell(
         self, owner: DbOwner, tool_ref: ToolRef, run_ref: RunRef, snapshot: dict[str, Any]
     ) -> RunRecord:
-        """同事务关联已批准的Bash意图与唯一runner启动身份。"""
+        """在同一事务内关联已批准的 Bash 意图与唯一 runner 启动身份。"""
         ...
 
     def commit_shell_run(self, owner: DbOwner, run: RunRecord) -> None:
-        """经owner fencing保存同一执行及控制租约，复用已确认工具结果。"""
+        """核对当前写入权后保存原执行及控制租约，工具结果已确认时直接复用。"""
         ...
 
     def commit_checkpoint_ack(
@@ -440,38 +434,38 @@ class StoragePort(Protocol):
         archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> int:
-        """消息/background/revision/delivered 同事务；返回新 revision 后才内存 ack。"""
+        """同事务提交消息、后台状态和投递确认，返回新版本后才更新内存。"""
         ...
 
     def lookup_checkpoint_operation(
         self, owner: DbOwner, operation_id: str, *, request_digest: str | None = None
     ) -> CheckpointOperation | None:
-        """Read committed receipt; absence does not prove an accepted operation failed."""
+        """读取已提交的检查点回执。未找到时仍可能有请求在执行。"""
         ...
 
     def record_recovery_decision(
         self, owner: DbOwner, decision_id: str, target: str, decision: str, explanation: str
     ) -> None:
-        """decision ID 幂等且内容冲突拒绝；resolve 不自动执行旧工具。"""
+        """同一决定可用原 ID 读取此前结果，内容冲突会被拒绝。核实结果不会重放工具。"""
         ...
 
     def prepare_recovery(self, owner: DbOwner, material_errors: dict[str, str] | None = None) -> None:
-        """归类丢失执行器及缺失附件；不启动或重放执行。"""
+        """标记已失联的执行器和缺失附件，供恢复流程核对。"""
         ...
 
     def commit_recovery(
         self, owner: DbOwner, decision: RecoveryDecision, expected_revision: int,
         checkpoint: Checkpoint,
     ) -> RecoveryReceipt:
-        """决定、受影响journal/run及用户消息同事务；同ID内容冲突拒绝。"""
+        """同事务保存恢复决定、受影响的工具或执行记录，以及用户消息。"""
         ...
 
     def load_recovery_view(self) -> RecoveryView:
-        """同一一致视图；检查损坏、附件 hash/执行身份；不触发副作用。"""
+        """从同一只读视图核对会话、附件摘要和执行身份。"""
         ...
 
     def read_pending_events(self) -> tuple[OutboxEvent, ...]:
-        """按 seq 读未投递事件。"""
+        """按数据库序号读取尚未投递的事件。"""
         ...
 
     def add_attachment(self, owner: DbOwner, file: str, digest: str) -> None: ...
@@ -485,7 +479,7 @@ class StoragePort(Protocol):
     def lookup_archive_operation(self, operation_id: str, *, request_digest: str | None = None) -> ArchiveOperation | None: ...
 
     def close(self, owner: DbOwner) -> None:
-        """停止接受新写；只有仍为本 owner 才释放 owner。"""
+        """停止接收写入，只释放仍由当前存储端持有的所有权。"""
         ...
 
 

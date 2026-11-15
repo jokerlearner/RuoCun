@@ -1,4 +1,4 @@
-"""冻结 todo_store.ts 的清单存储/格式化（MIT）。运行清单保存在ToolContext。"""
+"""为当前工具上下文提供任务清单存储，以及工具和界面共用的清单文本格式。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,7 @@
-"""原生运行环境设置与各加载器使用的可选来源数据。"""
+"""描述显式启用的兼容来源，并集中解析环境变量。
+
+每项来源绑定资源类型和作用范围，实际读取由对应模块决定。布尔和数值选项在这里按各自的兼容规则解释。
+"""
 
 from __future__ import annotations
 
@@ -31,7 +34,7 @@ def resolve_env(suffix: str, environ: Mapping[str, str]) -> str | None:
 
 
 def auto_approve(environ: Mapping[str, str]) -> bool:
-    # 非空字符串即真，"0" 也为真。
+    # 沿用非空字符串即为真的约定，字符串 0 也有效。
     value = resolve_env("AUTO_APPROVE", environ)
     return bool(value) if value is not None else False
 
@@ -41,13 +44,13 @@ def trust(environ: Mapping[str, str]) -> bool:
 
 
 def use_keychain_enabled(environ: Mapping[str, str]) -> bool:
-    # 仅 "0"/"off" 关闭，平台后端可用性由凭据端口决定。
+    # 显式的 0 或 off 停用凭据库。后端是否可用由实际接口判定。
     value = resolve_env("USE_KEYCHAIN", environ)
     return value not in ("0", "off") if value is not None else True
 
 
 def _number_or(value: str | None, default: int) -> int:
-    # 冻结 client.ts:104/127/390 Number(process.env.X) || default
+    # 沿用数值转换失败或结果为零时使用默认值的约定。
     if value is None:
         return default
     try:
@@ -75,5 +78,5 @@ def reasoning_effort(environ: Mapping[str, str]) -> str:
 
 
 def third_party(name: str, environ: Mapping[str, str]) -> str | None:
-    """第三方标准/协议变量保留原名，不机械改名（D09:148）。"""
+    """按第三方协议约定的变量名读取环境值。"""
     return environ.get(name)

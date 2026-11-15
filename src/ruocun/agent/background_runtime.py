@@ -1,4 +1,4 @@
-"""Frozen BackgroundRuntime/WaitControl (MIT); SQLite writes use the existing worker."""
+"""管理后台任务和等待状态，并经已有的 SQLite 工作线程提交持久状态。"""
 
 from __future__ import annotations
 

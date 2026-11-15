@@ -1,4 +1,4 @@
-"""Load the core skills distributed with RuoCun."""
+"""读取随若存发布的内置技能目录和对应正文。"""
 
 from __future__ import annotations
 

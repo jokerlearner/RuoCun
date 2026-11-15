@@ -1,4 +1,4 @@
-"""冻结 tab_attention.ts (MIT)；只生成受控标题序列，不直接占用 stdout。"""
+"""根据任务状态生成终端标签页标题和提醒。标题序列通过注入的终端写入口发送。"""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ class TabAttention:
             try:
                 self._write(value)
             except Exception:
-                pass  # 标题失败不改变真实任务结果。
+                pass  # 终端标签页更新失败时保留已经得到的任务结果。
 
     def _title(self, value: str) -> None:
         self._emit(f"\x1b]0;{value}\x1b\\")

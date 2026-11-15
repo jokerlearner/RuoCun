@@ -1,4 +1,8 @@
-"""Frozen reference tools/execute.ts (MIT), adapted to the foreground tool journal."""
+"""协调同一模型回复发出的工具调用。
+
+符合条件的只读调用可并行，涉及持久副作用的调用单独执行。通过校验和审批后，
+先记录执行意图，再调用处理器，以便中断后核实结果。
+"""
 
 from __future__ import annotations
 
@@ -47,7 +51,7 @@ class ToolJournal(Protocol):
 
 
 class UnknownToolOutcome(RuntimeError):
-    """A write or exec handler began and its result could not be confirmed."""
+    """有副作用的工具已进入处理器，调用结果仍缺少可确认的证据。"""
 
 
 class _ApprovalIncomplete(RuntimeError):
@@ -89,6 +93,7 @@ async def executeToolBatch(
     authorize: Authorize | None, authorize_batch: BatchAuthorize | None,
     call_scope: CallScope | None, permission_mode: Callable[[], str] | None,
 ) -> BatchOutcome:
+    # TaskWait 登记的是整个回合的等待。混合调用只执行同批的其余工具。
     if ctx.subagentDepth == 0 and len(calls) > 1 and any(name == "TaskWait" for _, name, _ in calls):
         from ..agent.background_runtime import currentWaitControl
         control = currentWaitControl()
@@ -226,11 +231,11 @@ async def executeToolBatch(
             image = None
             finished_handler = False
             if reason := stop_reason(tool):
-                # Intent committed, handler not yet entered.
+                # 执行意图已经落盘，此时仍可在进入处理器前停止。
                 result = reason
             else:
-                # Only Read owns an image slot. Baselines, signal, skill
-                # access callback and other shared state stay on the business loop.
+                # 给每次 Read 单独留出图片结果槽，避免并行读取串用结果。
+                # 读取基线、取消信号和技能回调继续使用业务循环的共享上下文。
                 call_ctx = replace(ctx, currentImageData=None) if tool.name == "Read" else ctx
                 started_at, trace_ok = time.monotonic(), False
                 try:
@@ -259,7 +264,7 @@ async def executeToolBatch(
                                 (time.monotonic() - started_at) * 1000, raw,
                                 metadata={**getObsMeta(), "sessionId": getObsSession() or "", "toolCallId": call_id})
                         except Exception:
-                            pass  # Audit failure cannot replay or change the tool outcome.
+                            pass  # 审计失败时保留已经取得的工具结果，避免重放。
                 if tool.capability == "exec" and looksFailed(result):
                     failed_exec.add(call_id)
             if journal is not None:
@@ -305,7 +310,7 @@ async def executeToolBatch(
             settled = await asyncio.shield(tasks)
         except asyncio.CancelledError:
             ctx.signal.set()
-            # A cancelled owner still owns started tools and storage receipts.
+            # 取消后仍需等待已开始的工具及其存储回执，以便确认副作用。
             while not tasks.done():
                 try:
                     await asyncio.shield(tasks)
@@ -313,7 +318,7 @@ async def executeToolBatch(
                     pass
             raise
         errors = [outcome for outcome in settled if isinstance(outcome, BaseException)]
-        # An approval failure only proves its own call did not start.
+        # 审批失败只证明对应调用未开始，其他并行调用仍以各自结果为准。
         for error in errors:
             if not isinstance(error, _ApprovalIncomplete):
                 raise error
@@ -346,6 +351,7 @@ async def executeToolBatch(
             if not _has_persistent_effect(call.tool) and call_id not in post_hooks:
                 group.append(call)
                 continue
+            # 先等待前面的并行工具全部收尾，再单独执行含持久副作用或事后钩子的调用。
             await settle(group)
             group.clear()
             if reason := stop_reason(call.tool):

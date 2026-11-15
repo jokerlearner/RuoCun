@@ -1,4 +1,7 @@
-"""Frozen src/schedule.ts (MIT), native branding and ADR-0010/W3 routing."""
+"""管理会话外的系统定时任务，供命令行和定时工具共用。
+
+入口先检查平台能力，再读写本操作系统的调度配置。会话内的 /loop 由会话运行时负责。
+"""
 
 from __future__ import annotations
 
@@ -153,7 +156,7 @@ async def scheduleRemove(n: int, write: Callable[[str], None], *, platform: str 
 
 @dataclass(frozen=True)
 class ScheduleService:
-    """One injectable command boundary shared by CLI and the four source tools."""
+    """为命令行和定时工具提供共用的调度接口。"""
     platform: str | None = None
     runner: ScheduleRunner | None = None
     environ: Mapping[str, str] | None = None

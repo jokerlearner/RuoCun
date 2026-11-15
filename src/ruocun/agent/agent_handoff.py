@@ -1,4 +1,4 @@
-"""Check a child agent’s tool calls before accepting its result."""
+"""在接收子代理结果前核对其工具调用，供父代理判断已执行的动作是否符合委派范围。"""
 from __future__ import annotations
 
 import re

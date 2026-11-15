@@ -240,6 +240,92 @@ def test_real_cancel_receipt_and_missing_attachment_no_relaunch(tmp_path):
     _run_case(_CANCEL, tmp_path)
 
 
+_START_ACK = _CODE[:_CODE.index("async def scenario():")] + r"""
+async def scenario():
+    from ruocun.platform.windows.ipc import IPCError
+
+    store,session=await open_store()
+    manager=ManagedShellManager(root/'session','one',store,runner_command=role+['--ruocun-shell-runner'],helper_command=role+['--ruocun-ipc-helper'])
+    rpc=manager._rpc
+    starts=[]
+
+    async def lose_start_reply(entry, action):
+        if action=='start':
+            starts.append(entry.record.run_ref.run_id)
+        reply=await rpc(entry,action)
+        if action=='start' and len(starts)==1:
+            state=manager._state(entry)
+            assert reply['started'] and state['phase']=='started' and state['started']
+            assert (entry.directory/'start.claim').is_file()
+            raise IPCError('synthetic lost reply after genuine start and signed state')
+        return reply
+
+    manager._rpc=lose_start_reply
+    try:
+        script=root/'once.py'
+        script.write_text("from pathlib import Path\nimport time\nwith Path('starts').open('ab') as out: out.write(b'1')\ntime.sleep(1)\nprint('confirmed',flush=True)\n",encoding='utf-8')
+        command=f'"{sys.executable}" -I "{script}"'
+        await store.intent('start-ack','Bash',json.dumps({'command':command}),True)
+        result=await manager.execute(buildShellPlan(command,str(root)),threading.Event())
+        assert result.code==0 and result.stdout.strip()=='confirmed'
+        await store.result('start-ack','confirmed')
+        record,=await store.recover()
+        assert record.status=='completed' and record.snapshot['closed']
+        assert manager._terminal(manager._runs[record.run_ref.run_id]) is not None
+        assert starts==[record.run_ref.run_id]
+        assert (root/'starts').read_bytes()==b'1'
+    finally:
+        await cleanup(manager,store)
+asyncio.run(scenario())
+"""
+
+
+def test_lost_start_reply_reaches_real_terminal_without_relaunch(tmp_path):
+    _run_case(_START_ACK, tmp_path)
+
+
+_TERMINAL_RACE = _CODE[:_CODE.index("async def scenario():")] + r"""
+async def scenario():
+    store,session=await open_store()
+    manager=ManagedShellManager(root/'session','one',store,runner_command=role+['--ruocun-shell-runner'],helper_command=role+['--ruocun-ipc-helper'])
+    terminal=manager._terminal
+    missed_running_terminal=[]
+
+    def finish_after_first_missing_read(entry):
+        receipt=terminal(entry)
+        if receipt is None and entry.record.status=='running' and not missed_running_terminal:
+            # Give the owned runner permission to finish only after the first read missed.
+            (root/'finish').touch()
+            launcher=manager._launchers[entry.record.run_ref.run_id]
+            assert launcher.wait(timeout=10)==0
+            assert terminal(entry)['status']=='completed'
+            missed_running_terminal.append(entry.record.run_ref.run_id)
+        return receipt
+
+    manager._terminal=finish_after_first_missing_read
+    try:
+        script=root/'finish_on_signal.py'
+        script.write_text("from pathlib import Path\nimport time\nwith Path('starts').open('ab') as out: out.write(b'1')\nwhile not Path('finish').exists(): time.sleep(.02)\nprint('confirmed',flush=True)\n",encoding='utf-8')
+        command=f'"{sys.executable}" -I "{script}"'
+        await store.intent('terminal-race','Bash',json.dumps({'command':command}),True)
+        result=await manager.execute(buildShellPlan(command,str(root)),threading.Event())
+        assert result.code==0 and result.stdout.strip()=='confirmed'
+        await store.result('terminal-race','confirmed')
+        record,=await store.recover()
+        assert record.status=='completed' and record.snapshot['closed']
+        assert missed_running_terminal==[record.run_ref.run_id]
+        assert (root/'starts').read_bytes()==b'1'
+    finally:
+        (root/'finish').touch()
+        await cleanup(manager,store)
+asyncio.run(scenario())
+"""
+
+
+def test_runner_exit_after_terminal_read_recovers_real_receipt(tmp_path):
+    _run_case(_TERMINAL_RACE, tmp_path)
+
+
 _LOSS = _CODE[:_CODE.index("async def scenario():")] + r"""
 async def scenario():
     import os,signal

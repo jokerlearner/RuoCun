@@ -1,4 +1,4 @@
-"""冻结 edit_file.ts / edit_mismatch.ts / diff_hunk.ts 的文本 Edit（MIT）。"""
+"""Edit 根据已读取的内容定位替换目标，检查文件版本后原子写回，并生成可展示的改动片段。"""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ def _edit_text(absolute: str, args: dict[str, Any], ctx: ToolContext) -> str:
         except OSError as exc:
             raise ToolRejected(f"编辑前无法读取文件:{args['path']}。{exc}") from exc
         requested = args["old_string"]
-        # 空串没有可核验的替换目标，首版准确拒绝。
+        # 用旧文本锚定替换位置。空字符串无法证明要改动的是文件里的哪一段。
         if not requested:
             raise ToolRejected("old_string 不能为空;请从 Read 原文复制需要替换的内容")
         old = findActualString(raw, requested)

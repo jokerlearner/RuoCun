@@ -1,4 +1,4 @@
-"""Frozen repomap/extract.ts: definitions, import references and signatures (MIT)."""
+"""解析单个源文件，抽取定义、签名和依赖线索，交给代码库地图做排序。"""
 
 from __future__ import annotations
 
@@ -142,7 +142,7 @@ def extractFileSync(absPath: str | Path, lang: LangDef | None, *, signal: thread
                 definitions.append(SymbolDef(name, node.type, node.start_point.row + 1, _signature(node, lines)))
             _refs(node, lang, refs, sources)
             stack.extend(reversed(node.children))
-        # Only plain values escape this frame; neither cached results nor callers own AST nodes.
+        # 缓存和调用方只持有提取后的普通值，解析树随本次扫描释放。
         return FileExtract(definitions, list(refs), list(sources))
 
 

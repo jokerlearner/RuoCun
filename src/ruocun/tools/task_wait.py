@@ -1,4 +1,4 @@
-"""Frozen task_wait.ts (MIT), control belongs to this turn's context scope."""
+"""向当前回合绑定的等待控制入口登记等待请求，由后台运行时决定何时继续。"""
 
 from __future__ import annotations
 

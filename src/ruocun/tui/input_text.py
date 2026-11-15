@@ -1,4 +1,4 @@
-"""App.tsx 粘贴折叠与 D10 Unicode 编辑适配。"""
+"""处理终端编辑缓冲区的粘贴占位和 Unicode 光标移动。长文本、图片用占位符留在编辑区，提交时展开为实际内容。"""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ _SURROGATES = re.compile("[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]")
 
 
 def normalizeSurrogates(text: str) -> str:
-    """将 Windows 输入和旧转录的 UTF-16 代理对还原为 Unicode 字符。"""
+    """把 Windows 输入和旧转录中的 UTF-16 代理对还原成 Unicode 字符。"""
     return _SURROGATES.sub(lambda match: match[0].encode("utf-16-le", "surrogatepass").decode("utf-16-le", "replace"),
                            text)
 

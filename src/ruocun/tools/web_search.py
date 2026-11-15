@@ -1,4 +1,4 @@
-"""Frozen src/tools/web_search.ts (MIT), DuckDuckGo HTML result parsing."""
+"""调用 DuckDuckGo 的网页搜索接口，解析 HTML 中的结果并整理标题、地址和摘要。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Tool entry points for planning and plan approval."""
+"""提供进入计划模式和请求批准计划的两个工具。实际模式由当前回合提供的入口切换。"""
 from typing import Any
 
 from .schema import objectSchema

@@ -1,4 +1,4 @@
-"""Extract persistent memories from recent conversation evidence."""
+"""从近期对话证据提取跨会话记忆候选。模型负责提取，格式和字段由本模块校验。"""
 
 from __future__ import annotations
 
@@ -90,7 +90,7 @@ def _transcript(messages: Sequence[ChatMessage]) -> str:
             continue
         content = message.get("content")
         if isinstance(content, list):
-            # JS String() renders content-part objects without including their image payload.
+            # 按 JavaScript String() 投影消息内容项，省略图像数据。
             content = ",".join("[object Object]" for _ in content)
         lines.append(f"{role}: {content if content is not None else ''}")
     return "\n".join(lines).encode("utf-16-le", errors="surrogatepass")[-48000:].decode(

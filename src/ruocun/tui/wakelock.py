@@ -1,4 +1,4 @@
-"""Frozen tui/wakelock.ts (MIT); W5 leaves Windows power policy to the user."""
+"""在支持的平台上尝试申请临时防休眠并在退出时释放。Windows 的电源管理由系统和用户设置决定。"""
 
 from __future__ import annotations
 

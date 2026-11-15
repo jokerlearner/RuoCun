@@ -1,4 +1,4 @@
-"""冻结list_dir.ts单层目录工具（MIT）。"""
+"""列出已批准访问目录的直接条目，并在真正的子目录名后加斜杠。"""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def _entries(absolute: str, lang: str) -> str:
     for entry in entries:
         directory = entry.is_dir(follow_symlinks=False)
         if directory and os.name == "nt":
-            # Node Dirent把junction视作链接；保持单层列表的目录标记一致。
+            # Windows 目录联接显示为链接，末尾斜杠留给可作为真实子目录的条目。
             directory = not bool(entry.stat(follow_symlinks=False).st_file_attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT)
         names.append(entry.name + "/" if directory else entry.name)
     result = "\n".join(names[:500])

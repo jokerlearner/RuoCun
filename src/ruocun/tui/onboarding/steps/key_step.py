@@ -1,4 +1,4 @@
-"""冻结 KeyStep.tsx (MIT) 的服务商提示及校验错误映射。"""
+"""生成当前服务商的凭据输入提示，把验证失败转换为可显示的消息。"""
 
 from ....config.profiles import Provider
 from ....i18n.i18n import t

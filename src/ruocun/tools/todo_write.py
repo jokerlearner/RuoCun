@@ -1,4 +1,4 @@
-"""冻结 todo_write.ts 的整表 TodoWrite（MIT）；清单按上下文隔离。"""
+"""校验 TodoWrite 提交的整份清单，再替换当前工具上下文的任务清单。"""
 
 from __future__ import annotations
 

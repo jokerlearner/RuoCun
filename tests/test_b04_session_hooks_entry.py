@@ -9,6 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import ruocun
+from ruocun.agent.runtime_context import isRuntimeContext
 
 
 def test_ordinary_session_hooks_replace_start_context_and_gate_prompt(tmp_path):
@@ -76,6 +77,9 @@ def test_ordinary_session_hooks_replace_start_context_and_gate_prompt(tmp_path):
             saved_session = next((user_root / "sessions").glob("*/*/session.db")).parent.name
             configure_start("resumed")
             run("--continue", saved_session, "synthetic second prompt")
+            rewind = run("--continue", saved_session, stdin="/rewind\n/exit\n")
+            assert "1. synthetic first prompt" in rewind and "2. synthetic second prompt" in rewind
+            assert "3." not in rewind and "<ruocun-runtime-context>" not in rewind
             command_line = "exit /b 2" if os.name == "nt" else "exit 2"
             hooks_file.write_text(json.dumps({"UserPromptSubmit": [{"command": command_line}]}), encoding="utf-8")
             assert "提交被 Hook 阻止" in run(stdin="synthetic blocked prompt\n/exit\n")
@@ -91,4 +95,6 @@ def test_ordinary_session_hooks_replace_start_context_and_gate_prompt(tmp_path):
     assert all("[[dao:session-start-hook]]" not in message.get("content", "") for message in resumed)
     assert resumed[-2]["content"] == "synthetic second prompt"
     assert resumed[-1] == {"role": "system", "content": "[hook 注入的上下文]\nsynthetic-prompt-context"}
-    assert (workspace / "ends.txt").read_text(encoding="utf-8").splitlines() == ["ended", "ended"]
+    assert str(workspace) not in first[0]["content"]
+    assert sum(isRuntimeContext(message) for message in first) == sum(isRuntimeContext(message) for message in resumed) == 1
+    assert (workspace / "ends.txt").read_text(encoding="utf-8").splitlines() == ["ended", "ended", "ended"]

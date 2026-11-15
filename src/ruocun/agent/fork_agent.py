@@ -1,4 +1,4 @@
-"""Fork context construction from the frozen reference fork_agent.ts and resume_agent.ts (MIT)."""
+"""为 fork 子代理构造独立的会话投影。建立分叉历史时须保持模型工具调用与返回结果的配对。"""
 from __future__ import annotations
 
 import copy
@@ -39,7 +39,7 @@ def buildForkContextMessages(parent_messages: Sequence[ChatMessage], directive: 
 def forkRequestMessages(parent_messages: Sequence[ChatMessage], task: str) -> list[ChatMessage]:
     directive = "[fork 任务] " + task
     messages = buildForkContextMessages(parent_messages, directive)
-    # The placeholder remains user text. Only actual tool messages can pair an assistant call.
+    # 占位信息作为用户文本保留。只有工具消息可以与助手的工具调用配对。
     paired_ids = {message.get("tool_call_id") for message in messages if message.get("role") == "tool"}
     return [message for message in messages if message.get("role") != "assistant"
             or all(call.get("id") in paired_ids for call in message.get("tool_calls") or ())]

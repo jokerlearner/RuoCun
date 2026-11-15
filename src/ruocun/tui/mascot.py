@@ -1,4 +1,4 @@
-"""冻结mascot.ts (MIT) 的动画/epoch策略；写帧只调用终端owner注入端口。"""
+"""根据终端能力、尺寸和焦点决定何时显示吉祥物动画。通过注入的输出入口绘制，窗口变化后重新计算布局。"""
 
 from __future__ import annotations
 
@@ -200,7 +200,7 @@ class WelcomeMotion:
         except Exception:
             self.layout = None
             self._resized = True
-            self._report()  # 图形失败保留已显示的文本卡，不影响业务结果。
+            self._report()  # 图形路径失败时继续保留已经显示的文本卡片。
         finally:
             self._advancing = False
             if self._has_work() and self._timer is None:

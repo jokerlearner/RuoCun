@@ -1,6 +1,6 @@
-"""冻结参考 agent/loop.ts 的会话循环（MIT）。
+"""执行一轮会话的核心循环。先准备请求并读模型响应，再按权限派发工具，把助手调用和工具结果成对保存后进入下一次请求。
 
-复用已迁移的传输、权限和保存接口，压缩失败遵循 ADR-0012。
+请求、权限和存储由各自接口提供。压缩失败则保留旧上下文并停止本轮，见 ADR-0012。
 """
 
 from __future__ import annotations
@@ -92,7 +92,7 @@ def _reject_json_constant(value: str) -> None:
 
 
 def sanitizeHistoryForResume(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """冻结loop.ts的续写清洗：只改坏arguments，保留推理/其它历史字段。"""
+    """为续写清理不可解析的 arguments，保留已有的推理和其余历史字段。"""
     cleaned = []
     for message in messages:
         if message.get("role") != "assistant" or not message.get("tool_calls"):
@@ -110,7 +110,7 @@ def sanitizeHistoryForResume(messages: list[dict[str, Any]]) -> list[dict[str, A
 
 
 def _safe_calls(raw: Any) -> tuple[list[dict[str, Any]], list[tuple[str, str, str]]]:
-    """历史中的坏JSON归一为{}，实际校验仍使用原参数（回合循环测试）。"""
+    """保存历史时把损坏的 JSON 参数归一为空对象，工具执行仍按原始参数校验。"""
     saved: list[dict[str, Any]] = []
     calls: list[tuple[str, str, str]] = []
     seen: set[str] = set()
@@ -171,7 +171,7 @@ async def run_turn(
     progress_advice: bool = False, interactive: bool = True,
     has_running_background: Callable[[], bool] | None = None,
 ) -> TurnResult:
-    """用户消息先由组合入口保存；所有副作用在已提交intent之后开始。"""
+    """执行一个已保存用户输入的回合。造成副作用前须先提交相应执行意图。"""
     wait_control = (wait_control or currentWaitControl()) if ctx.subagentDepth == 0 else None
     empty = 0
     turns = 0
@@ -210,7 +210,7 @@ async def run_turn(
         except InterruptedError:
             return TurnResult("cancelled", "压缩已取消，原上下文保留。")
         except Exception:
-            # ADR-0012：异常不硬截断、不进入下一次请求或工具派发。
+            # 压缩失败时保留原上下文，停止本轮的请求和工具派发。
             return TurnResult("compaction_failed", "摘要未确认，原上下文保留；本轮已停止，可修复后重试。")
         if ctx.signal.is_set():
             return TurnResult("cancelled", "本轮已取消。")
@@ -244,7 +244,7 @@ async def run_turn(
                 try:
                     switched = await switch_account_and_wait(target)
                 except Exception:
-                    # The confirmed configuration may already have changed. Do not resend.
+                    # 配置可能已经确认写入，回执异常后直接保留现场。
                     return TurnResult("failed", "限流时切换账号的结果未确认，原现场已保留；本轮已停止。")
                 if ctx.signal.is_set():
                     return TurnResult("cancelled", "本轮已取消。")
@@ -371,7 +371,7 @@ async def run_turn(
             try:
                 event_loop.call_soon_threadsafe(deliver)
             except RuntimeError:
-                # 已关闭的业务loop不再消费迟到展示事件；可信结果由完成口处理。
+                # 业务循环关闭后丢弃迟到的展示事件，可信结果由完成路径接收。
                 pass
 
         request_error: Exception | None = None
@@ -400,12 +400,12 @@ async def run_turn(
                 try:
                     ctx.cacheAudit.record(cast(Any, record))
                 except Exception:
-                    pass  # Observation cannot alter the model result or tool dispatch.
+                    pass  # 观测失败时，模型结果和工具派发照常完成。
         message = copy.deepcopy(response.message) if response is not None else {}
         content = message.get("content") or "".join(streamed_text)
         if ctx.signal.is_set() or response is not None and response.cancelled:
             if content:
-                # 部分文字保留，但取消时绝不执行已收集的工具。
+                # 取消时保留已展示的部分文字，收集到的工具调用不再派发。
                 session.messages.append({"role": "assistant", "content": content})
             await save()
             return TurnResult("cancelled", "本轮已取消。")
@@ -470,8 +470,8 @@ async def run_turn(
         retry_reasoning = False
         forcing_unsupported = False
         context_retries = 0
-        # 来源sanitizeForHistory保留完整assistant，包括Chat reasoningContent和
-        # Responses encrypted reasoning现场；重建role/content会破坏后续工具回合。
+        # 保留助手消息中的 Chat reasoningContent 与 Responses 加密推理项。
+        # 后续请求需要这些历史，按角色和正文重建会丢失它们。
         assistant: dict[str, Any] = message
         assistant["role"] = "assistant"
         assistant["content"] = content
@@ -521,7 +521,7 @@ async def run_turn(
             else:
                 await journal.replace_context(session, projected, reset_prompt=False)
         if on_tool_boundary is not None and not ctx.signal.is_set():
-            # 在已配对、图片投影也已提交后发布工具批产生的会话状态。
+            # 助手和工具结果配对、图片投影也已提交后，才发布工具批产生的会话状态。
             await on_tool_boundary()
         batch_names = [name for _, name, _ in calls]
         running_background = has_running_background() if has_running_background is not None else False

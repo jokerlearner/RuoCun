@@ -1,4 +1,7 @@
-"""冻结 skills/install.ts（MIT）的原生技能安装与目录发布。"""
+"""把本地目录或 Git 来源中的技能安装到项目级或用户级目录。
+
+先把内容复制到准备目录，再发布到目标位置。发布结果不明时保留现场，让调用方先核实真实目录状态。
+"""
 
 from __future__ import annotations
 
@@ -30,11 +33,11 @@ class GitRunner(Protocol):
 
 
 class InstallUnconfirmed(RuntimeError):
-    """进程退出或目录发布未确认。保留本次现场，不得自动重放。"""
+    """安装发布结果不明，现场可供后续核实。"""
 
 
 class _InstallFailure(ValueError):
-    """失败边界已知，已发布目录另计。"""
+    """发布边界已确认，记录需要保护的目录。"""
 
 
 @dataclass(frozen=True, slots=True)
@@ -127,7 +130,7 @@ def _copy(source: Path, target: Path, signal: Event, *, omit_git: bool = False) 
     if stat.S_ISDIR(mode):
         target.mkdir(exist_ok=True)
         for item in source.iterdir():
-            if not omit_git or not _git_admin(item):  # 导入时不复制可能含远程地址的 Git 元数据。
+            if not omit_git or not _git_admin(item):  # 复制时避开可能记录远程地址的 Git 元数据。
                 _copy(item, target / item.name, signal, omit_git=omit_git)
         if sys.platform == "win32":
             sync_directory(target)
@@ -151,7 +154,7 @@ def _present(path: Path) -> bool:
 
 
 def _move(source: Path, target: Path) -> bool:
-    """返回成功或原路径仍在、目标仍缺失的可确认失败。"""
+    """尝试移动目录，以源和目标是否存在区分确定失败和未确认。"""
     try:
         source.rename(target)
     except OSError as exc:
@@ -166,7 +169,7 @@ def _move(source: Path, target: Path) -> bool:
 
 def _sync_names(target: Path, stage: Path) -> None:
     if sys.platform != "win32":
-        return  # Windows 为当前验收平台，其余保留目录交换语义。
+        return  # Windows 的目录保护交给外层原生机制，其他平台同步这两级目录。
     try:
         sync_directory(target.parent)
         sync_directory(stage)

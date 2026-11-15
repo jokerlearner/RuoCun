@@ -1,4 +1,7 @@
-"""Reference permissions/engine.ts (MIT): rule, risk and mode decision order."""
+"""结合权限规则、操作风险和当前模式决定允许、拒绝或询问。
+
+明确的拒绝优先。Bash 异步入口可借助语法树逐项匹配，单个工具的附加权限由审批层核对。
+"""
 from __future__ import annotations
 
 import json
@@ -78,8 +81,8 @@ def _base(p: DecideParams, ruleDec: Decision | None, *, ast: bool = False) -> De
     if ruleDec == "ask":
         return "ask"
     if ruleDec == "allow":
-        # Source synchronous path downgrades broad Bash allow in auto mode.
-        # Its async AST path returns allow here without this extra downgrade.
+        # 自动模式下，同步 Bash 路径会把过宽的允许规则降为人工确认。
+        # 异步语法树路径使用解析后的规则结果，此处分支直接返回允许。
         identity = toCcIdentity(p["toolName"], p["argsJson"])
         if not ast and p["mode"] == "auto" and identity and identity["ccTool"] == "Bash":
             hit = next((parseRule(rule) for rule in p["rules"]["allow"] if ruleMatches(parseRule(rule), identity)), None)

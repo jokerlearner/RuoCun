@@ -1,4 +1,4 @@
-"""Frozen tools/spill.ts (MIT), small visible result with a full-output pointer."""
+"""长输出写入文件，工具结果保留首尾预览和完整输出的访问路径。"""
 
 from __future__ import annotations
 

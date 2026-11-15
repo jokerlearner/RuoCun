@@ -1,4 +1,7 @@
-"""普通前台会话接线；复用唯一StorageWorker，不另建日志/恢复系统。"""
+"""把前台会话接到存储线程，协调用户输入、模型上下文和后台事件的提交。
+
+新的内存状态在数据库提交确认后生效。恢复时复用已保存的结果补齐消息，不自动重放工具调用。
+"""
 
 from __future__ import annotations
 
@@ -67,7 +70,7 @@ class Conversation:
         self.directory = Path(".")
 
     def remember_secret(self, secret: str) -> None:
-        """Only retain explicitly supplied keys in this process; never serialize them."""
+        """只在本进程内保留显式提供的密钥，用于后续脱敏。密钥本身不序列化。"""
         if secret:
             self._known_secrets.add(secret)
 
@@ -102,7 +105,7 @@ class Conversation:
             saved: dict[str, Any] = {}
             for key, child in value.items():
                 if key == "imageData" and opaque_image:
-                    # 图像字节不是可编辑文字，碰巧包含凭据子串也必须保持原图。
+                    # 即使图像字节碰巧包含待脱敏的子串，仍应保持原始内容。
                     saved[key] = copy.deepcopy(child)
                 elif key == "image_url" and inline_image:
                     saved[key] = {name: copy.deepcopy(item) if name == "url" else self._safe(item)
@@ -143,7 +146,7 @@ class Conversation:
                 obj.foreground_state = {"foreground-only": "idle", "running": "paused",
                                         "closed": "idle"}.get(checkpoint.background_state,
                                                               checkpoint.background_state)
-                # R1：历史总token恢复，分模型费用不冒充完整。
+                # 恢复历史总用量。分模型费用只能从当前进程重新累计。
                 for key in session.usage:
                     session.usage[key] = checkpoint.usage.get(key, 0)  # type: ignore[literal-required]
                 obj.historical_usage = any(session.usage.values())
@@ -163,16 +166,16 @@ class Conversation:
                            or any(run.status == "unknown" for run in view.runs)
                            or any(rec.state != "result_committed" for rec in view.tool_records))
         if not self.blocked:
-            # 如果结果已落盘但消息checkpoint尚未落盘，补齐配对，不再执行。
+            # 工具结果已经提交而检查点缺少结果消息时，补齐消息配对即可复用结果。
             from .recovery import repairToolPairs
             messages = repairToolPairs(session.messages, view.tool_records)
-            # 即使tool pair已在checkpoint，仍独立补投递未标记图片；只看当前history。
+            # 工具消息已配对时仍需检查图像投递标记，范围限于当前模型上下文。
             candidate = flushReadImages(messages)
             await self._commit(session, candidate, self._accepted_inputs, archive_import=archive_import)
             session.messages = candidate
 
     async def commit_recovery(self, session: Session, decision: RecoveryDecision) -> RecoveryReceipt:
-        """Recovery is the only blocked-session writer; decision and history commit together."""
+        """会话被未决结果阻挡时，只有恢复入口允许写入。决定和对话历史一起提交。"""
         async with self._checkpoint_lock:
             if self._safe(asdict(decision)) != asdict(decision):
                 raise ValueError("恢复说明含账户凭据，请移除后重试。")
@@ -224,7 +227,7 @@ class Conversation:
 
     async def queue_user(self, session: Session, content: str | list[dict[str, Any]], *,
                          model_content: str | list[dict[str, Any]] | None = None) -> AcceptedInput:
-        """只有queued身份与当前检查点同事务确认后才返回接纳回执。"""
+        """把排队输入的身份和当前检查点一起提交，确认后才返回接纳回执。"""
         async with self._checkpoint_lock:
             if self._safe(content) != content or self._safe(model_content) != model_content:
                 raise ValueError("此输入含当前账户凭据，无法完整保存；未接纳排队，请保留原输入并移除凭据后重试。")
@@ -237,7 +240,7 @@ class Conversation:
         model_content: str | list[dict[str, Any]] | None = None, rejected: bool = False,
         hook_context: str = "",
     ) -> bool:
-        """只由scheduler安全边界或pause→settled后调用；不与飞行请求并行换投影。"""
+        """在调度器安全边界消费排队输入，待在途请求结束后再更新模型上下文。"""
         async with self._checkpoint_lock:
             item = next((entry for entry in self._accepted_inputs if entry.input_id == input_id), None)
             if item is None:
@@ -276,10 +279,10 @@ class Conversation:
         self, session: Session, content: str | list[dict[str, Any]], *,
         model_content: str | list[dict[str, Any]] | None = None,
     ) -> None:
-        """提交确认后才接纳输入；账本身份独立于可被压缩的模型上下文。"""
+        """提交确认后接受用户输入。输入账本保留的身份独立于可以压缩的模型上下文。"""
         async with self._checkpoint_lock:
             item = self._input(content, queued=False)
-            # 手动Skill调用保留用户原始命令；模型投影按来源使用正文，两者同事务确认。
+            # 手动调用 Skill 时同时保留用户输入的原命令与发给模型的 Skill 正文。
             projected = content if model_content is None else model_content
             messages = [*session.messages, {"role": "user", "content": copy.deepcopy(projected)}]
             await self._commit(session, messages, (*self._accepted_inputs, item))
@@ -288,23 +291,27 @@ class Conversation:
     async def replace_context(
         self, session: Session, messages: list[dict[str, Any]], *, reset_prompt: bool = True,
     ) -> None:
-        """提交确认后交换投影；图片批末用reset_prompt=False保留主API用量。"""
+        """持久提交成功后更新模型上下文。批末注入图片时可沿用当前主请求的用量。"""
         async with self._checkpoint_lock:
             if (not messages or not session.messages or messages[0].get("role") != "system"
                     or reset_prompt and messages[0] != session.messages[0]):
                 raise ValueError("压缩须保留当前系统前缀。")
             self._require_paired(session)
+            original = session.messages
             candidate = copy.deepcopy(messages)
             rewrite = self._context_rewrite(session.messages, messages)
             await self._commit(session, candidate, self._accepted_inputs, archive_rewrite=rewrite)
-            session.messages = candidate
+            # 追加事实消息后仍保留已存在的用户消息对象，
+            # 进程内代码回退检查点仍凭这些对象定位。
+            session.messages = ([*original, *candidate[len(original):]]
+                                if len(candidate) >= len(original) and candidate[:len(original)] == original else candidate)
             if reset_prompt:
                 session.lastPromptTokens = None
                 session.lastSentLength = 0
 
     @staticmethod
     def _context_rewrite(original: list[dict[str, Any]], messages: list[dict[str, Any]]) -> ArchiveRewrite | None:
-        """Trusted projection edits retain positions/object identities, never deduplicate text."""
+        """为已核验的上下文修改保留消息位置和对象身份，文字相同的消息各自记录。"""
         if len(messages) >= len(original) and messages[:len(original)] == original:
             return None
         expected = copy.deepcopy(original)
@@ -380,7 +387,7 @@ class Conversation:
 
     async def branch(self, session: Session, directory: Path, runtime: RuntimeRecord, cwd: Path,
                      *, title: str | None = None) -> str:
-        """A fresh journal owns only the paired chat snapshot, never the parent's effects."""
+        """为分支创建自己的工具账本，导入配对的对话快照，父会话执行仍归父会话。"""
         self._require_paired(session)
         import uuid
 
@@ -395,8 +402,8 @@ class Conversation:
                                         resume=False, archive_import=imported)
         child._known_secrets.update(self._known_secrets)
         try:
-            # Retain original attachment identities as explicit durable references. Cleanup
-            # skips attachment-owning sessions and protects their paths, including the parent.
+            # 以持久引用保留原附件身份。
+            # 清理时按附件归属保护这些路径，其中也可能包含父会话目录。
             for file, digest in imported.attachments.items():
                 await child.register_background_attachment(file, digest)
             child._task_title = self._task_title
@@ -421,14 +428,14 @@ class Conversation:
                     scope, offset=offset, limit=16, versions=json_format)))
             def page(scope: str, offset: int) -> dict[str, Any]:
                 return asyncio.run_coroutine_threadsafe(read(scope, offset), loop).result()
-            # The worker supplies only registered scopes; this command is a user action.
+            # 这是用户主动导出。可读范围由存储线程返回的已登记范围确定。
             scopes = await self.worker.archive_scopes()
             task = asyncio.create_task(asyncio.to_thread(writeArchiveExport, workspace, self.session_id,
                                                        scopes, page, json_format=json_format))
             try:
                 return await asyncio.shield(task)
             except asyncio.CancelledError:
-                await task  # Retain the lock until an accepted publication has a known result.
+                await task  # 导出已进入发布阶段时继续持锁，等到发布结果明确才释放。
                 raise
 
     async def _commit(
@@ -453,7 +460,7 @@ class Conversation:
                  if inputs and not self._accepted_inputs else self._title)
         foreground_state = self.foreground_state if state is None else state
         reflection_state = self._safe(copy.deepcopy(reflection if update_reflection else self.reflection_state))
-        # A retained wait remains inert after a failed summary, including the save on reopen.
+        # 摘要失败后应保留既有等待状态，重新打开时的保存也遵循这一点。
         if (state is None and foreground_state != "paused" and background_checkpoint
                 and background_checkpoint["state"] == "waiting"):
             foreground_state = "waiting"

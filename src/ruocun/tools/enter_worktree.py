@@ -1,4 +1,4 @@
-"""Frozen tools/enter_worktree.ts (MIT)."""
+"""校验名称并委托工作树模块创建或进入工作树，再让当前会话使用新的工作目录。"""
 
 from __future__ import annotations
 
@@ -46,6 +46,7 @@ async def _handler(args: dict[str, Any], ctx: ToolContext) -> str:
         raise ToolRejected(str(exc)) from exc
     if worktree is None:
         return "创建 worktree 失败(当前目录不是 git 仓库、没有可检出的 HEAD 或 Git 不可用)。"
+    # 切换文件和命令的当前目录，继续用原工作区的项目配置。
     setattr(ctx, "activeWorktree", ActiveWorktree(worktree, ctx.cwd))
     ctx.cwd = worktree.root
     return (f"已进入 worktree：{worktree.root}（分支 {worktree.branch}）。此处用于文件操作和运行命令。"

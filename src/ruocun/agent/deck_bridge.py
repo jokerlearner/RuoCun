@@ -1,4 +1,4 @@
-"""冻结参考 deck_bridge.ts（MIT）：独立的本地 HTTP 会话协议桥。"""
+"""为本地客户端提供 HTTP 会话桥。请求线程负责解析和回包，会话命令回到代理事件循环串行处理。"""
 
 from __future__ import annotations
 
@@ -39,6 +39,7 @@ from .deck_messages import (
     utf16_slice,
     utf16_tail,
 )
+from .runtime_context import isRuntimeContext
 from .session_scheduler import SchedulerStatus, SessionScheduler
 
 _PERMISSION_COMMAND = re.compile(r"^/(mode|bypass|yolo|permissions|plan)(?:\s|$)", re.IGNORECASE)
@@ -128,7 +129,7 @@ class _DeckHttpServer(ThreadingHTTPServer):
             request.close()
 
     def handle_error(self, request: Any, client_address: Any) -> None:
-        # Errors from disconnected clients never print untrusted requests to stderr.
+        # 客户端断开后，错误回调可能拿到未受信的请求内容，直接结束这次记录。
         return
 
 
@@ -140,7 +141,7 @@ class _DeckRequest(BaseHTTPRequestHandler):
         super().setup()
 
     def log_message(self, format: str, *args: Any) -> None:
-        # Discovery credentials and user payload never go to HTTP logs.
+        # 禁用常规 HTTP 请求日志，避免记录发现凭据和用户请求正文。
         return
 
     def _read_body(self) -> bytes:
@@ -161,7 +162,7 @@ class _DeckRequest(BaseHTTPRequestHandler):
                 if len(chunks) + size > _REQUEST_LIMIT:
                     raise _BodyTooLarge
                 if not size:
-                    # The server handles one request per connection and does not consume trailers.
+                    # 每条连接只处理一条请求，尾随头无需再读。
                     return bytes(chunks)
                 chunk = self.rfile.read(size + 2)
                 if len(chunk) != size + 2 or not chunk.endswith(b"\r\n"):
@@ -215,7 +216,7 @@ class _DeckRequest(BaseHTTPRequestHandler):
 
 
 class DeckBridge:
-    """HTTP workers parse requests; all session/command state stays on the Agent loop."""
+    """将 HTTP 工作线程收到的请求交给代理循环，保持会话和命令状态的单一写入者。"""
 
     def __init__(self, options: DeckOptions, env: Mapping[str, str], managed: bool) -> None:
         self._options = options
@@ -439,7 +440,8 @@ class DeckBridge:
             state.pop("waiting", None)
         title = options.title() if options.title is not None else ""
         if not title:
-            first = next((message for message in options.session.messages if message.get("role") == "user"), {})
+            first = next((message for message in options.session.messages
+                          if message.get("role") == "user" and not isRuntimeContext(message)), {})
             title = utf16_slice(self._redact(contentText(first.get("content"))), 120)
         snapshot: dict[str, Any] = {
             "protocol": 1, "instanceId": self._instance, "sessionId": self._session_id, "pid": os.getpid(),
@@ -515,8 +517,8 @@ class DeckBridge:
         try:
             response = await self._dispatch(key, command)
         except Exception:
-            # Once dispatch is attempted, a failed save/control acknowledgment can be ambiguous.
-            # Preserve this command ID instead of retrying it into another write or execution.
+            # 命令一旦尝试派发，保存或控制回执丢失时，实际结果可能已经生效。
+            # 保留原命令 ID，避免新请求重复执行同一次写入。
             response = _error(400, "无法处理指令")
             self._unknown_commands[key] = signature, response
         if response[0] == 200:
@@ -610,7 +612,7 @@ class _DeckEvents:
 
     def content(self, chunk: str) -> None:
         self._deck._last_activity = _now()
-        # Keep a bounded tail in memory; apply redaction to the combined text before serving.
+        # 内存只保留有界尾部，对拼好的文字统一脱敏后再供读取。
         self._deck._live = (self._deck._live + chunk)[-48000:]
         self._deck._activity = "正在回复"
         if self._inner is not None:

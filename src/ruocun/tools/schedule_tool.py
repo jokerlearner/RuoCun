@@ -1,4 +1,4 @@
-"""Frozen src/tools/schedule_tool.ts (MIT), W3 capability text and native paths."""
+"""将一次性安排与周期任务工具装配到同一个计划服务，由该服务管理任务存储。"""
 from __future__ import annotations
 
 from typing import Any

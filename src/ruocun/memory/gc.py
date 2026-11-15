@@ -1,4 +1,4 @@
-"""Frozen reference memory/gc.ts (MIT), scoped to confirmed native deletions."""
+"""按记忆维护策略删除可清理的原生记录。删除结果未经确认时停止该作用域，保留现场供后续处理。"""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ __all__ = ["MemoryPruneUnconfirmed", "daysBetween", "gcMemories", "retention", "
 
 
 class MemoryPruneUnconfirmed(RuntimeError):
-    """A scope was stopped after an unconfirmed deletion receipt."""
+    """删除回执未经确认，当前记忆作用域已停止清理。"""
 
     def __init__(self, pruned: list[str]) -> None:
         super().__init__("记忆清理结果未确认，已停止本作用域。")

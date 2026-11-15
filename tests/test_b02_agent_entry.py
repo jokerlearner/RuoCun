@@ -11,6 +11,7 @@ import pytest
 from test_b02_worktree import repo as repo
 
 import ruocun
+from ruocun.agent.runtime_context import isRuntimeContext
 
 
 @pytest.mark.parametrize("case", ["builtin", "custom", "worktree", "worktree-unavailable"])
@@ -89,7 +90,8 @@ def test_agent_in_normal_cli_dispatches_isolated_child_session(tmp_path, case, r
     assert [body["model"] for body in requests] == ["synthetic-parent-model", "synthetic-child-model", "synthetic-parent-model"]
     assert "Agent" in {tool["function"]["name"] for tool in requests[0]["tools"]}
     assert "Agent" not in {tool["function"]["name"] for tool in requests[1]["tools"]}
-    child_messages = requests[1]["messages"]
+    child_messages = [message for message in requests[1]["messages"] if not isRuntimeContext(message)]
+    assert isRuntimeContext(requests[1]["messages"][-1])
     assert len(child_messages) == 2 and child_messages[1] == {"role": "user", "content": "synthetic child prompt"}
     if custom:
         assert "entry-reader" in requests[0]["messages"][0]["content"]
@@ -99,7 +101,8 @@ def test_agent_in_normal_cli_dispatches_isolated_child_session(tmp_path, case, r
     parent_messages = requests[-1]["messages"]
     results = [item["content"] for item in parent_messages if item.get("tool_call_id") == "parent-1"]
     if case == "worktree":
-        assert ".ruocun" in child_messages[0]["content"] and "worktrees" in child_messages[0]["content"]
+        snapshot = requests[1]["messages"][-1]["content"]
+        assert ".ruocun" in snapshot and "worktrees" in snapshot
         assert git("worktree", "list", "--porcelain").count(b"worktree ") == 1
         assert results == ["synthetic child result\n[remote 在同机 Git 工作树执行。]"]
     else:

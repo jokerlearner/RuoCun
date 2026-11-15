@@ -1,4 +1,4 @@
-"""Frozen src/tools/fetch_cache.ts (MIT), URL text cache before truncation."""
+"""短期缓存按 URL 获取的纯文本，使不同的截断长度可共用同一份抓取结果。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Frozen tools/task_list.ts (MIT)."""
+"""按请求列出全部或运行中的子代理任务，输出适合模型读取的状态列表。"""
 
 from __future__ import annotations
 

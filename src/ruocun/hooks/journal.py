@@ -1,4 +1,7 @@
-"""Durable exactly-once admission and verified receipts for configured Hooks."""
+"""为配置的 Hook 保存执行意图和已核实的结果。
+
+先登记意图再运行命令。已有意图而缺少可信结果时，将结果未确认交还调用方核实，避免恢复流程重新触发同一项外部操作。
+"""
 
 from __future__ import annotations
 
@@ -19,7 +22,7 @@ class HookJournal(Protocol):
 
 
 class HookOutcomeUnknown(RuntimeError):
-    """A configured command or its durable output could not be confirmed."""
+    """无法确认 Hook 命令的执行结果或其持久化输出。"""
 
 
 def hookJSON(value: Any) -> str:
@@ -50,6 +53,7 @@ async def runJournaledHooks(
         metadata["payloadDigest"] = _digest(hookJSON(context.payload))
         metadata["source"] = context.source
     try:
+        # 先登记事件和本次命令的身份。恢复时，可用经过校验的旧收据直接返回结果。
         cached = await journal.intent(call_id, name, hookJSON(metadata), True)
         if cached is not None:
             if not isinstance(cached, str):
@@ -59,6 +63,7 @@ async def runJournaledHooks(
             if not isinstance(payload, str) or _digest(payload) != receipt["digest"]:
                 raise ValueError("Hook receipt differs from the completed output.")
             return HookOutcome(**json.loads(payload))
+        # 只有记录接口允许继续且没有可复用的结果时，才实际运行 Hook。
         outcome = await runtime.run(event, context, signal, selected=commands)
         if signal.is_set():
             outcome = HookOutcome(block=True, reason="Hook 已取消，原调用已停止。")

@@ -1,4 +1,4 @@
-"""Frozen reference memory/store.ts (MIT), with native writes and read-only source provenance."""
+"""读取多个作用域的 Markdown 记忆并保留来源身份。写入只发往若存原生存储，兼容来源保持只读。"""
 
 from __future__ import annotations
 
@@ -290,8 +290,8 @@ class MemoryStore:
         self, target: Path, data: bytes, original: tuple[Memory, bytes], signal: Event | None,
     ) -> bool:
         while True:
-            # Keep the canonical stem identifiable without exhausting the
-            # Windows path budget when the publisher adds its own temp suffix.
+            # 保留能识别正式文件名的前缀，并给发布器追加的临时后缀
+            # 预留足够的 Windows 路径长度。
             backup = target.with_name(f".{target.stem}.{uuid4().hex[:12]}.bak")
             try:
                 backup.lstat()
@@ -309,7 +309,7 @@ class MemoryStore:
             return False
         _checkCancellation(signal)
         self._publishBytes(target, data)
-        # Recovery material is optional once the replacement is confirmed.
+        # 正式替换已经确认，恢复材料只作为可选辅助。
         try:
             with PrivateDirectory(target.parent):
                 if _regular(backup, mutable=True) and backup.read_bytes() == original[1]:
@@ -363,8 +363,8 @@ class MemoryStore:
         with _MUTATION_LOCK:
             _checkCancellation(signal)
             directory = self._writable(entry.scope)
-            # A confirmed locked fact may refresh its date, never its content or
-            # other metadata. Compatible sources are always read-only.
+            # 已确认的锁定事实只允许刷新日期，正文和其他元数据须保留。
+            # 兼容来源只读，不能刷新日期。
             unlocked = replace(entry, memory=replace(entry.memory, locked=False))
             if not self._ownsEntry(directory, unlocked):
                 return False
@@ -462,7 +462,7 @@ class MemoryStore:
                         try:
                             self._unlink(entry)
                         except ToolRejected as exc:
-                            # New data is already published; no ordinary "not executed" result.
+                            # 新数据已经对外发布，不能返回普通的未执行结果。
                             raise RuntimeError("已写入记忆，重复项清理未确认。") from exc
             return UpsertResult("added" if match is None else "updated", memory.name)
 

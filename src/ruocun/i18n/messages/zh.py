@@ -1,4 +1,4 @@
-"""中文终端标签、提示与快捷用法。"""
+"""中文终端标签、通知和快捷用法。"""
 
 zh: dict[str, str] = {'onboard.welcome': '欢迎使用若存 Code。先设置模型，再确认工作目录。',
  'onboard.step1': '[1/2] DeepSeek API key',

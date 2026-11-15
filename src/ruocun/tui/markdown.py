@@ -1,4 +1,4 @@
-"""冻结tui/markdown.ts（MIT）的ANSI Markdown，表格按显示列折行。"""
+"""将 Markdown 转换为适合终端显示的文本和样式，按显示列宽折叠表格。"""
 
 import re
 from io import StringIO
@@ -81,7 +81,7 @@ def _table(rows: list[list[str]], maximum: int) -> str:
 
 
 def _highlight(code: str, language: str) -> str:
-    # D10固定Rich只离屏格式化，绝不持有终端/Live/输入。
+    # Rich 只在内存中生成高亮文本，终端读写继续由输入代理统一管理。
     try:
         from pygments.lexers import get_lexer_by_name  # type: ignore[import-untyped]
         from rich.console import Console

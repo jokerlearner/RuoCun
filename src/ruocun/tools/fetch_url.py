@@ -1,4 +1,4 @@
-"""Frozen src/tools/fetch_url.ts (MIT): static text fetch and optional extraction."""
+"""检查 WebFetch 的目标 URL，获取页面并提取可读文本。缓存截断前的纯文本，可按请求进一步提取，最后限制返回长度。"""
 
 from __future__ import annotations
 

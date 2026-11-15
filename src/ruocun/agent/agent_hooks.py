@@ -1,4 +1,4 @@
-"""Frozen reference agent/agent_hooks.ts lifecycle for an individually admitted agent (MIT)."""
+"""在单个代理通过准入后运行其生命周期钩子，并维护本次执行的钩子状态。"""
 
 from __future__ import annotations
 

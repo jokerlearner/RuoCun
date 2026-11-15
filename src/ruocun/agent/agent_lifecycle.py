@@ -1,4 +1,4 @@
-"""Known background agent terminal outcomes, following frozen agent_lifecycle.ts (MIT)."""
+"""统一后台代理的已知终态，供等待、恢复和结果交付判断任务是否结束。"""
 
 from __future__ import annotations
 

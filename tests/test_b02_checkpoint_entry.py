@@ -18,6 +18,7 @@ def _exercise(home, workspace, patch):
 
     from ruocun.agent import runtime
     from ruocun.agent.input_broker import InputBroker
+    from ruocun.agent.runtime_context import isRuntimeContext
     from ruocun.client.resilient import ResilientResult
 
     class Output(DummyOutput):
@@ -42,8 +43,9 @@ def _exercise(home, workspace, patch):
     def request(options, *, env, context):
         messages = options["messages"]
         requests.append(messages)
-        users = [item["content"] for item in messages if item["role"] == "user"]
-        if messages[-1]["role"] == "user":
+        task_messages = [item for item in messages if not isRuntimeContext(item)]
+        users = [item["content"] for item in task_messages if item["role"] == "user"]
+        if task_messages[-1]["role"] == "user":
             name = "Write" if len(users) == 1 else "Edit"
             arguments = {"path": "a.txt", "content": users[-1]} if name == "Write" else {
                 "path": "a.txt", "old_string": users[-2], "new_string": users[-1]}

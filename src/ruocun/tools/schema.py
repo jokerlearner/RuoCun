@@ -1,4 +1,4 @@
-"""冻结 schema.ts 的 JSON Schema 适配与首版内置参数校验（MIT）。"""
+"""在内置工具使用的 JSON Schema 子集上校验调用参数，生成交给模型的工具参数结构。"""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ def objectSchema(properties: dict[str, Any], required: list[str]) -> dict[str, A
 
 
 def parseSchema(schema: dict[str, Any], args: Any) -> dict[str, Any]:
-    """校验内置工具使用的 JSON Schema 子集；先校验，再交给审批/handler。"""
+    """校验并返回工具参数，供后续审批和处理器共用。"""
     _validate(schema, args, "(root)")
     if not isinstance(args, dict):
         raise ValueError("参数需要 object")

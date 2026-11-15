@@ -1,12 +1,6 @@
-"""SSE 分帧与增量 UTF-8 严格解码。
+"""对 SSE 字节流先做严格 UTF-8 增量解码，再按空行分隔事件。跨数据块的字符和未结束事件留到后续块补齐。
 
-- ``parseSSEChunk`` 忠实迁移冻结 ``src/client/sse.ts``：事件以空行 ``\\n\\n``
-  分隔，CRLF 归一，取 ``data:`` 行，残留不完整尾事件留 ``rest``。
-- ``SSEStreamParser`` 是本票产品修复：用标准库增量 UTF-8 **strict** 解码器
-  按字节喂入，正确处理中文/emoji 跨字节分片、CR/LF、多帧、空行与 ``[DONE]``；
-  非法/不完整字节序列明确抛错，不静默替换、不伪报成功。
-  （冻结 client.ts 用 TextDecoder stream 模式；这里显式用 strict 增量解码器，
-  不复制来源 ``data.toString()`` 按 chunk 解码的 Unicode/65536 缓冲瑕疵。）
+CRLF 归一后提取 data 行。流结束还未闭合的字节序列以错误报告，避免乱码继续进入消息。
 """
 
 from __future__ import annotations
@@ -34,7 +28,7 @@ def parseSSEChunk(buffer: str) -> SSEParseResult:
 
 
 class SSEByteDecoder:
-    """按增量字节严格解码 UTF-8；未闭合的多字节序列在块间缓冲，末尾仍不完整则报错。"""
+    """缓存尚未收齐的 UTF-8 字节。流关闭时仍无法完成解码则报告错误。"""
 
     def __init__(self) -> None:
         self._decoder = codecs.getincrementaldecoder("utf-8")("strict")
@@ -47,7 +41,7 @@ class SSEByteDecoder:
 
 
 class SSEStreamParser:
-    """组合：字节流 → 严格增量解码 → CR/LF 归一 → SSE 分帧 → payload 列表。"""
+    """串联增量解码、换行归一和分帧，产出各事件中的数据。"""
 
     def __init__(self) -> None:
         self._decoder = SSEByteDecoder()
@@ -63,6 +57,6 @@ class SSEStreamParser:
         self._buffer += self._decoder.flush()
         if not self._buffer.strip():
             return []
-        # 冻结 client.ts:330-335：处理未以 \n\n 收尾的最后一个事件。
+        # 流结束时仍解析最后一个未以空行收尾的事件。
         buf = self._buffer if self._buffer.endswith("\n\n") else self._buffer + "\n\n"
         return parseSSEChunk(buf).payloads

@@ -1,4 +1,4 @@
-"""冻结 Onboarding.tsx (MIT) 的流程，持久化由普通启动入口注入。"""
+"""组织首次启动的语言、账户和目录信任选择，校验通过后由启动入口注入的函数保存结果。"""
 
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ async def Onboarding(ui: OnboardingUI, *, welcome: Mapping[str, str], detectedLa
         if trusted:
             await trustCurrent()
     except Exception:
-        # 写入结果不明时保留现场，退出前不重试且不显示底层可能带凭据的原文。
+        # 写入结果未知时提示检查已保存状态。自动重试可能重复写入，底层错误也可能带出凭据。
         await ui.write("✗ " + ("保存失败，已退出。请先检查已保存的账户和设置。" if getLang() == "zh" else
                               "Save failed; exiting. Check the saved account and settings before retrying."))
         return None

@@ -1,4 +1,4 @@
-"""本次请求的隔离解析子进程；stdin/stdout 为有界 JSON 协议。"""
+"""为单个请求提供独立的域名解析子进程。标准输入和输出采用有长度边界的 JSON 协议。"""
 
 from __future__ import annotations
 

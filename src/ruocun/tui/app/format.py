@@ -1,4 +1,4 @@
-"""冻结tui/app/format.ts（MIT）的展示纯函数。"""
+"""为终端展示限制行数，并从工具结果中提取任务清单。"""
 
 import re
 from typing import TypeVar

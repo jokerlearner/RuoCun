@@ -1,4 +1,4 @@
-"""Reference bash_ast.ts (MIT): parser/walker bridge for the permission pipeline."""
+"""衔接 Bash 解析器和安全分析，向权限流程提供子命令及分析结果。"""
 from __future__ import annotations
 
 from ..rules import splitBashCommands

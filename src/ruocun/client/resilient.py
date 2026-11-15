@@ -1,12 +1,6 @@
-"""模型流重试、非流式兜底与 idle watchdog（来源冻结 ``src/client/client.ts``，MIT）。
+"""编排模型请求的超时、取消、重试与非流式兜底。一次尝试由 client.py 完成，本模块决定失败能否再试。
 
-WIRE-07：仅在参考允许阶段/次数重试；已产出内容不从头重复；ADR-0003 未知结果
-不自动重放；529 background、无 Retry-After 的 429 保留来源分支。
-WIRE-08：默认 240s idle，仅有效 delta 重置；用户取消保留部分；产出后 idle 明确错误。
-
-本模块只在 ``src/ruocun/client/`` 内组织重试/watchdog，复用 04/05 已建立的
-``client.py`` 请求组装、SSE 分帧、累积器与 Responses 路由（不重定义 chunks
-消费逻辑、不另起第二套 client、不修改公共类型契约）。
+只在尚无有效产出时考虑重试或兜底。已经产出后发生断流时保留部分结果。空闲计时只由有效增量重置。
 """
 
 from __future__ import annotations
@@ -32,35 +26,35 @@ from ..config.compat import resolve_env
 from . import client, responses
 from .types import StreamChatOptions, StreamDelta
 
-# 冻结 client.ts:15 —— 过载/网关/限流状态；429 是否真走重试见 !res.ok 分支。
+# 过载、网关失败和限流候选状态。429 最终还要核对 Retry-After。
 RETRYABLE_STATUS: frozenset[int] = frozenset(
     {408, 409, 425, 429, 500, 502, 503, 504, 529}
 )
-# 冻结 client.ts:127-130 默认值。
+# 缺少配置时的等待、空闲和重试默认值。
 DEFAULT_IDLE_MS: int = 240000
 DEFAULT_MAX_RETRIES: int = 2
 DEFAULT_RETRY_DELAY_MS: int = 600
-# 冻结 client.ts:303 Math.min(s * 1000, 120_000)。
+# 请求声明的退避等待最长两分钟。
 RETRY_AFTER_CAP_MS: int = 120000
 
-# 冻结 client.ts:20 —— 上下文超限（loop 反应式压缩，client 不重试/不兜底）。
+# 上下文超限由回合循环考虑压缩，客户端将错误向上传递。
 _CONTEXT_LENGTH_RE = re.compile(
     r"context length|maximum context|too many tokens|reduce the length|"
     r"context_length_exceeded|prompt is too long|exceeds? the maximum|input is too long",
     re.IGNORECASE,
 )
-# 冻结 client.ts:30 —— 限流/配额（loop 的用户决策/退避路径，client 不自动换模型）。
+# 限流与配额状态由上层处理，当前模型由用户或上层策略决定。
 _RATE_LIMIT_RE = re.compile(
     r"\b429\b|rate[_ -]?limit|quota_exceeded|限流|请求频率",
     re.IGNORECASE,
 )
-# 冻结 client.ts:40 —— 凭证/认证（400 含订阅关键词）。
+# 订阅和认证错误分类。部分订阅错误会使用 HTTP 400。
 _CREDENTIAL_RE = re.compile(
     r"invalid.*key|authentication|unauthorized|subscription|CodingPlan|billing|"
     r"InvalidSubscription",
     re.IGNORECASE,
 )
-# 冻结 client.ts:141 —— 网络瞬断关键词（产出前失败才可重试）。
+# 识别瞬断特征，是否重试还取决于此前有无有效产出。
 _RETRYABLE_RE = re.compile(
     r"socket|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EPIPE|closed unexpectedly|"
     r"fetch failed|terminated|ENOTFOUND|EAI_AGAIN|network",
@@ -69,10 +63,7 @@ _RETRYABLE_RE = re.compile(
 
 
 def idleErrorMessage(idle_ms: float) -> str:
-    """冻结 client.ts:128 ``模型流空闲超时(${Math.round(idleMs/1000)}s ...)``。
-
-    JS ``Math.round`` 对非负数等于 ``floor(x + 0.5)``，不用 Python banker's rounding。
-    """
+    """生成空闲错误文案，对非负秒数按 JavaScript Math.round 取整。"""
     value = idle_ms / 1000
     if math.isnan(value):
         seconds: int | str = "NaN"
@@ -84,7 +75,7 @@ def idleErrorMessage(idle_ms: float) -> str:
 
 
 def _jsNumber(value: str) -> float:
-    """环境变量的 JS Number：识别空白、十进制/指数、Infinity 与无符号进制前缀。"""
+    """解析环境变量中的 JavaScript Number，支持空白、十进制、指数、无穷大和无符号进制前缀。"""
     token = value.strip()
     if not token:
         return 0.0
@@ -99,19 +90,19 @@ def _jsNumber(value: str) -> float:
 
 
 def _nodeTimerMs(value: float) -> float:
-    """Node 22 setTimeout 的到期时长；保留原值供错误消息而不静默改配置。"""
+    """按 Node 22 定时规则计算到期时长，错误提示仍使用用户配置的原值。"""
     if not math.isfinite(value) or value < 1 or value > 2147483647:
         return 1.0
     return float(math.floor(value))
 
 
 def isContextLengthError(e: BaseException) -> bool:
-    """冻结 client.ts:18-21；导出给 loop 判定（client 不重试/不兜底）。"""
+    """识别上下文超限，交由回合循环决定是否压缩。"""
     return bool(_CONTEXT_LENGTH_RE.search(str(e)))
 
 
 def isRateLimitError(e: BaseException) -> bool:
-    """冻结 client.ts:26-31；status 429 或限流/配额关键词。"""
+    """识别 HTTP 429 或带限流、配额特征的错误。"""
     status = getattr(e, "status", None)
     if status == 429:
         return True
@@ -119,7 +110,7 @@ def isRateLimitError(e: BaseException) -> bool:
 
 
 def isCredentialError(e: BaseException) -> bool:
-    """冻结 client.ts:35-43；401/403 或含订阅关键词的 400。"""
+    """识别 401、403 和带订阅特征的 400 错误。"""
     status = getattr(e, "status", None)
     if status == 401 or status == 403:
         return True
@@ -129,25 +120,23 @@ def isCredentialError(e: BaseException) -> bool:
 
 
 def isRetryable(e: BaseException) -> bool:
-    """冻结 client.ts:138-142；retryableStatus 内部标记或网络瞬断关键词。"""
+    """根据流内可重试标记和连接异常信号识别可能恢复的失败。"""
     if getattr(e, "retryableStatus", False) is True:
         return True
-    # Python/Windows 的本地化错误文本不一定含 Node 错误码；按对应异常类型识别。
+    # Windows 错误文本可能已经本地化，因此也按 Python 异常类型判断。
     if isinstance(e, (ConnectionResetError, ConnectionRefusedError, BrokenPipeError,
                       socket.gaierror)):
         return True
     if isinstance(e, urllib.error.URLError) and isinstance(e.reason, BaseException):
         return isRetryable(e.reason)
-    # 冻结把 ``${e.name} ${e.message}`` 一起纳入；Python 用类名近似 name。
+    # 同时匹配异常类名和消息，以兼容按错误名称识别的情形。
     return bool(_RETRYABLE_RE.search(f"{type(e).__name__} {e}"))
 
 
 def retryAfterMs(headers: Mapping[str, str], status: int) -> float | None:
-    """冻结 client.ts:301-303：Retry-After 秒→毫秒、下限 0、上限 120000。
+    """解析 Retry-After 的等待秒数，换算为毫秒并限制为至多 120000。
 
-    header 名按 HTTP Headers 规范大小写不敏感（JS ``headers.get`` 语义）；非法
-    数字（``Number("abc")`` → NaN）或负值跳过。仅可重试状态才需要等待时长，
-    其余状态直接 fatal、不会进入退避（与冻结可观察行为等价）。
+    响应头名称忽略大小写，非法值和负数跳过。只有可重试状态才使用这个等待值。
     """
     if status not in RETRYABLE_STATUS:
         return None
@@ -165,21 +154,17 @@ def retryAfterMs(headers: Mapping[str, str], status: int) -> float | None:
 
 
 def backoffMs(retry_delay_ms: float, attempt: int, jitter_ms: float) -> float:
-    """冻结 client.ts:352 ``retryDelayMs*(attempt+1)+floor(random()*250)``。
-
-    jitter 由调用方注入（冻结的 ``Math.floor(Math.random()*250)``），便于 oracle
-    用固定值验证公式，而不是照抄「指数退避」注释。
-    """
+    """按尝试次数线性递增等待时长，再加调用方提供的随机扰动。"""
     return retry_delay_ms * (attempt + 1) + jitter_ms
 
 
 # ---------------------------------------------------------------------------
-# 任务06 · 重试 / watchdog 编排（冻结 client.ts:271-378 的 client 层重试循环）
+# 重试和空闲监视使用的依赖、状态和证据。
 # ---------------------------------------------------------------------------
 
 
 class IdleTimeoutError(RuntimeError):
-    """idle watchdog 触发（冻结 client.ts:283-286）。"""
+    """已超过允许的无有效增量时长。"""
 
     def __init__(self, message: str, status: int | None = None) -> None:
         super().__init__(message)
@@ -187,7 +172,7 @@ class IdleTimeoutError(RuntimeError):
 
 
 class RequestCancelled(RuntimeError):
-    """用户取消请求。"""
+    """用户取消当前请求。"""
 
 
 def _monotonic() -> float:
@@ -199,17 +184,13 @@ def _realSleep(seconds: float) -> None:
 
 
 def _defaultJitter() -> float:
-    # 冻结 client.ts:352 Math.floor(Math.random() * 250)
+    # 每次退避叠加小于 250 毫秒的随机扰动。
     return float(random.randrange(250))
 
 
 @dataclass
 class ResilientContext:
-    """注入式系统边界依赖（时钟 / 退避 / jitter / 取消 / 证据回调）。
-
-    默认真实时钟与真实 sleep；测试注入 fake clock 与 no-op sleep，让 240s idle
-    与退避可确定性验证，不真等、不访问网络（mocking.md：只在系统边界注入）。
-    """
+    """提供时钟、退避、随机扰动、取消和证据回调。默认使用系统时钟，测试可控制经过时间和退避选择。"""
 
     clock: Callable[[], float] = _monotonic
     sleep: Callable[[float], None] = _realSleep
@@ -223,24 +204,24 @@ class ResilientContext:
 
 @dataclass(frozen=True)
 class AttemptRecord:
-    """每次尝试的独立证据（08 契约 request/attempt identity：同事实只累计一次）。"""
+    """记录一次尝试的状态，按请求和尝试身份归并证据。"""
 
     index: int
-    kind: str                       # "stream" | "fallback"
+    kind: str                       # 尝试路径可为流式或非流式兜底。
     http_status: int | None
     retry_after_ms: float | None
     deltas_count: int
     yielded_any: bool
-    replayed: bool                  # 是否「已产出后重放」（冻结从不发生）
-    outcome: str                    # complete/partial/retry/fallback/fatal/idle/cancelled
+    replayed: bool                  # 记录是否重放已产出的内容，当前流程按规则始终避免这种重放。
+    outcome: str                    # 记录尝试实际结束原因，供调用方区分成功、部分结果和故障。
     idle_triggered: bool
-    classification: str             # no-output-before-failure / sent-but-outcome-unknown
+    classification: str             # 区分产出前失败和请求已发出但结果未确认。
     error: str | None
 
 
 @dataclass(frozen=True)
 class ResilientResult:
-    """任务06 结构化结果（不改动 04 的 ``StreamResult`` 公共契约）。"""
+    """聚合流结果和重试记录，供调用方同时取得回答及尝试过程。"""
 
     status: Literal["complete", "partial", "failed"]
     deltas: list[StreamDelta]
@@ -261,11 +242,9 @@ class ResilientResult:
 
 
 class IdleWatchdog:
-    """冻结 client.ts:280-286, 321-328：默认 240s，**仅有效 delta 重置**。
+    """监视连续无有效增量的时长，默认 240 秒。有效增量才重置计时。
 
-    每帧主动检查并仅在有效 delta 重置；计时线程向默认 HTTP transport 发出
-    socket 中断，结束前必须 join。自定义 transport 须自行保证可及时返回，
-    域名解析等尚无 socket 的阻塞阶段不能仅凭 socket 中断保证及时停止。
+    超时后通知默认传输中断本请求的套接字，退出前回收计时线程。自带传输需要处理自己的阻塞，在尚无套接字时也要单独处理解析等阻塞阶段。
     """
 
     def __init__(
@@ -283,10 +262,10 @@ class IdleWatchdog:
         self._thread: threading.Thread | None = None
 
     def arm(self) -> None:
-        self._last_delta_at = self._clock()  # 连接/首字节阶段也纳入看门狗
+        self._last_delta_at = self._clock()  # 空闲计时已经覆盖连接建立和首字节等待。
 
     def reset(self) -> None:
-        self._last_delta_at = self._clock()  # 仅有效 delta 调用
+        self._last_delta_at = self._clock()  # 只有有效内容才重置空闲起点。
 
     def check(self) -> None:
         if self._cancelled or (self._cancel is not None and self._cancel()):
@@ -302,7 +281,7 @@ class IdleWatchdog:
                 try:
                     self.check()
                 except (IdleTimeoutError, RequestCancelled):
-                    # 在连接尚未建立时 socket 可能暂不存在；持续尝试直到被停止。
+                    # 连接建立前可能还没有可中断的套接字，继续观察直到停止。
                     abort()
 
         self._thread = threading.Thread(target=watch, name="ruocun-idle-watchdog")
@@ -325,14 +304,14 @@ class IdleWatchdog:
 def _resolve_addresses(
     host: str, port: int, context: ResilientContext, watchdog: IdleWatchdog,
 ) -> list[Any]:
-    """以本次请求私有 helper 解析；中断时必须停止并等待该子进程。"""
+    """在本次请求私有的子进程解析地址，取消时终止并等待该进程退出。"""
     watchdog.check()
     if context.resolver_command is None and getattr(sys, "frozen", False):
         raise RuntimeError("独立程序尚未配置 DNS helper")
     command = context.resolver_command or (
         sys.executable, "-I", "-X", "utf8", "-m", "ruocun.client._dns_helper",
     )
-    # 解析不需要账户、凭据或配置路径；仅保留 Windows 进程启动所需环境。
+    # DNS 解析只需 Windows 进程启动环境，过滤账户凭据和配置路径。
     allowed = ("SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT")
     child_env = {name: os.environ[name] for name in allowed if name in os.environ}
     child_env["PATH"] = os.path.dirname(sys.executable)
@@ -391,7 +370,7 @@ def _resolveIdleMs(
     source = os.environ if env is None else env
     raw = resolve_env("STREAM_IDLE_MS", source)
     parsed = _jsNumber(raw) if raw is not None else math.nan
-    # 冻结 client.ts:127 Number(env) || 240000；负数和无穷大为真。
+    # 空闲时长沿用 Number(env) 的默认值选择语义，负数和无穷大仍视为已配置。
     return float(DEFAULT_IDLE_MS) if parsed == 0 or math.isnan(parsed) else parsed
 
 
@@ -406,7 +385,7 @@ def _resolveRetryDelayMs(opts: StreamChatOptions) -> float:
 
 
 def _stateHadOutput(state_out: dict[str, Any]) -> bool:
-    # Frozen yieldedAny is set by emitted StreamDelta, not buffered tool fragments.
+    # 只有已经发出的有效 StreamDelta 才算产出，仍在缓冲的工具片段不计入。
     deltas = state_out.get("deltas")
     return isinstance(deltas, list) and bool(deltas)
 
@@ -423,7 +402,7 @@ def _partialFromState(
 
 
 def _classification(yielded_any: bool) -> str:
-    # ADR-0003：产出后「已发送但结果未知」不自动重放；产出前才允许重试。
+    # 产出前失败可进入重试判断。产出后结果不明时保留部分结果，避免重复请求。
     return "sent-but-outcome-unknown" if yielded_any else "no-output-before-failure"
 
 
@@ -435,16 +414,16 @@ def _recoverable(
     err: BaseException, idled_out: bool, status: int | None,
     retry_after_ms: float | None,
 ) -> bool:
-    """冻结 client.ts:344-346 recoverable 判定（idle / 瞬断 / 过载状态）。"""
+    """判断空闲超时、瞬时断流或过载是否允许后续恢复处理。"""
     if idled_out:
         return True
     if isinstance(err, client.SseError):
-        return True  # 冻结 :226 SSE error 带 retryableStatus=true
+        return True  # 流内错误携带 retryableStatus 标记。
     if isinstance(err, (client.StreamError, client.StreamDisconnected)):
-        return True  # 断流/网络瞬断（产出前）
+        return True  # 请求在产出前发生断流或瞬断。
     if isinstance(err, client.ApiError):
         if status == 429 and retry_after_ms is None:
-            return False  # 冻结 :308 429 无 Retry-After → 立即上抛，不重试/不兜底
+            return False  # 429 缺少 Retry-After 时，把原错误向上报告，结束此次尝试链。
         return status in RETRYABLE_STATUS if status is not None else False
     return isRetryable(err)
 
@@ -453,13 +432,9 @@ def _nonStreamingFallback(
     opts: StreamChatOptions, transport: client.Transport,
     env: Mapping[str, str] | None,
 ) -> tuple[list[StreamDelta], dict[str, Any], dict[str, Any] | None, str | None]:
-    """冻结 client.ts:145-175 + responses.ts:66-71：流式彻底失败后一次性兜底。
+    """流式失败且允许兜底时，执行一次非流式请求。
 
-    - Chat：``{...body, stream:false}`` 删 stream_options，POST /chat/completions，
-      解析 ``choices[0].message``（content/tool_calls/reasoning_content/responseItems）。
-    - Responses：经 05 桥转 ``stream:false`` 请求，非流式 ``output`` 经
-      ``responsesMessage`` 归一化后走**同一段** Chat 形状解析（冻结 responsesFetch
-      对包装 fetch 的处理），保留工具调用与推理项（responses.test.ts:76-86）。
+    Chat 直接解析首条消息，Responses 先归一成同样的消息结构，两路均保留工具和推理项。
     """
     use_responses = responses.usesResponses(opts["baseUrl"], opts["model"])
     chat_body = client.buildRequestBody(opts, env=env, use_responses=use_responses)
@@ -488,7 +463,7 @@ def _nonStreamingFallback(
         raise ValueError("非流式兜底响应不是 JSON 对象")
     chat_data: dict[str, Any]
     if use_responses:
-        # 冻结 responsesFetch:67-71：非流式 Responses → 统一 Chat 形状
+        # 将非流式 Responses 结果归一为 Chat 的消息形状。
         if data.get("error") or data.get("status") == "failed":
             raise client.ApiError(
                 f"Responses error: {data.get('error')}", status=response.status,
@@ -547,14 +522,14 @@ def _nonStreamingFallback(
         message["reasoningContent"] = reasoning
     if isinstance(response_items, list) and response_items:
         message["responseItems"] = response_items
-    # 冻结 client.ts:162-163 / responsesFetch:70-71 的回调
+    # 调用方可沿用同一个增量接收入口接收兜底结果。
     usage_cb = opts.get("onUsage")
     if usage_cb is not None and usage is not None:
         usage_cb(cast("Any", usage))
     finish_cb = opts.get("onFinishReason")
     if finish_cb is not None and finish_str is not None:
         finish_cb(finish_str)
-    # 冻结 client.ts:357-363：兜底内容也作为 delta 实时显示
+    # 兜底得到的内容也通过 delta 投递。
     deltas: list[StreamDelta] = []
     if content:
         deltas.append({"kind": "content", "text": content})
@@ -570,13 +545,9 @@ def streamChatResilient(
     env: Mapping[str, str] | None = None,
     context: ResilientContext | None = None,
 ) -> ResilientResult:
-    """冻结 client.ts:271-378 的 client 层重试编排（新公开函数，不改 streamChat）。
+    """执行可恢复的流式请求。只有产出前且可恢复的失败才退避重试，Retry-After 优先。
 
-    - 仅在「产出前」失败时按 maxRetries 退避重试；Retry-After 优先于公式。
-    - 重试耗尽且仍无产出 → 非流式兜底一次。
-    - 已产出内容的中途断开 → 返回 partial，不重试、不重复（ADR-0003）。
-    - 429 无 Retry-After / 背景 529 / 上下文超限 / 认证错误 → 明确失败。
-    - 产出后 idle → 明确错误，不静默成功。
+    重试额度耗尽且仍无产出时，可做一次非流式兜底。已有增量的流中断时返回部分结果，产出后空闲则报告明确错误。上下文、认证和受限状态按各自规则交回上层。
     """
     ctx = context if context is not None else ResilientContext()
     send: client.Transport = client.urllib_transport if transport is None else transport
@@ -634,7 +605,7 @@ def streamChatResilient(
             idle_triggered=idle_trig, classification=classification, error=error,
         )
 
-    yielded_any = False  # 冻结 :271，在 for 循环外，产出后不再重试
+    yielded_any = False  # 跨尝试累计产出状态，一旦有产出就停止后续重试。
     for attempt in range(max_retries + 2):
         if ctx.cancel is not None and ctx.cancel():
             return emit(
@@ -643,7 +614,7 @@ def streamChatResilient(
                           "cancelled", False, "no-output-before-failure", None),
             )
         watchdog = IdleWatchdog(timer_ms / 1000.0, ctx.clock, idle_err_msg, ctx.cancel)
-        watchdog.arm()  # 连接/首字节阶段也纳入
+        watchdog.arm()  # 空闲计时从连接建立之前开始。
         state_out = {}
         connections: list[http.client.HTTPConnection] = []
         sockets: list[socket.socket] = []
@@ -661,8 +632,8 @@ def streamChatResilient(
                 except OSError:
                     pass
                 try:
-                    # Windows 下 socket.makefile() 持有引用，普通 close 会延迟真正关闭，
-                    # 无法唤醒已阻塞的 recv；仅对本次请求私有 socket 触发底层关闭。
+                    # Windows 中 socket.makefile() 会持有套接字引用，普通 close 可能延迟。
+                    # 对本次请求的套接字执行底层关闭，使阻塞的 recv 尽快返回。
                     getattr(sock, "_real_close")()
                 except OSError:
                     pass
@@ -677,7 +648,7 @@ def streamChatResilient(
             except ValueError:
                 entries = _resolve_addresses(host, port, ctx, active_watchdog[0])
             else:
-                # 数字地址明确禁止 DNS 查询，避免为已知 IP 启动额外进程。
+                # 常量 IP 直接使用，避免为数字地址启动 DNS 进程。
                 entries = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM,
                                              0, socket.AI_NUMERICHOST)
             last_error: OSError | None = None
@@ -702,7 +673,7 @@ def streamChatResilient(
 
         def register_connection(connection: http.client.HTTPConnection) -> None:
             connections.append(connection)
-            # CPython 3.11 实例级接入，不影响其它请求或全局 getaddrinfo。
+            # 连接钩子只挂到当前 CPython 3.11 实例，其他请求沿用各自的解析路径。
             connection._create_connection = connect_address  # type: ignore[attr-defined]
 
         if transport is None:
@@ -727,7 +698,7 @@ def streamChatResilient(
             watchdog.stop()
             if _stateHadOutput(state_out):
                 yielded_any = True
-            # 冻结 :340 isAbort / :347 recoverable&&yieldedAny → break（返回部分）
+            # 用户取消或已产出后发生可恢复断流时，进入部分结果收尾。
             is_cancel = ctx.cancel is not None and ctx.cancel()
             if is_cancel and result.status == "partial":
                 return emit(
@@ -771,7 +742,7 @@ def streamChatResilient(
             err_text = str(err)
             classification = _classification(yielded_any)
 
-            # (1) 用户取消：冻结 :340 isAbort && !idledOut → 优雅返回已累积部分
+            # 用户主动取消时，把已累积的内容交给调用方。
             if (watchdog.cancelled or (ctx.cancel is not None and ctx.cancel())) and not idled_out:
                 deltas, message, usage, finish = _partialFromState(state_out)
                 return emit(
@@ -782,7 +753,7 @@ def streamChatResilient(
                               classification, err_text),
                 )
 
-            # (2) 上下文超限：冻结 :341-342 致命且可救，立即上抛，不重试/不兜底
+            # 上下文超限直接交由会话回合处理。
             if isContextLengthError(err):
                 return emit(
                     "failed", deltas=[], message=_emptyMessage(),
@@ -791,7 +762,7 @@ def streamChatResilient(
                               had_output, "fatal", False, classification, err_text),
                 )
 
-            # (3) 背景查询 529：冻结 :343-344 立即上抛，零重试零兜底
+            # 后台查询遇到 529 立即交回调用方，避免后台请求扩大重试量。
             if background and status == 529:
                 return emit(
                     "failed", deltas=[], message=_emptyMessage(),
@@ -800,7 +771,7 @@ def streamChatResilient(
                               had_output, "fatal", False, classification, err_text),
                 )
 
-            # (4) 产出后 idle：冻结 :345 清晰报错（不静默成功、不半截工具调用）
+            # 已经产出后长时间无有效增量，明确报告空闲错误，保留失败原因。
             if idled_out and yielded_any:
                 deltas, message, usage, finish = _partialFromState(state_out)
                 return emit(
@@ -814,7 +785,7 @@ def streamChatResilient(
 
             recoverable = _recoverable(err, idled_out, status, retry_after_ms)
 
-            # (6) 已产出内容的中途断开 → 返回部分（不重试，避免重复）
+            # 已经交付过部分内容，返回这些内容即可，避免重试重复输出。
             if recoverable and yielded_any:
                 deltas, message, usage, finish = _partialFromState(state_out)
                 return emit(
@@ -825,7 +796,7 @@ def streamChatResilient(
                               classification, err_text),
                 )
 
-            # (7) recoverable 且尚无产出 → 退避重试 / 非流式兜底
+            # 只有产出前且可恢复时，才进入退避重试或非流式兜底。
             if recoverable:
                 if attempt < max_retries:
                     delay = (
@@ -851,8 +822,8 @@ def streamChatResilient(
                 fallback_watchdog.arm()
                 fallback_watchdog.start(abort_connection)
                 try:
-                    # Frozen fallback creates AbortSignal.timeout(idleMs) before fetch.
-                    # Its uint32/integer check differs from streaming setTimeout's clamp.
+                    # 非流式兜底先按 AbortSignal.timeout 的规则检查时长。
+                    # 该规则要求 uint32 范围内的整数，与流式定时器的截断规则不同。
                     if (not math.isfinite(idle_ms) or not idle_ms.is_integer()
                             or idle_ms < 0 or idle_ms > 4294967295):
                         raise ValueError(
@@ -919,7 +890,7 @@ def streamChatResilient(
                 finally:
                     fallback_watchdog.stop()
 
-            # (8) 非可重试错误（致命）原样上抛
+            # 其余不可重试错误原样返回给调用方。
             return emit(
                 "failed", deltas=[], message=_emptyMessage(),
                 error=err_text, error_exception=err, error_status=status,

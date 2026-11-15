@@ -1,4 +1,4 @@
-"""Frozen reference memory/audit.ts (MIT) and the pure scoring it uses."""
+"""对现有记忆计算留存评分、识别噪声，并为 /memory 构造只读审计结果。"""
 
 from __future__ import annotations
 

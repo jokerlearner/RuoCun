@@ -1,9 +1,4 @@
-"""Chat 协议类型（来源冻结 ``src/client/types.ts``，MIT）。
-
-消息、工具、流式增量用宽松映射保留来源对角色/字段/空值/未知字段的宽容
-边界（R-12）：不借 Pydantic 式默认删未知/补 default 改写发送契约。
-``Usage`` / ``StreamChatOptions`` 用 TypedDict 表达已确认字段。
-"""
+"""定义 Chat 消息、工具和流式增量的共享类型。协议映射保留未知字段和空值语义，Usage 等已确认结构用 TypedDict 描述。"""
 
 from __future__ import annotations
 

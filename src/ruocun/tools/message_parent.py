@@ -1,4 +1,4 @@
-"""Frozen tools/message_parent.ts (MIT)."""
+"""将子代理的进展通过当前执行提供的报告入口发给父代理。"""
 
 from __future__ import annotations
 

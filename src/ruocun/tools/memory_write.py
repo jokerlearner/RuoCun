@@ -1,4 +1,4 @@
-"""Frozen reference MemoryWrite (MIT), using native durable publication."""
+"""通过绑定的记忆库保存或删除条目。写入前检查凭据、确定存储范围，并为附带出处的条目记录来源指纹。"""
 
 from __future__ import annotations
 

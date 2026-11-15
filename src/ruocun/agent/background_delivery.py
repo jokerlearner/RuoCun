@@ -1,4 +1,4 @@
-"""Frozen BackgroundDelivery (MIT): persist message+delivered before memory ack."""
+"""将后台任务结果交给主会话。先一并提交消息和已交付标记，再确认内存里的待投递项，避免恢复后重复投递。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Choose a RuoCun welcome line for the plain terminal banner."""
+"""为纯文本欢迎横幅选取一句若存短句。"""
 
 import math
 import random

@@ -2,11 +2,11 @@
 
 若存 Code 是用 Python 编写的终端编码助手。它可以在指定项目目录中阅读和修改代码、执行命令，并在重开会话后继续工作。
 
-当前安装包面向 Windows x64 和 CPython 3.11。各平台的验证范围见[发布记录](docs/release/batch-09.md)。
+当前发布版为 **0.9.0**，安装包面向 Windows x64 和 CPython 3.11。[GitHub Release](https://github.com/jokerlearner/RuoCun/releases/tag/v0.9.0) · [版本说明](docs/release/v0.9.0.md)
 
 ## 当前状态
 
-当前版本包含分层权限、前台输入队列、后台任务、文件搜索、Skills 和上下文压缩。各批固定产物、自动检查和实机验收记录见[实施进度](.scratch/ruocun/implementation.md)及[发布记录](docs/release/batch-09.md)。
+当前版本包含分层权限、前台输入队列、后台任务、文件搜索、Skills 和上下文压缩。独立验收按具体风险和证据缺口派发，仍适用的验收结果可以复用。Windows 可选 MXC 后端使用独立安装的固定 Codex CLI，详见[Windows 沙箱](docs/windows-sandbox.md)。
 
 开发使用 pytest、统一验收驱动、Ruff、mypy 和 build。构建与复现方法见[开发说明](docs/development.md)。
 
@@ -15,11 +15,12 @@ Codex 负责编码和自动验证，用户负责决策和体验验收。
 
 ## 用法
 
-将 Windows wheel 安装到 CPython 3.11 的专用环境。离线安装、手动更新和恢复见[安装指南](docs/install-and-recovery.md)。
+从 GitHub Release 下载 Windows wheel，将它安装到 CPython 3.11 的专用环境。以下安装会解析运行依赖。离线安装、手动更新和恢复见[安装指南](docs/install-and-recovery.md)。
 
 ```powershell
 py -3.11 -m venv .venv
-.venv\Scripts\python -m pip install "路径\ruocun-0.1.0.dev0-py311-none-win_amd64.whl"
+.venv\Scripts\python -m pip install ".\ruocun-0.9.0-py311-none-win_amd64.whl"
+.venv\Scripts\python -m ruocun --version
 .venv\Scripts\python -m ruocun --help
 ```
 

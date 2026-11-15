@@ -1,4 +1,7 @@
-"""冻结config/auth_wizard.ts（MIT）；校验/输入注入，密钥存储复用58。"""
+"""编排录入密钥时的验证和保存。
+
+向导依赖注入的验证和存储接口。密钥校验通过后才请求保存，调用方据返回结果更新配置。
+"""
 
 from __future__ import annotations
 
@@ -41,7 +44,7 @@ async def runKeyWizard(deps: WizardDeps) -> WizardResult | None:
             reason = reason if reason in {"invalid", "unreachable", "http"} else "fail"
             deps.write(t("wizard.retry", t("validate.reason." + reason)) + "\n")
             continue
-        # persistKey保留58的不明写入显式异常，不捕捉后重试；cfg由组合根保存。
+        # 系统凭据写入不明时保留原异常，由调用方提示核实。
         cfg, stored = persistKey(deps.cfg, deps.name, deps.meta, key, deps.kc, prefer_keychain=deps.preferKeychain)
         deps.write(t("wizard.storedKeychain" if stored == "system" else "wizard.storedFile") + "\n")
         return {"cfg": cfg, "resolved": {"key": key, "provider": deps.meta["provider"],

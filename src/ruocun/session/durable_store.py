@@ -1,22 +1,7 @@
-"""StoragePort v1 产品实现（MM-593 / MM-601 / REC-01..03 / REC-09）。
+"""用会话 SQLite 实现 StoragePort，管理所有权、工具账本、检查点和后台事件。
 
-冻结行为来源（只读解包副本）：``src/session/durable_store.ts`` 与
-``durable_store.test.ts``、``src/session/sqlite.ts``、``src/session/recovery.ts``、
-``src/session/process_identity.ts``。契约来源：``09-storage-extension-route.md``
-``# StoragePort v1`` / ``# SQLite及文件路线``、``08-python-runtime-route.md``、
-ADR-0005、任务 07 票。
-
-本票实现「本票路径真正需要的最小子集」：全部九个端口方法均有可运行实现，
-但下列细节明确留后续票（见交接与证据）：
-- 完整 RunRecord 的 runner/进程身份/launch 关联、agent checkpoint 与 fork 材料；
-- OutboxEvent 的完整快照/附件 hash、分模型费用桶、pending interaction 全字段；
-- 双原子域 runner 收据导入、control_epoch / stream_generation（本票只实现
-  owner_epoch）；完整恢复决定 UI 与后台调度。
-关键保证不缩减：owner fencing（每个写事务内）、原子提交、未知结果保护、
-失败保留原错、品牌/数据身份与版本拒绝、运行库门禁不静默回退。
-
-任务15在既有RunRecord快照内增加Shell启动关联与control_epoch校验。
-runner收据的实际身份及日志核验由manager完成，再经本端口提交。
+每次写入都在事务内核对所有者及代次。前台和后台提交共享同一数据库，工具结果与相关事件一起提交，调用方据此判断哪些操作可以复用。
+恢复时保留结果未知的调用。Shell 管理器先核实 runner 及其收据，再由本模块提交已确认的结果。
 """
 
 from __future__ import annotations
@@ -161,10 +146,10 @@ def _validated_checkpoint(con: "sqlite3.Connection") -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# JSON 编解码（冻结来源以 json 列保存逻辑状态；不把 JSON 旁路当等价真相）
+# 状态记录保存在 SQLite 的 JSON 列中，下面的助手负责编解码。
 # ---------------------------------------------------------------------------
 def _dumps(value: Any) -> str:
-    # SQLite TEXT与HTTP均要求有效UTF-8；仅把孤立代理项转成合法JSON转义。
+    # SQLite 和 HTTP 需要合法 UTF-8。字符串里的孤立代理项转换成 JSON 转义。
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
         "utf-8", errors="backslashreplace",
     ).decode("utf-8")
@@ -316,7 +301,7 @@ def _decode_checkpoint(data: dict[str, Any]) -> Checkpoint:
 
 
 # ---------------------------------------------------------------------------
-# 表级读写助手（都接受 con，不自行开启事务，避免线程内/跨 await 伪嵌套）
+# 表级助手使用调用方提供的连接，由外层控制事务的开始和提交。
 # ---------------------------------------------------------------------------
 def _read_tool(con: "sqlite3.Connection", ref: ToolRef) -> ToolRecord | None:
     row = con.execute(
@@ -531,7 +516,7 @@ def _pending_events(con: "sqlite3.Connection") -> list[OutboxEvent]:
 
 
 def assert_runtime_gate(runtime: RuntimeRecord) -> None:
-    """声明的受控清单必须与进程实际 sqlite3 运行库一致；不符即拒绝（不静默回退）。"""
+    """核对已声明的 SQLite 清单与进程实际加载的运行库，不一致就拒绝打开会话。"""
     from .runtime import verify_controlled_runtime
 
     if runtime.gate != "met":
@@ -556,10 +541,10 @@ def _verify_private_database_files(directory: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# DurableStore
+# SQLite 会话存储的事务实现。
 # ---------------------------------------------------------------------------
 class DurableStore:
-    """StoragePort v1 最小子集；连接由调用方在专属线程内创建/使用/关闭。"""
+    """由调用方在专属线程持有的会话存储实例。"""
 
     def __init__(
         self,
@@ -583,7 +568,7 @@ class DurableStore:
 
     @property
     def config(self) -> dict[str, Any]:
-        """已读回的 WAL/FULL/busy_timeout/foreign_keys 配置证据。"""
+        """返回连接实际读回的 WAL、同步、等待超时和外键配置。"""
         return dict(self._config)
 
     @property
@@ -595,7 +580,7 @@ class DurableStore:
             raise StoreError("会话存储尚未打开。")
         return self._con
 
-    # ---- 版本/身份协商（REC-02） ----
+    # 打开会话前核对身份、版本和数据库结构。
     def _open_and_initialize(self) -> None:
         import sqlite3
 
@@ -661,9 +646,9 @@ class DurableStore:
     def _verify_database_files(self) -> None:
         _verify_private_database_files(self._dir)
 
-    # ---- owner fencing ----
+    # 在每个写事务内核验数据库所有权。
     def _assert_owner(self, owner: DbOwner) -> None:
-        """每个写事务内校验当前 owner；旧 writer / 错误 epoch 一律 fence。"""
+        """校验当前所有者及代次，拒绝旧写入者或错误代次。"""
         if self._closed:
             raise StoreError("会话存储已关闭。")
         con = self._require_con()
@@ -687,11 +672,11 @@ class DurableStore:
 
         return transaction(con, wrapped)
 
-    # ---- StoragePort v1 ----
+    # 以下方法实现 StoragePort 的提交与恢复操作。
     def open_or_claim(
         self, identity: ProcessIdentity
     ) -> tuple[DbOwner, RecoveryView]:
-        """拒活 owner；死 owner 接管递增 epoch；身份查询错误不冒充死亡。"""
+        """核实原所有者确实已退出才能接管。每次接管递增代次并读取恢复状态。"""
         if self._con is not None or self._closed:
             raise StoreError("会话存储已经打开或关闭，不能重复建立所有权。")
         self._namespace = PrivateDirectory(self._dir)
@@ -747,7 +732,7 @@ class DurableStore:
         return self._owner, self.load_recovery_view()
 
     def commit_intent(self, owner: DbOwner, intent: Intent) -> ToolResult | None:
-        """副作用许可前提交；同 ToolRef 已知结果返回复用结果。"""
+        """工具执行前持久化意图。如果同一 ToolRef 已保存结果，直接返回旧结果。"""
 
         def body(con: "sqlite3.Connection") -> ToolResult | None:
             existing = _read_tool(con, intent.tool_ref)
@@ -796,7 +781,7 @@ class DurableStore:
                 if canceling_stop and record.name == "TaskStop" and record.tool_ref.scope == "main":
                     target = _loads(active.args)
                     if isinstance(target, dict) and target.get("id") == intent.run_ref.task_id:
-                        return False  # The matching cancellation is already durable; its text receipt may still be writing.
+                        return False  # 对应的取消状态已落盘，供用户阅读的文本回执可能还在写入。
                 task_control = intent.name in {"TaskStop", "TaskSend"} and intent.tool_ref.scope == "main"
                 if (background_child or task_control and intent.name == "TaskSend") and not active.side_effect:
                     return False
@@ -892,7 +877,7 @@ class DurableStore:
         *, operation_id: str | None = None, archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> None:
-        """结果 + 关联 run 状态 + outbox 事件同一 DB 事务；COMMIT 前不发布成功。"""
+        """一次事务提交工具结果、运行状态及待投递事件，提交完成后才报告成功。"""
 
         digest = archive_request_digest(run_update, event, tool_ref=tool_ref, result=result,
                                         archive_rewrite=archive_rewrite, archive_import=archive_import)
@@ -1024,7 +1009,7 @@ class DurableStore:
         operation_id: str | None = None, archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> OutboxEvent | None:
-        """无工具结果的后台进展；有 event 时 run+event 原子。"""
+        """在不提交工具结果时保存后台进展。存在关联事件时随运行状态一起提交。"""
 
         digest = archive_request_digest(run_update, event, archive_rewrite=archive_rewrite, archive_import=archive_import)
         op_id = operation_id or "run-v1:" + uuid.uuid4().hex
@@ -1066,8 +1051,8 @@ class DurableStore:
                     or prior is not None and prior.cancel_requested and not run_update.cancel_requested):
                 raise StoreError("手工任务只能保存记录，不能发布执行事件或重启终态。")
             if event is None and prior is not None and self._is_task_description_update(prior, run_update):
-                # This write touches only the visible description of an existing task,
-                # including tasks created by a previous owner. Execution grants stay unchanged.
+                # 此处只更新已有任务的可见描述，包括前一个所有者留下的任务。
+                # 原任务的执行授权仍绑定到此前记录。
                 _put_run(con, run_update)
                 self._save_archive_operation(con, op_id, digest, run_update.run_ref.run_id, None)
                 return None
@@ -1192,7 +1177,7 @@ class DurableStore:
         archive_rewrite: ArchiveRewrite | None = None,
         archive_import: ArchiveImport | None = None,
     ) -> int:
-        """Save checkpoint and idempotency receipt in the same transaction."""
+        """同事务保存检查点和幂等回执，用于确认可能丢失的提交响应。"""
         if checkpoint.session_id != self._session_id:
             raise StoreError("检查点会话身份不匹配。")
         digest = checkpoint_request_digest(expected_revision, checkpoint, consumed_event_ids,
@@ -1273,7 +1258,7 @@ class DurableStore:
         return transaction(self._require_con(), read, readonly=True)
 
     def _import_archive_materials(self, con: "sqlite3.Connection", imported: ArchiveImport) -> None:
-        """Confirm private copies before publishing DB aliases; originals remain immutable."""
+        """先验证附件的私有副本，再写入数据库别名。保留原文件。"""
         import hashlib
         import stat
 
@@ -1312,7 +1297,7 @@ class DurableStore:
     def lookup_checkpoint_operation(
         self, owner: DbOwner, operation_id: str, *, request_digest: str | None = None
     ) -> CheckpointOperation | None:
-        """Read committed receipt; None says nothing about an in-flight request."""
+        """查询已经提交的回执。返回 None 时，原操作可能仍在执行。"""
         def body(con: "sqlite3.Connection") -> CheckpointOperation | None:
             row = con.execute(
                 "SELECT request_digest, revision FROM checkpoint_operations WHERE id=?",
@@ -1334,7 +1319,7 @@ class DurableStore:
         decision: str,
         explanation: str,
     ) -> None:
-        """decision ID 幂等且内容冲突拒绝；resolve 不自动执行旧工具。"""
+        """按决定 ID 查找已提交结果，拒绝相同 ID 下的内容冲突。核实不会再次执行旧工具。"""
 
         def body(con: "sqlite3.Connection") -> None:
             if not explanation.strip():
@@ -1373,7 +1358,7 @@ class DurableStore:
         self._atomic(owner, body)
 
     def prepare_recovery(self, owner: DbOwner, material_errors: dict[str, str] | None = None) -> None:
-        """Frozen recovery.ts: missing results stay unresolved; lost agents never restart."""
+        """恢复时标记找不到可信结果的工具和失联代理，保留现场供后续核实。"""
         from .recovery import attachmentToolRef
 
         def body(con: "sqlite3.Connection") -> None:
@@ -1423,7 +1408,7 @@ class DurableStore:
         self, owner: DbOwner, decision: RecoveryDecision, expected_revision: int,
         checkpoint: Checkpoint,
     ) -> RecoveryReceipt:
-        """Human attestation is never converted into an authenticated runner receipt."""
+        """提交用户提供的恢复证据。记录来源始终是用户核实，runner 的认证回执另有独立入口。"""
         from .recovery import repairToolPairs
 
         def body(con: "sqlite3.Connection") -> RecoveryReceipt:
@@ -1498,8 +1483,8 @@ class DurableStore:
                 if (decision.new_run.task_id != prior_run.run_ref.task_id
                         or _read_run(con, decision.new_run) is not None):
                     raise StoreError("继续执行的新run身份冲突。")
-                # A durable one-shot authorization precedes dispatch. If owner dies next,
-                # its outcome stays unknown; no recovery path re-invokes this operation.
+                # 派发之前保存一次性继续许可，许可提交后才开始新的执行。
+                # 当前所有者若就此退出，表示执行结果待核实，恢复流程沿原身份继续查询。
                 snapshot = {**prior_run.snapshot, "continuation_of": asdict(prior_run.run_ref),
                             "decision_ref": decision.decision_id, "phase": "continuation-authorized"}
                 snapshot.pop("background_execution", None)
@@ -1521,7 +1506,7 @@ class DurableStore:
         return self._atomic(owner, body)
 
     def load_recovery_view(self) -> RecoveryView:
-        """同一一致视图；检查附件 hash；不触发副作用。"""
+        """通过同一一致视图读取会话及关联附件摘要，供恢复前核对。"""
         con = self._require_con()
         owner = self._owner
         if owner is None:
@@ -1549,7 +1534,7 @@ class DurableStore:
         return tuple(_pending_events(self._require_con()))
 
     def mark_interrupted_tools(self, owner: DbOwner) -> None:
-        """恢复时 started 无可信结果 → outcome_unknown（不重执行）。"""
+        """把已开始但没有可信结果的工具标为结果未知，留待核实。"""
 
         def body(con: "sqlite3.Connection") -> None:
             for record in _all_tools(con):
@@ -1559,7 +1544,7 @@ class DurableStore:
         self._atomic(owner, body)
 
     def add_attachment(self, owner: DbOwner, file: str, digest: str) -> None:
-        """登记结果附件 hash；恢复时检验，缺失/变更成为明确未决。"""
+        """登记工具结果附件的摘要，以便恢复时发现文件缺失或变化。"""
 
         def body(con: "sqlite3.Connection") -> None:
             files = _read_meta(con, "attachments") or {}
@@ -1587,7 +1572,7 @@ class DurableStore:
         return missing
 
     def close(self, owner: DbOwner) -> None:
-        """停止接受新写；只有仍为本 owner 才释放 owner，旧 writer 不能清掉新 owner。"""
+        """停止该存储端的写入，只释放仍归本实例持有的所有权。"""
         if self._closed:
             return
         con = self._require_con()
@@ -1610,10 +1595,9 @@ class DurableStore:
 
 
 def read_durable_state(session_dir: Path, runtime: RuntimeRecord) -> dict[str, Any]:
-    """只读恢复：忽略 JSON/events.jsonl 旁路，只认 SQLite 权威状态。
+    """从 SQLite 只读加载会话状态。
 
-    未来版本 / 旧版 / 产品身份不符 / 缺可信 checkpoint / 损坏一律拒绝，
-    不静默创建空会话、不自动转换、不退成 JSON 恢复。
+    版本、归属或检查点校验失败时保留原数据，调用方收到明确错误。
     """
     assert_runtime_gate(runtime)
     if not (Path(session_dir) / "session.db").is_file():
@@ -1623,7 +1607,7 @@ def read_durable_state(session_dir: Path, runtime: RuntimeRecord) -> dict[str, A
 
 
 def inspect_durable_session(session_dir: Path, runtime: RuntimeRecord) -> dict[str, Any]:
-    """Read checkpoint, ownership and outstanding work from one pinned transaction."""
+    """从固定路径上的同一读事务读取检查点、所有权和仍待完成的工作。"""
     assert_runtime_gate(runtime)
     if not (Path(session_dir) / "session.db").is_file():
         raise MissingCheckpointError("会话数据库不存在。")
@@ -1633,7 +1617,7 @@ def inspect_durable_session(session_dir: Path, runtime: RuntimeRecord) -> dict[s
 
 def seal_durable_session(session_dir: Path, runtime: RuntimeRecord, *, cutoff_ms: int,
                          protected_paths: tuple[str, ...] | None = None) -> str | None:
-    """Fence an old, inactive and fully settled session before filesystem cleanup."""
+    """仅对足够旧、无人持有且工作已结清的会话写入封存标记，阻止清理期间接管。"""
     assert_runtime_gate(runtime)
     directory = Path(session_dir)
     with PrivateDirectory(directory, readonly=True, anchor_file="session.db"):

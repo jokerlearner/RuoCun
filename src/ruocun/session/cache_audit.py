@@ -1,6 +1,6 @@
-"""冻结 ``src/session/cache_audit.ts`` 的旁路缓存诊断（MIT）。
+"""依据请求方提供的缓存用量和前缀信息诊断缓存变化。
 
-仅记录调用方提供的诊断输入，不改变 Session/StoragePort；观测写入失败不影响任务。
+诊断记录独立于会话读写，观测文件写入失败时主任务继续。
 """
 
 from __future__ import annotations
@@ -86,7 +86,7 @@ class Divergence(TypedDict):
 
 
 def divergence(a: str, b: str) -> Divergence:
-    """首个 UTF-16 分歧位置及新串样本，偏移口径与 JS String 一致。"""
+    """返回首个 UTF-16 分歧位置以及新字符串样本，便于按相同偏移口径定位原因。"""
     left, right = _utf16(a), _utf16(b)
     index = 0
     while index < min(len(left), len(right)) and left[index:index + 2] == right[index:index + 2]:
@@ -178,7 +178,7 @@ def _fixed(number: float, digits: int) -> str:
 
 
 def formatCacheReport(events: list[CacheAuditEvent], ttlMs: float = 5 * 60 * 1000) -> str:
-    """逐轮命中率、前缀维变化及空闲 TTL 诊断；不保证供应商实际缓存命中。"""
+    """将逐轮用量、前缀差异和空闲时间整理为面向用户的缓存诊断。"""
     if not events:
         return "缓存审计为空。"
     rows: list[str] = []

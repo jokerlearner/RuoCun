@@ -1,4 +1,4 @@
-"""冻结tui/width.ts（MIT）：终端显示列宽及CJK填充。"""
+"""计算字符串所占的终端列数，并按显示宽度填充，适配宽字符。"""
 
 
 def displayWidth(text: str) -> int:

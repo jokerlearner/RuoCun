@@ -1,4 +1,4 @@
-"""The foreground /memory audit and deletion branch from frozen index.ts."""
+"""实现前台 /memory 的审计和删除分支。读取、排序和写入由现有记忆模块负责。"""
 
 from ..tools.types import ToolRejected
 from .audit import formatAudit, gatherAudit

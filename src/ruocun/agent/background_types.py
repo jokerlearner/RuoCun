@@ -1,4 +1,4 @@
-"""Frozen agent/background_types.ts (MIT)."""
+"""定义后台执行、等待和结果交付共用的数据结构。"""
 
 from __future__ import annotations
 

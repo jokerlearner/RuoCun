@@ -1,18 +1,6 @@
-"""任务05 可运行产品路径：合成账户配置 → Responses 路由 → 同一对话/工具回合。
+"""用合成账户和本地服务验证 Responses 路由在同一对话中的工具往返。
 
-来源冻结 ``src/client/responses.ts`` / ``responses.test.ts``（MIT）与 04 已建立的
-配置/提示/流式契约。本路径只用**显式传入的合成配置目录**与**本次拥有的本地
-loopback 合成 HTTP/SSE 服务**：
-- 不调用任何真实模型、不访问公网、不读真实用户配置/凭据/密钥；
-- 配置里使用官方端点（满足路由判据），但实际请求经注入式 transport 重写到
-  ``127.0.0.1`` 随机端口的本地合成服务，服务端按 17 字节分块写 Responses SSE；
-- 两轮 ``streamChat`` 复现冻结 ``responses.test.ts:30-62`` 的函数调用/输出与
-  reasoning items 往返；输出两轮请求 golden、原始 Responses 事件 golden、
-  统一 Chat 事件 golden 与资源清理回执，绝不回显 secret；
-- 服务在 ``finally`` 中 shutdown/server_close/thread.join，报告端口/线程/socket 回执。
-
-这是显式演示/验收入口；既有 ``--version`` / ``--help`` / 普通 prompt 退出码 69
-与 04 的 ``--chat-demo`` 行为不变。完整 Agent 运行路径仍由后续任务实现。
+演示保留正式端点的路径判定，再把 HTTP 传输定向到回环服务。记录服务收到的请求、发出的 SSE 事件和客户端转换后的结果，方便逐层核对。
 """
 
 from __future__ import annotations
@@ -33,10 +21,10 @@ from .prompt import system_prompt
 
 
 class ResponsesDemoError(RuntimeError):
-    """无效配置 / 缺凭据 / 路由不命中的明确失败。"""
+    """演示配置、凭据或路由条件无效。"""
 
 
-# 冻结 responses.test.ts:6-8 / :10-13 的 fixture（服务端合成事件，产品不发真实请求）
+# 演示的合成事件面向固定的两轮对话。
 _REASONING: dict[str, Any] = {
     "type": "reasoning", "id": "rs_1", "summary": [], "encrypted_content": "ciphertext",
 }
@@ -65,7 +53,7 @@ def _completed(output: list[dict[str, Any]], *extra: dict[str, Any]) -> list[dic
 
 
 def _turn_events() -> list[list[dict[str, Any]]]:
-    """冻结 responses.test.ts:34-39 的两轮事件序列（含中文跨字节参数增量）。"""
+    """为指定回合构造合成 Responses 事件。"""
     first = _completed([_REASONING, _CALL],
         {"type": "response.output_item.added", "output_index": 1,
          "item": {**_CALL, "arguments": ""}},
@@ -82,7 +70,7 @@ def _turn_events() -> list[list[dict[str, Any]]]:
 
 
 def _encode_responses_sse(events: list[dict[str, Any]]) -> bytes:
-    """冻结 responses.test.ts:14-15：event:<type> CRLF data:<json> CRLFCRLF。"""
+    """将 Responses 事件编码为使用 CRLF 的 SSE 字节。"""
     parts: list[str] = []
     for event in events:
         parts.append("event: " + str(event["type"]) + "\r\ndata: "
@@ -100,7 +88,7 @@ class _ResponsesHandler(BaseHTTPRequestHandler):
         except (UnicodeDecodeError, json.JSONDecodeError):
             parsed = None
         server.captured.append({"path": self.path, "body": parsed})
-        turn = len(server.captured)  # 1-based，对应冻结 requests.length === 1
+        turn = len(server.captured)  # 回合从 1 开始编号，与服务端已收到的请求数量对齐。
         data = server.sse_bytes(turn)
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
@@ -114,7 +102,7 @@ class _ResponsesHandler(BaseHTTPRequestHandler):
 
 
 class SyntheticResponsesServer(ThreadingHTTPServer):
-    """本次拥有的本地合成 Responses SSE 服务（仅 127.0.0.1 随机端口）。"""
+    """在回环地址和临时端口启动合成 Responses 服务。"""
 
     daemon_threads = True
 
@@ -129,13 +117,9 @@ class SyntheticResponsesServer(ThreadingHTTPServer):
 
 
 def _loopback_transport(port: int) -> client.Transport:
-    """注入式 transport：官方端点 URL 重写到本次拥有的本地服务，保留 path。
-
-    真实 HTTP POST + 真实响应字节；返回按 17 字节切分的 chunks，确定性复现
-    跨字节 UTF-8 分片（与冻结 sse() 的 17 字节分块一致）。
-    """
+    """将请求转到本地服务，并把收到的响应按 17 字节分片交回客户端。"""
     def transport(url: str, headers: dict[str, str], body: bytes) -> client.HttpResponse:
-        # 路由判据保证是官方 Responses 端点；本地合成服务只暴露 /responses 路径
+        # 先按正式地址检查 Responses 路由，再将有效的路径转往回环服务。
         if url != responses.RESPONSES_ENDPOINT:
             raise ResponsesDemoError("transport 收到非 Responses 端点 URL")
         local_url = f"http://127.0.0.1:{port}/responses"
@@ -167,7 +151,7 @@ def run_responses_demo(
     root = Path(config_dir).resolve()
     env: dict[str, str] = dict(os.environ if environ is None else environ)
 
-    # 1) dotenv / 原生与兼容 profiles / 合成凭据（复用 04 契约，不读真实密钥）
+    # 演示只读显式传入的合成账户目录，并用内存凭据库承接密钥查询。
     env_file.applyDotenv(root / ".env", env)
     config = profiles_store.loadProfiles(root / "config.json")
     store = credential.MemoryKeychain()
@@ -177,12 +161,11 @@ def run_responses_demo(
             "缺少有效凭据：激活 profile 无内联 key，且未配置可用的合成 keyRef")
 
     model = model_override or resolved["model"]
-    # 2) 路由判据必须成立；不静默用 Chat 冒充 Responses 演示（R-06）
+    # 路由必须实际命中 Responses，避免以 Chat 路径的数据误作演示结果。
     if not responses.usesResponses(resolved["baseUrl"], model):
         raise ResponsesDemoError(
             "配置未命中 Responses 路由判据：需 https://api.openai.com/v1 + gpt-6 模型")
 
-    # 3) 冻结提示（品牌/环境差异白名单）
     system_text = system_prompt.buildSystemPrompt({
         "modelId": model,
         "toolSummaries": "- Read:读取文件",
@@ -198,7 +181,7 @@ def run_responses_demo(
     try:
         port = int(server.server_address[1])
         transport = _loopback_transport(port)
-        base_url = resolved["baseUrl"]  # 官方端点，仅用于判据/请求组装
+        base_url = resolved["baseUrl"]
         reasoning_effort = compat.reasoning_effort(env)
         messages1: list[dict[str, Any]] = [
             {"role": "system", "content": system_text},
@@ -214,7 +197,7 @@ def run_responses_demo(
         }
         first = client.streamChat(opts1, transport=transport, env=env)
 
-        # 同一对话/工具回合：回灌 assistant（含 responseItems/tool_calls）与工具结果
+        # 用第一轮回复的响应项和工具调用，加上工具结果构造下一轮请求。
         messages2: list[dict[str, Any]] = [
             *messages1, first.message,
             {"role": "tool", "tool_call_id": "call_1", "content": "文件内容"},
@@ -256,11 +239,11 @@ def run_responses_demo(
             "endpoint": responses.RESPONSES_ENDPOINT,
         },
         "answer": second.message.get("content"),
-        # 请求 golden：两轮 Responses 请求体（与服务端捕获 body 逐项核对）
+        # 保留服务端接到的请求体，便于核对编码后的内容。
         "request_golden": [first.request_body, second.request_body],
-        # 原始 Responses 事件 golden：服务端发送的输入事件序列（独立来源 fixture）
+        # 保留服务端发出的事件序列，便于核对协议输入。
         "responses_events_golden": turns,
-        # 统一 Chat 事件 golden：转换后的 deltas/finish_reason/usage/message
+        # 保留客户端转换后的事件，便于查看统一接口的解析结果。
         "event_golden": [
             {"deltas": first.deltas, "finish_reason": first.finish_reason,
              "usage": first.usage, "message": first.message},
@@ -269,7 +252,7 @@ def run_responses_demo(
         ],
         "server_captured": captured,
         "wire_request_validated": wire_ok,
-        "configured_base_url": resolved["baseUrl"],  # 合成配置端点，未连接公网
+        "configured_base_url": resolved["baseUrl"],
         "local_endpoint": f"http://127.0.0.1:{port}/responses",
         "model": model,
         "provider": resolved["provider"],

@@ -1,4 +1,7 @@
-"""Frozen repomap/index.ts walk/cache/rank/render pipeline (MIT)."""
+"""组织代码库地图的扫描、缓存、排序和裁剪。
+
+每个文件先提取定义和引用，提取结果按路径、大小和修改时间复用。文件排序后由 render 按调用方提供的预算生成文本。
+"""
 
 from __future__ import annotations
 
@@ -65,6 +68,7 @@ def _build(root: str, budget: int, signal: threading.Event | None) -> RepoMapRes
             continue
         with _CACHE_LOCK:
             cached = _CACHE.get(absolute)
+        # 文件大小和修改时间都一致时，复用上次提取结果，避免重复解析。
         if cached is not None and cached[:2] == (stat.st_mtime_ns, stat.st_size):
             extracted = cached[2]
         else:

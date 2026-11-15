@@ -1,4 +1,4 @@
-"""冻结App.tsx选择/审批面板状态；所有按键仍由InputBroker路由。"""
+"""保存选择、审批和输入面板的临时状态，接收输入代理转发的按键，并把选择结果交还调用者。"""
 
 from __future__ import annotations
 

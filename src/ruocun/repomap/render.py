@@ -1,4 +1,7 @@
-"""Frozen repomap/render.ts folded signatures and UTF16 character/3 estimate (MIT)."""
+"""按预算把已排序的定义渲染为简明代码库地图。
+
+折叠缺省的代码段，只保留需要展示的签名，按 UTF-16 长度粗估其 token 开销。
+"""
 
 import math
 from dataclasses import dataclass

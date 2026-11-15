@@ -1,4 +1,4 @@
-"""Frozen reference memory/types.ts (MIT)."""
+"""定义记忆记录、作用域和验证结果的共享类型，供存储、注入和维护使用。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,7 @@
-"""账户配置读写与 v2 格式检查。"""
+"""读取原生账户配置，并将账户变更保存为 v2 格式。
+
+读取可以给缺失的配置提供空结构。写入前则单独检查磁盘上已有的数据，避免覆盖不支持的版本或损坏的文件。
+"""
 
 from __future__ import annotations
 
@@ -17,7 +20,7 @@ from .profiles import Profile, ProfilesConfig, migrateConfig
 
 
 class UnsupportedProfilesError(ValueError):
-    """An explicit account format cannot be used or safely rewritten."""
+    """配置使用了当前无法安全读取或改写的账户格式。"""
 
 
 def _check_account_format(raw: object) -> None:
@@ -33,7 +36,7 @@ def _check_account_format(raw: object) -> None:
 
 
 def loadProfiles(file: str | Path) -> ProfilesConfig:
-    """读取单个 config.json 并迁移；缺失/损坏 → 全新空档案（不立即回写）。"""
+    """读取原生账户配置，缺失或为空时返回空配置。"""
     try:
         raw: Any = json.loads(Path(file).read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError):
@@ -43,7 +46,7 @@ def loadProfiles(file: str | Path) -> ProfilesConfig:
 
 
 def saveProfiles(file: str | Path, cfg: ProfilesConfig) -> None:
-    """写回 v2 到指定文件，保留其它顶层字段。"""
+    """将账户配置保存为 v2，保留传入的扩展字段。"""
     path = Path(file).absolute()
     if sys.platform == "win32":
         path.parent.parent.mkdir(parents=True, exist_ok=True)
@@ -61,7 +64,7 @@ def readAccountProfilesForWrite(path: Path) -> dict[str, Any]:
 
 def _save_profiles(path: Path, cfg: ProfilesConfig) -> None:
     existing = readAccountProfilesForWrite(path)
-    # 已选整份 cfg 覆盖 existing，保留其它顶层字段。
+    # 让传入账户配置覆盖同名字段，保留调用方未涉及的扩展字段。
     merged: dict[str, Any] = {**existing, **cfg}
     merged.pop("apiKey", None)
     merged["version"] = cfg.get("version", 2)
@@ -78,7 +81,7 @@ def _save_profiles(path: Path, cfg: ProfilesConfig) -> None:
     try:
         path.chmod(0o600)
     except OSError:
-        pass  # 某些文件系统设不上权限，不致命（冻结 profiles_store.ts:35-39）
+        pass  # 部分文件系统不支持调整权限，继续使用已写入的配置。
 
 
 def addProfile(cfg: ProfilesConfig, name: str, profile: Profile) -> ProfilesConfig:
@@ -88,7 +91,7 @@ def addProfile(cfg: ProfilesConfig, name: str, profile: Profile) -> ProfilesConf
         raise ValueError(f"账户已存在:{name}(先 /account rm {name} 再新建)")
     return {
         **cfg,
-        "activeProfile": name,  # 新增即激活
+        "activeProfile": name,
         "profiles": {**current, name: dict(profile)},
     }
 
